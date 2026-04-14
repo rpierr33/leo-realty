@@ -49,7 +49,7 @@ const FALLBACK_LISTINGS = [
     address: "123 Ocean Drive",
     city: "Miami Beach",
     state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=85", caption: "", order: 0 }],
+    images: [{ url: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=85", caption: "", order: 0 }],
     isFeatured: true,
     agentName: "Leopold Evariste",
   },
@@ -66,7 +66,7 @@ const FALLBACK_LISTINGS = [
     address: "456 Brickell Ave",
     city: "Miami",
     state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=85", caption: "", order: 0 }],
+    images: [{ url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=85", caption: "", order: 0 }],
     isFeatured: true,
     agentName: "Carly Cadet",
   },
@@ -83,7 +83,7 @@ const FALLBACK_LISTINGS = [
     address: "789 Aventura Blvd",
     city: "Aventura",
     state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=85", caption: "", order: 0 }],
+    images: [{ url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&q=85", caption: "", order: 0 }],
     isFeatured: true,
     agentName: "Jean Samuel Luxama",
   },
@@ -108,7 +108,7 @@ export default async function FeaturedListings() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
             <span className="section-label">Featured Listings</span>
-            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-[#0A1628] leading-tight">
+            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-medium text-[#0A1628] leading-tight">
               Premium South Florida
               <br />
               Properties
@@ -116,7 +116,7 @@ export default async function FeaturedListings() {
           </div>
           <Link
             href="/properties"
-            className="group inline-flex items-center gap-2 text-[#0A1628] font-semibold text-sm hover:text-[#C5A55A] transition-colors"
+            className="group inline-flex items-center gap-2 text-[#0A1628] font-medium text-sm hover:text-[#C5A55A] transition-colors"
           >
             View All Properties
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
@@ -131,8 +131,8 @@ export default async function FeaturedListings() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {displayListings.map((listing, index) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {displayListings.map((listing) => {
               const image = listing.images?.[0]?.url;
               const statusLabel = STATUS_LABELS[listing.status]?.label ?? listing.status;
               const isRent = listing.status === "for_rent";
@@ -141,54 +141,50 @@ export default async function FeaturedListings() {
                 <Link
                   key={listing.id}
                   href={`/properties/${listing.slug}`}
-                  className={`group block rounded-2xl overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0A1628]/10 ${
-                    index === 0 ? "md:col-span-2 md:row-span-1" : ""
-                  }`}
+                  className="group block"
                 >
-                  {/* Image — dominant */}
-                  <div className={`relative overflow-hidden bg-[#0A1628]/5 ${index === 0 ? "h-72 md:h-80" : "h-60"}`}>
+                  {/* Large image — 16/9 aspect, no overlay text */}
+                  <div className="relative aspect-[16/9] overflow-hidden bg-[#E8E4DE] mb-5">
                     {image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={image}
                         alt={listing.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-[#0A1628]/8">
+                      <div className="w-full h-full flex items-center justify-center bg-[#E8E4DE]">
                         <span className="text-[#0A1628]/20 text-5xl font-playfair">L</span>
                       </div>
                     )}
 
-                    {/* Gradient overlay at bottom */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/60 via-transparent to-transparent" />
-
-                    {/* Status badge */}
-                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full">
+                    {/* Status badge — top left */}
+                    <div className="absolute top-4 left-4 bg-white text-[#0A1628] text-[11px] font-semibold tracking-wider uppercase px-3 py-1.5">
                       {statusLabel}
-                    </div>
-
-                    {/* Price overlay at bottom */}
-                    <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                      <div>
-                        <div className="text-[#C5A55A] font-bold text-xl leading-none mb-0.5">
-                          {formatPrice(listing.price)}
-                          {isRent && <span className="text-sm font-normal text-white/70">/mo</span>}
-                        </div>
-                        <div className="flex items-center gap-1 text-white/75 text-xs">
-                          <MapPin className="w-3 h-3" />
-                          {listing.city}, {listing.state}
-                        </div>
-                      </div>
                     </div>
                   </div>
 
-                  {/* Property details */}
-                  <div className="px-5 py-4">
-                    <h3 className="font-playfair font-bold text-[#0A1628] text-lg leading-snug group-hover:text-[#C5A55A] transition-colors duration-200 mb-3">
+                  {/* Property info — below image, not overlaid */}
+                  <div>
+                    {/* Price */}
+                    <div className="text-[#C5A55A] font-medium text-xl mb-1">
+                      {formatPrice(listing.price)}
+                      {isRent && <span className="text-sm font-normal text-[#6B7280]">/mo</span>}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-playfair font-medium text-[#0A1628] text-lg leading-snug mb-2 group-hover:text-[#C5A55A] transition-colors duration-200">
                       {listing.title}
                     </h3>
-                    <div className="flex items-center gap-5 text-[#6B7280] text-sm border-t border-[#E8E4DE] pt-3">
+
+                    {/* Location */}
+                    <div className="flex items-center gap-1 text-[#9CA3AF] text-sm mb-3">
+                      <MapPin className="w-3 h-3" />
+                      {listing.address}, {listing.city}, {listing.state}
+                    </div>
+
+                    {/* Specs */}
+                    <div className="flex items-center gap-5 text-[#6B7280] text-sm pt-3 border-t border-[#E8E4DE]">
                       {listing.bedrooms > 0 && (
                         <span className="flex items-center gap-1.5">
                           <Bed className="w-3.5 h-3.5" />
@@ -214,10 +210,10 @@ export default async function FeaturedListings() {
         )}
 
         {/* Footer link */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-16">
           <Link
             href="/properties"
-            className="inline-flex items-center gap-2 border border-[#0A1628]/20 text-[#0A1628] font-semibold text-sm px-8 py-3.5 rounded-full hover:bg-[#0A1628] hover:text-white hover:border-[#0A1628] transition-all duration-200"
+            className="inline-flex items-center gap-2 border border-[#0A1628]/20 text-[#0A1628] font-medium text-sm px-8 py-3.5 rounded-full hover:bg-[#0A1628] hover:text-white hover:border-[#0A1628] transition-all duration-200"
           >
             Browse All Properties
             <ArrowRight className="w-4 h-4" />

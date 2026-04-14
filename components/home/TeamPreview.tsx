@@ -31,45 +31,37 @@ export default async function TeamPreview() {
   const displayTeam = team.length > 0 ? team.slice(0, 6) : FALLBACK_TEAM;
 
   return (
-    <section className="py-24 md:py-32 bg-[#0A1628] overflow-hidden">
-      {/* Subtle texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg, #C5A55A 0px, #C5A55A 1px, transparent 1px, transparent 80px), repeating-linear-gradient(90deg, #C5A55A 0px, #C5A55A 1px, transparent 1px, transparent 80px)" }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <section className="py-24 md:py-32 bg-[#0A1628]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
             <span className="section-label">Our Team</span>
-            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-white leading-tight">
-              Expert Professionals
+            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-medium text-white leading-tight">
+              The People Behind
               <br />
-              <span className="text-[#C5A55A]">Ready to Serve You</span>
+              <span className="text-[#C5A55A]">Every Transaction</span>
             </h2>
           </div>
           <Link
             href="/team"
-            className="group inline-flex items-center gap-2 text-white/60 text-sm font-semibold hover:text-[#C5A55A] transition-colors"
+            className="group inline-flex items-center gap-2 text-white/50 text-sm font-medium hover:text-[#C5A55A] transition-colors"
           >
             Meet the Full Team
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
         </div>
 
-        {/* Team grid — portrait-dominant */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {/* Team grid — portrait photos, names below */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
           {displayTeam.map((member) => {
             const photo = member.avatarUrl?.startsWith("/") ? member.avatarUrl : null;
             const externalPhoto = !photo && member.avatarUrl ? member.avatarUrl : null;
 
             return (
-              <div
-                key={member.id}
-                className="group relative rounded-2xl overflow-hidden cursor-default"
-              >
-                {/* Portrait */}
-                <div className="relative aspect-[3/4] overflow-hidden bg-[#152238]">
+              <div key={member.id} className="group">
+                {/* Portrait — clean square crop, no overlay text */}
+                <div className="aspect-[3/4] overflow-hidden bg-[#152238] mb-4">
                   {photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -85,22 +77,23 @@ export default async function TeamPreview() {
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#152238] to-[#0A1628]">
-                      <span className="font-playfair text-4xl font-bold text-[#C5A55A]">
+                    <div className="w-full h-full flex items-center justify-center bg-[#152238]">
+                      <span className="font-playfair text-4xl font-medium text-[#C5A55A]">
                         {member.name.charAt(0)}
                       </span>
                     </div>
                   )}
+                </div>
 
-                  {/* Overlay — always visible at bottom */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/90 via-[#0A1628]/20 to-transparent" />
-
-                  {/* Name on photo */}
-                  <div className="absolute bottom-0 inset-x-0 p-3">
-                    <div className="text-white font-semibold text-xs leading-snug mb-0.5 truncate">
-                      {member.name.split(" ")[0]}
-                    </div>
-                    <div className="text-[#C5A55A] text-[10px] font-medium truncate">{member.title}</div>
+                {/* Name and title — below photo, NOT overlaid */}
+                <div>
+                  {/* Gold accent line */}
+                  <div className="w-6 h-px bg-[#C5A55A] mb-2" />
+                  <div className="text-white font-medium text-sm leading-snug mb-1">
+                    {member.name}
+                  </div>
+                  <div className="text-white/40 text-xs tracking-wide">
+                    {member.title}
                   </div>
                 </div>
               </div>
@@ -109,10 +102,10 @@ export default async function TeamPreview() {
         </div>
 
         {/* CTA */}
-        <div className="mt-12 text-center">
+        <div className="mt-16 text-center">
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold text-sm px-8 py-4 rounded-full hover:bg-[#D4BA7A] transition-colors shadow-lg shadow-[#C5A55A]/20"
+            className="inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-semibold text-sm px-8 py-4 rounded-full hover:bg-[#D4BA7A] transition-colors"
           >
             Schedule a Consultation
           </Link>

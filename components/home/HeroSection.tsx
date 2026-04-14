@@ -8,7 +8,6 @@ import { Search, Phone } from "lucide-react";
 export default function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
@@ -16,20 +15,24 @@ export default function HeroSection() {
       ref={ref}
       className="relative min-h-screen flex items-center overflow-hidden"
     >
-      {/* Full-bleed parallax background */}
-      <motion.div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform"
+      {/* Deep navy gradient background — no stock photo */}
+      <div className="absolute inset-0 bg-[#07101F]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0A1628] via-[#07101F] to-[#030810]" />
+
+      {/* Subtle geometric accent — fine diagonal lines, very low opacity */}
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=2000&q=85')",
-          y: yBg,
-          scale: 1.15,
+            "repeating-linear-gradient(135deg, rgba(197,165,90,0.04) 0px, rgba(197,165,90,0.04) 1px, transparent 1px, transparent 60px)",
         }}
       />
 
-      {/* Layered overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628]/96 via-[#0A1628]/70 to-[#0A1628]/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/80 via-transparent to-transparent" />
+      {/* Single vertical gold accent line — left side */}
+      <div className="absolute left-[52px] top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#C5A55A]/18 to-transparent hidden lg:block" />
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#07101F] to-transparent" />
 
       {/* Content */}
       <motion.div
@@ -37,7 +40,7 @@ export default function HeroSection() {
         style={{ opacity }}
       >
         <div className="max-w-3xl">
-          {/* Overline */}
+          {/* Overline — "MR 2% · 32 Years In Business" */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -46,20 +49,18 @@ export default function HeroSection() {
           >
             <span className="block w-10 h-px bg-[#C5A55A]" />
             <span className="text-[#C5A55A] text-xs font-semibold tracking-[0.18em] uppercase">
-              32 Years In Business · South Florida
+              MR 2% &nbsp;·&nbsp; 32 Years In Business
             </span>
           </motion.div>
 
-          {/* Main headline */}
+          {/* Main headline — single flowing line */}
           <motion.h1
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-playfair text-[clamp(2.8rem,6vw,5.5rem)] font-bold text-white leading-[1.06] tracking-tight mb-6"
+            className="font-playfair text-[clamp(2.8rem,6vw,5.5rem)] font-medium text-white leading-[1.06] tracking-tight mb-6"
           >
-            <span className="block">MR 2% —</span>
-            <span className="block text-[#C5A55A]">No One Does</span>
-            <span className="block">It Better</span>
+            No One Does It Better
           </motion.h1>
 
           {/* Sub-copy */}
@@ -67,10 +68,10 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-white/65 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl"
+            className="text-white/55 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl"
           >
-            Mortgages Made Easy. Dreams Made Real. South Florida&apos;s most trusted brokerage
-            — helping families buy, sell, rent, and finance their dream homes for over three decades.
+            South Florida&apos;s most trusted brokerage — helping families buy, sell,
+            rent, and finance their dream homes for over three decades.
           </motion.p>
 
           {/* CTAs */}
@@ -82,14 +83,14 @@ export default function HeroSection() {
           >
             <Link
               href="/properties"
-              className="group inline-flex items-center gap-2.5 bg-[#C5A55A] text-[#0A1628] font-bold text-sm px-7 py-4 rounded-full hover:bg-[#D4BA7A] transition-all duration-200 shadow-xl shadow-[#C5A55A]/30 hover:shadow-[#C5A55A]/50 hover:scale-[1.02]"
+              className="group inline-flex items-center gap-2.5 bg-[#C5A55A] text-[#0A1628] font-semibold text-sm px-7 py-4 rounded-full hover:bg-[#D4BA7A] transition-all duration-200"
             >
               <Search className="w-4 h-4" />
               Search Properties
             </Link>
             <a
               href="tel:+13057052030"
-              className="inline-flex items-center gap-2.5 border border-white/25 text-white font-semibold text-sm px-7 py-4 rounded-full hover:bg-white/10 hover:border-white/50 transition-all duration-200 backdrop-blur-sm"
+              className="inline-flex items-center gap-2.5 border border-white/20 text-white font-medium text-sm px-7 py-4 rounded-full hover:bg-white/6 hover:border-white/35 transition-all duration-200"
             >
               <Phone className="w-4 h-4" />
               (305) 705-2030
@@ -101,7 +102,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap gap-10 pt-8 border-t border-white/12"
+            className="flex flex-wrap gap-10 pt-8 border-t border-white/8"
           >
             {[
               { value: "32+", label: "Years In Business" },
@@ -109,10 +110,10 @@ export default function HeroSection() {
               { value: "MR 2%", label: "Commission Rate" },
             ].map((stat) => (
               <div key={stat.label}>
-                <div className="font-playfair text-3xl font-bold text-[#C5A55A] leading-none mb-1">
+                <div className="font-playfair text-3xl font-medium text-[#C5A55A] leading-none mb-1">
                   {stat.value}
                 </div>
-                <div className="text-white/50 text-xs tracking-wider uppercase">{stat.label}</div>
+                <div className="text-white/40 text-xs tracking-wider uppercase">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -130,9 +131,9 @@ export default function HeroSection() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="w-px h-12 bg-gradient-to-b from-transparent via-[#C5A55A]/60 to-transparent"
+          className="w-px h-12 bg-gradient-to-b from-transparent via-[#C5A55A]/40 to-transparent"
         />
-        <span className="text-white/30 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+        <span className="text-white/25 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
       </motion.div>
     </section>
   );

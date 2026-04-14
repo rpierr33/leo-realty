@@ -87,7 +87,7 @@ export default function Navbar() {
               alt="Leo Realty Capital Investments"
               width={140}
               height={80}
-              className="h-10 w-auto object-contain"
+              className="h-10 w-auto object-contain brightness-0 invert"
               priority
             />
           </Link>
