@@ -3,8 +3,9 @@ import Link from "next/link";
 import { Bed, Bath, Ruler, MapPin, ArrowRight } from "lucide-react";
 import { db } from "@/lib/db";
 import { properties, agents } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, gte, lte, ilike, or, SQL } from "drizzle-orm";
 import { formatPrice } from "@/lib/utils/format";
+import PropertyFilters from "@/components/properties/PropertyFilters";
 
 export const metadata: Metadata = {
   title: "Properties — Buy, Sell & Rent in South Florida",
@@ -12,10 +13,62 @@ export const metadata: Metadata = {
     "Browse Leo Realty's property listings. Find homes for sale, rent, and investment properties throughout South Florida.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
-async function getAllProperties() {
+type SearchParams = {
+  type?: string;
+  status?: string;
+  price_min?: string;
+  price_max?: string;
+  beds?: string;
+  baths?: string;
+  q?: string;
+};
+
+type PropertyType = "residential" | "condo" | "townhouse" | "commercial" | "multi_family" | "land" | "investment";
+type PropertyStatus = "for_sale" | "for_rent" | "pending" | "sold" | "rented";
+
+const VALID_TYPES: PropertyType[] = ["residential", "condo", "townhouse", "commercial", "multi_family", "land", "investment"];
+const VALID_STATUSES: PropertyStatus[] = ["for_sale", "for_rent", "pending", "sold", "rented"];
+
+async function getProperties(params: SearchParams) {
   try {
+    const filters: SQL[] = [eq(properties.isPublished, true)];
+
+    const type = params.type && params.type !== "all" ? params.type : null;
+    const status = params.status && params.status !== "all" ? params.status : null;
+
+    if (type && (VALID_TYPES as string[]).includes(type)) {
+      filters.push(eq(properties.propertyType, type as PropertyType));
+    }
+    if (status && (VALID_STATUSES as string[]).includes(status)) {
+      filters.push(eq(properties.status, status as PropertyStatus));
+    }
+    if (params.price_min) {
+      filters.push(gte(properties.price, params.price_min));
+    }
+    if (params.price_max) {
+      filters.push(lte(properties.price, params.price_max));
+    }
+    if (params.beds) {
+      const bedsNum = parseInt(params.beds);
+      if (!isNaN(bedsNum)) filters.push(gte(properties.bedrooms, bedsNum));
+    }
+    if (params.baths) {
+      const bathsNum = parseInt(params.baths);
+      if (!isNaN(bathsNum)) filters.push(gte(properties.bathrooms, bathsNum));
+    }
+    if (params.q && params.q.trim()) {
+      const pattern = `%${params.q.trim()}%`;
+      filters.push(
+        or(
+          ilike(properties.title, pattern),
+          ilike(properties.city, pattern),
+          ilike(properties.address, pattern)
+        )!
+      );
+    }
+
     return await db
       .select({
         id: properties.id,
@@ -36,21 +89,13 @@ async function getAllProperties() {
       })
       .from(properties)
       .leftJoin(agents, eq(properties.agentId, agents.id))
-      .where(eq(properties.isPublished, true))
+      .where(and(...filters))
       .orderBy(properties.createdAt);
-  } catch {
+  } catch (err) {
+    console.error("getProperties error:", err);
     return [];
   }
 }
-
-const FALLBACK_PROPERTIES = [
-  { id: 1, slug: "luxury-waterfront-miami", title: "Luxury Waterfront Estate", price: "1250000", status: "for_sale" as const, propertyType: "residential" as const, bedrooms: 5, bathrooms: 4, sqft: 3800, address: "123 Ocean Drive", city: "Miami Beach", state: "FL", images: [{ url: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=85", caption: "", order: 0 }], isFeatured: true, agentName: "Leopold Evariste" },
-  { id: 2, slug: "modern-condo-brickell", title: "Modern Brickell Condo", price: "485000", status: "for_sale" as const, propertyType: "condo" as const, bedrooms: 2, bathrooms: 2, sqft: 1200, address: "456 Brickell Ave", city: "Miami", state: "FL", images: [{ url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=85", caption: "", order: 0 }], isFeatured: true, agentName: "Carly Cadet" },
-  { id: 3, slug: "family-home-aventura", title: "Spacious Family Home", price: "680000", status: "for_sale" as const, propertyType: "residential" as const, bedrooms: 4, bathrooms: 3, sqft: 2600, address: "789 Aventura Blvd", city: "Aventura", state: "FL", images: [{ url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=85", caption: "", order: 0 }], isFeatured: true, agentName: "Jean Samuel Luxama" },
-  { id: 4, slug: "investment-property-hialeah", title: "Investment Multi-Family", price: "890000", status: "for_sale" as const, propertyType: "multi_family" as const, bedrooms: 6, bathrooms: 6, sqft: 4200, address: "321 Palm Ave", city: "Hialeah", state: "FL", images: [{ url: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=85", caption: "", order: 0 }], isFeatured: false, agentName: "Olivier Desire" },
-  { id: 5, slug: "cozy-townhouse-doral", title: "Cozy Doral Townhouse", price: "3200", status: "for_rent" as const, propertyType: "townhouse" as const, bedrooms: 3, bathrooms: 2, sqft: 1800, address: "555 Doral Blvd", city: "Doral", state: "FL", images: [{ url: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=800&q=85", caption: "", order: 0 }], isFeatured: false, agentName: "Carly Cadet" },
-  { id: 6, slug: "commercial-space-nmi", title: "Prime Commercial Space", price: "5500", status: "for_rent" as const, propertyType: "commercial" as const, bedrooms: 0, bathrooms: 2, sqft: 2400, address: "100 NMB Blvd", city: "North Miami Beach", state: "FL", images: [{ url: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=85", caption: "", order: 0 }], isFeatured: false, agentName: "Leopold Evariste" },
-];
 
 const STATUS_CONFIG: Record<string, { label: string }> = {
   for_sale: { label: "For Sale" },
@@ -60,9 +105,13 @@ const STATUS_CONFIG: Record<string, { label: string }> = {
   rented: { label: "Rented" },
 };
 
-export default async function PropertiesPage() {
-  const allProps = await getAllProperties();
-  const listings = allProps.length > 0 ? allProps : FALLBACK_PROPERTIES;
+type Props = {
+  searchParams: Promise<SearchParams>;
+};
+
+export default async function PropertiesPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const listings = await getProperties(params);
 
   return (
     <>
@@ -84,108 +133,113 @@ export default async function PropertiesPage() {
           </p>
           <div className="mt-6 flex items-center gap-2 text-[#C5A55A] text-sm font-medium">
             <span className="w-2 h-2 rounded-full bg-[#C5A55A]" />
-            {listings.length} Properties Available
+            {listings.length} {listings.length === 1 ? "Property" : "Properties"} Available
           </div>
         </div>
       </section>
 
-      {/* Listings grid */}
-      <section className="py-24 md:py-32 bg-[#FAF8F5]">
+      {/* Filters + Listings */}
+      <section className="py-16 md:py-24 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {listings.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-[#6B7280] text-lg mb-4">No properties currently listed.</p>
-              <Link href="/contact" className="text-[#C5A55A] font-semibold underline underline-offset-4">
-                Contact us to find your perfect property
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {listings.map((listing) => {
-                const image = listing.images?.[0]?.url;
-                const statusLabel = STATUS_CONFIG[listing.status]?.label ?? listing.status;
-                const isRent = listing.status === "for_rent";
+          {/* Filter bar (client component) */}
+          <PropertyFilters currentParams={params} />
 
-                return (
-                  <Link
-                    key={listing.id}
-                    href={`/properties/${listing.slug}`}
-                    className="group block bg-white rounded-2xl overflow-hidden border border-[#E8E4DE] hover:border-[#C5A55A]/30 hover:shadow-2xl hover:shadow-[#0A1628]/8 transition-all duration-300 hover:-translate-y-0.5"
-                  >
-                    {/* Image */}
-                    <div className="relative h-56 overflow-hidden bg-[#0A1628]/5">
-                      {image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={image}
-                          alt={listing.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-[#0A1628]/5">
-                          <span className="font-playfair text-[#0A1628]/20 text-5xl">L</span>
+          {/* Results */}
+          <div className="mt-8">
+            {listings.length === 0 ? (
+              <div className="text-center py-20 bg-white rounded-2xl border border-[#E8E4DE]">
+                <MapPin className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                <p className="text-[#6B7280] text-lg mb-2 font-semibold">No properties match your search</p>
+                <p className="text-[#6B7280]/70 text-sm mb-6">Try adjusting your filters or browse all listings</p>
+                <Link href="/properties" className="text-[#C5A55A] font-semibold underline underline-offset-4">
+                  Clear all filters
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {listings.map((listing) => {
+                  const image = listing.images?.[0]?.url;
+                  const statusLabel = STATUS_CONFIG[listing.status]?.label ?? listing.status;
+                  const isRent = listing.status === "for_rent";
+
+                  return (
+                    <Link
+                      key={listing.id}
+                      href={`/properties/${listing.slug}`}
+                      className="group block bg-white rounded-2xl overflow-hidden border border-[#E8E4DE] hover:border-[#C5A55A]/30 hover:shadow-2xl hover:shadow-[#0A1628]/8 transition-all duration-300 hover:-translate-y-0.5"
+                    >
+                      {/* Image */}
+                      <div className="relative h-56 overflow-hidden bg-[#0A1628]/5">
+                        {image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={image}
+                            alt={listing.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-[#0A1628]/5">
+                            <span className="font-playfair text-[#0A1628]/20 text-5xl">L</span>
+                          </div>
+                        )}
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/50 via-transparent to-transparent" />
+
+                        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full">
+                          {statusLabel}
                         </div>
-                      )}
 
-                      {/* Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/50 via-transparent to-transparent" />
+                        {listing.isFeatured && (
+                          <div className="absolute top-4 right-4 bg-[#C5A55A] text-[#0A1628] text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
+                            Featured
+                          </div>
+                        )}
 
-                      {/* Status */}
-                      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full">
-                        {statusLabel}
+                        <div className="absolute bottom-4 left-4">
+                          <div className="text-[#C5A55A] font-bold text-xl leading-none">
+                            {formatPrice(listing.price)}
+                            {isRent && <span className="text-sm font-normal text-white/70">/mo</span>}
+                          </div>
+                        </div>
                       </div>
 
-                      {listing.isFeatured && (
-                        <div className="absolute top-4 right-4 bg-[#C5A55A] text-[#0A1628] text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
-                          Featured
+                      {/* Details */}
+                      <div className="p-5">
+                        <h3 className="font-playfair font-bold text-[#0A1628] text-lg mb-2 group-hover:text-[#C5A55A] transition-colors duration-200 line-clamp-1">
+                          {listing.title}
+                        </h3>
+                        <div className="flex items-center gap-1.5 text-[#6B7280] text-xs mb-4">
+                          <MapPin className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{listing.address}, {listing.city}, {listing.state}</span>
                         </div>
-                      )}
-
-                      {/* Price on image */}
-                      <div className="absolute bottom-4 left-4">
-                        <div className="text-[#C5A55A] font-bold text-xl leading-none">
-                          {formatPrice(listing.price)}
-                          {isRent && <span className="text-sm font-normal text-white/70">/mo</span>}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Details */}
-                    <div className="p-5">
-                      <h3 className="font-playfair font-bold text-[#0A1628] text-lg mb-2 group-hover:text-[#C5A55A] transition-colors duration-200 line-clamp-1">
-                        {listing.title}
-                      </h3>
-                      <div className="flex items-center gap-1.5 text-[#6B7280] text-xs mb-4">
-                        <MapPin className="w-3 h-3 flex-shrink-0" />
-                        <span className="truncate">{listing.address}, {listing.city}, {listing.state}</span>
-                      </div>
-                      <div className="flex items-center gap-5 text-[#6B7280] text-sm pt-3 border-t border-[#E8E4DE]">
-                        {listing.bedrooms > 0 && (
+                        <div className="flex items-center gap-5 text-[#6B7280] text-sm pt-3 border-t border-[#E8E4DE]">
+                          {listing.bedrooms > 0 && (
+                            <span className="flex items-center gap-1.5">
+                              <Bed className="w-3.5 h-3.5" />
+                              {listing.bedrooms}
+                            </span>
+                          )}
                           <span className="flex items-center gap-1.5">
-                            <Bed className="w-3.5 h-3.5" />
-                            {listing.bedrooms}
+                            <Bath className="w-3.5 h-3.5" />
+                            {listing.bathrooms}
                           </span>
-                        )}
-                        <span className="flex items-center gap-1.5">
-                          <Bath className="w-3.5 h-3.5" />
-                          {listing.bathrooms}
-                        </span>
-                        {listing.sqft && (
-                          <span className="flex items-center gap-1.5">
-                            <Ruler className="w-3.5 h-3.5" />
-                            {listing.sqft.toLocaleString()} sf
-                          </span>
-                        )}
-                        {listing.agentName && (
-                          <span className="ml-auto text-[10px] text-[#6B7280]/60 truncate">{listing.agentName}</span>
-                        )}
+                          {listing.sqft && (
+                            <span className="flex items-center gap-1.5">
+                              <Ruler className="w-3.5 h-3.5" />
+                              {listing.sqft.toLocaleString()} sf
+                            </span>
+                          )}
+                          {listing.agentName && (
+                            <span className="ml-auto text-[10px] text-[#6B7280]/60 truncate">{listing.agentName}</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

@@ -2,13 +2,67 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { properties } from '@/lib/db/schema';
 import { requireAuth } from '@/lib/utils/auth-guard';
+import { and, eq, gte, lte, ilike, or, SQL } from 'drizzle-orm';
 import type { InferInsertModel } from 'drizzle-orm';
 
 type PropertyInsert = InferInsertModel<typeof properties>;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const rows = await db.select().from(properties).orderBy(properties.createdAt);
+    const { searchParams } = new URL(req.url);
+
+    const type = searchParams.get('type');          // residential, condo, etc.
+    const status = searchParams.get('status');        // for_sale, for_rent, etc.
+    const priceMin = searchParams.get('price_min');  // numeric string
+    const priceMax = searchParams.get('price_max');  // numeric string
+    const beds = searchParams.get('beds');            // min bedrooms
+    const baths = searchParams.get('baths');          // min bathrooms
+    const q = searchParams.get('q');                  // text search (title + city + address)
+
+    const filters: SQL[] = [];
+
+    // Only published by default unless admin is requesting all
+    const includeUnpublished = searchParams.get('all') === '1';
+    if (!includeUnpublished) {
+      filters.push(eq(properties.isPublished, true));
+    }
+
+    if (type) {
+      filters.push(eq(properties.propertyType, type as PropertyInsert['propertyType']));
+    }
+    if (status) {
+      filters.push(eq(properties.status, status as PropertyInsert['status']));
+    }
+    if (priceMin) {
+      filters.push(gte(properties.price, priceMin));
+    }
+    if (priceMax) {
+      filters.push(lte(properties.price, priceMax));
+    }
+    if (beds) {
+      filters.push(gte(properties.bedrooms, parseInt(beds)));
+    }
+    if (baths) {
+      filters.push(gte(properties.bathrooms, parseInt(baths)));
+    }
+    if (q) {
+      const pattern = `%${q}%`;
+      filters.push(
+        or(
+          ilike(properties.title, pattern),
+          ilike(properties.city, pattern),
+          ilike(properties.address, pattern),
+          ilike(properties.state, pattern)
+        )!
+      );
+    }
+
+    const rows = await db
+      .select()
+      .from(properties)
+      .where(filters.length > 0 ? and(...filters) : undefined)
+      .orderBy(properties.createdAt);
+
     return NextResponse.json(rows);
   } catch (err) {
     console.error('GET /api/properties:', err);
