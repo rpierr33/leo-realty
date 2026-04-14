@@ -17,8 +17,8 @@ export default function Footer() {
               <Image
                 src="/leo-logo.png"
                 alt="Leo Realty Capital Investments"
-                width={140}
-                height={80}
+                width={200}
+                height={100}
                 className="h-10 w-auto object-contain brightness-0 invert"
               />
             </Link>
