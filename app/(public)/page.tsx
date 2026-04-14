@@ -7,6 +7,8 @@ import TeamPreview from "@/components/home/TeamPreview";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import MortgageCalculator from "@/components/home/MortgageCalculator";
 import CTABanner from "@/components/home/CTABanner";
+import HomeValuationCTA from "@/components/home/HomeValuationCTA";
+import SavingsCalculator from "@/components/home/SavingsCalculator";
 
 export const metadata: Metadata = {
   title: "Leo Realty Capital Investments | South Florida Real Estate & Mortgage",
@@ -21,6 +23,9 @@ export default function HomePage() {
       <StatsBar />
       <ProgramsSection />
       <FeaturedListings />
+      {/* Lead magnet between featured properties and testimonials */}
+      <HomeValuationCTA />
+      <SavingsCalculator />
       <TeamPreview />
       <MortgageCalculator />
       <TestimonialsSection />

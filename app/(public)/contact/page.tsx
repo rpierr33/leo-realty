@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import ContactForm from "@/components/layout/ContactForm";
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Star } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact Us — Leo Realty Capital Investments",
@@ -117,8 +117,27 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Right — form */}
-            <div className="lg:col-span-3">
+            {/* Right — form + testimonial */}
+            <div className="lg:col-span-3 space-y-6">
+              {/* Testimonial sidebar */}
+              <div className="bg-[#0A1628] rounded-2xl p-6 flex flex-col sm:flex-row gap-5 items-start">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-[#C5A55A]/15 flex items-center justify-center">
+                  <span className="font-playfair text-[#C5A55A] font-bold text-sm">J</span>
+                </div>
+                <div>
+                  <div className="flex gap-0.5 mb-2">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-[#C5A55A] text-[#C5A55A]" />
+                    ))}
+                  </div>
+                  <p className="font-playfair text-white/85 text-sm italic leading-relaxed mb-3">
+                    &ldquo;Sold my home in just 21 days at asking price. Leopold&apos;s market knowledge and negotiation skills are unmatched. Leo Realty is the gold standard in South Florida real estate.&rdquo;
+                  </p>
+                  <div className="text-[#C5A55A] text-xs font-semibold">James Thompson</div>
+                  <div className="text-white/40 text-xs">Property Owner · North Miami Beach</div>
+                </div>
+              </div>
+
               <div className="bg-white border border-[#E8E4DE] rounded-2xl p-8 md:p-10">
                 <h2 className="font-playfair text-2xl font-bold text-[#0A1628] mb-2">Send Us a Message</h2>
                 <p className="text-[#6B7280] text-sm mb-8">We&apos;ll get back to you within one business day.</p>

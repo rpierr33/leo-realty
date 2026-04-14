@@ -79,7 +79,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap gap-4 mb-16"
+            className="flex flex-wrap gap-4 mb-5"
           >
             <Link
               href="/properties"
@@ -95,6 +95,27 @@ export default function HeroSection() {
               <Phone className="w-4 h-4" />
               (305) 705-2030
             </a>
+          </motion.div>
+
+          {/* Social proof — single star snippet below CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-2.5 mb-12"
+          >
+            <div className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <svg key={i} className="w-3.5 h-3.5 fill-[#C5A55A]" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span className="text-white/50 text-xs">
+              5/5 stars —{" "}
+              <span className="text-white/70 italic">&ldquo;No one does it better&rdquo;</span>
+              {" "}— Sarah Johnson
+            </span>
           </motion.div>
 
           {/* Stats row */}
