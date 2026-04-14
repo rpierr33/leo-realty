@@ -49,7 +49,7 @@ const FALLBACK_LISTINGS = [
     address: "123 Ocean Drive",
     city: "Miami Beach",
     state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=80", caption: "", order: 0 }],
+    images: [{ url: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=85", caption: "", order: 0 }],
     isFeatured: true,
     agentName: "Leopold Evariste",
   },
@@ -66,7 +66,7 @@ const FALLBACK_LISTINGS = [
     address: "456 Brickell Ave",
     city: "Miami",
     state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80", caption: "", order: 0 }],
+    images: [{ url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=85", caption: "", order: 0 }],
     isFeatured: true,
     agentName: "Carly Cadet",
   },
@@ -83,18 +83,18 @@ const FALLBACK_LISTINGS = [
     address: "789 Aventura Blvd",
     city: "Aventura",
     state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80", caption: "", order: 0 }],
+    images: [{ url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=85", caption: "", order: 0 }],
     isFeatured: true,
     agentName: "Jean Samuel Luxama",
   },
 ];
 
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  for_sale: { label: "For Sale", color: "bg-green-500" },
-  for_rent: { label: "For Rent", color: "bg-blue-500" },
-  pending: { label: "Pending", color: "bg-yellow-500" },
-  sold: { label: "Sold", color: "bg-gray-500" },
-  rented: { label: "Rented", color: "bg-gray-500" },
+const STATUS_LABELS: Record<string, { label: string }> = {
+  for_sale: { label: "For Sale" },
+  for_rent: { label: "For Rent" },
+  pending: { label: "Pending" },
+  sold: { label: "Sold" },
+  rented: { label: "Rented" },
 };
 
 export default async function FeaturedListings() {
@@ -102,97 +102,109 @@ export default async function FeaturedListings() {
   const displayListings = listings.length > 0 ? listings : FALLBACK_LISTINGS;
 
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-24 md:py-32 bg-[#FAF8F5]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
-            <div className="inline-flex items-center gap-2 bg-[#C5A55A]/10 rounded-full px-4 py-1.5 mb-4">
-              <span className="text-[#C5A55A] text-sm font-semibold uppercase tracking-wider">
-                Featured Listings
-              </span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#0A1628] font-[var(--font-playfair)]">
-              Premium Properties
+            <span className="section-label">Featured Listings</span>
+            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-[#0A1628] leading-tight">
+              Premium South Florida
+              <br />
+              Properties
             </h2>
           </div>
           <Link
             href="/properties"
-            className="inline-flex items-center gap-2 text-[#C5A55A] font-semibold hover:gap-3 transition-all"
+            className="group inline-flex items-center gap-2 text-[#0A1628] font-semibold text-sm hover:text-[#C5A55A] transition-colors"
           >
             View All Properties
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
         </div>
 
         {displayListings.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
-            <p>No featured properties at this time.</p>
-            <Link href="/contact" className="text-[#C5A55A] underline mt-2 block">
+          <div className="text-center py-20 text-[#6B7280]">
+            <p className="text-lg mb-3">No featured properties at this time.</p>
+            <Link href="/contact" className="text-[#C5A55A] font-semibold underline underline-offset-4">
               Contact us to find your perfect home
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayListings.map((listing) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayListings.map((listing, index) => {
               const image = listing.images?.[0]?.url;
-              const status = STATUS_LABELS[listing.status] ?? { label: listing.status, color: "bg-gray-500" };
+              const statusLabel = STATUS_LABELS[listing.status]?.label ?? listing.status;
+              const isRent = listing.status === "for_rent";
 
               return (
                 <Link
                   key={listing.id}
                   href={`/properties/${listing.slug}`}
-                  className="group block rounded-2xl overflow-hidden bg-white border border-gray-100 hover:shadow-xl hover:shadow-[#0A1628]/5 transition-all duration-300 hover:-translate-y-1"
+                  className={`group block rounded-2xl overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0A1628]/10 ${
+                    index === 0 ? "md:col-span-2 md:row-span-1" : ""
+                  }`}
                 >
-                  {/* Image */}
-                  <div className="relative h-56 overflow-hidden bg-gray-100">
+                  {/* Image — dominant */}
+                  <div className={`relative overflow-hidden bg-[#0A1628]/5 ${index === 0 ? "h-72 md:h-80" : "h-60"}`}>
                     {image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={image}
                         alt={listing.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-[#0A1628]/5">
-                        <span className="text-gray-300 text-4xl">🏠</span>
+                      <div className="w-full h-full flex items-center justify-center bg-[#0A1628]/8">
+                        <span className="text-[#0A1628]/20 text-5xl font-playfair">L</span>
                       </div>
                     )}
-                    <div className={`absolute top-4 left-4 ${status.color} text-white text-xs font-bold px-3 py-1 rounded-full`}>
-                      {status.label}
+
+                    {/* Gradient overlay at bottom */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A1628]/60 via-transparent to-transparent" />
+
+                    {/* Status badge */}
+                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full">
+                      {statusLabel}
                     </div>
-                    {listing.isFeatured && (
-                      <div className="absolute top-4 right-4 bg-[#C5A55A] text-[#0A1628] text-xs font-bold px-3 py-1 rounded-full">
-                        Featured
+
+                    {/* Price overlay at bottom */}
+                    <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                      <div>
+                        <div className="text-[#C5A55A] font-bold text-xl leading-none mb-0.5">
+                          {formatPrice(listing.price)}
+                          {isRent && <span className="text-sm font-normal text-white/70">/mo</span>}
+                        </div>
+                        <div className="flex items-center gap-1 text-white/75 text-xs">
+                          <MapPin className="w-3 h-3" />
+                          {listing.city}, {listing.state}
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
 
-                  {/* Details */}
-                  <div className="p-6">
-                    <p className="text-[#C5A55A] font-bold text-xl mb-1">
-                      {formatPrice(listing.price)}
-                    </p>
-                    <h3 className="font-bold text-[#0A1628] text-lg font-[var(--font-playfair)] mb-2 group-hover:text-[#C5A55A] transition-colors">
+                  {/* Property details */}
+                  <div className="px-5 py-4">
+                    <h3 className="font-playfair font-bold text-[#0A1628] text-lg leading-snug group-hover:text-[#C5A55A] transition-colors duration-200 mb-3">
                       {listing.title}
                     </h3>
-                    <div className="flex items-center gap-1 text-gray-400 text-sm mb-4">
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>{listing.city}, {listing.state}</span>
-                    </div>
-                    <div className="flex items-center gap-4 text-gray-500 text-sm pt-4 border-t border-gray-100">
-                      <span className="flex items-center gap-1">
-                        <Bed className="w-4 h-4" />
-                        {listing.bedrooms} Beds
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Bath className="w-4 h-4" />
+                    <div className="flex items-center gap-5 text-[#6B7280] text-sm border-t border-[#E8E4DE] pt-3">
+                      {listing.bedrooms > 0 && (
+                        <span className="flex items-center gap-1.5">
+                          <Bed className="w-3.5 h-3.5" />
+                          {listing.bedrooms} Beds
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1.5">
+                        <Bath className="w-3.5 h-3.5" />
                         {listing.bathrooms} Baths
                       </span>
-                      <span className="flex items-center gap-1">
-                        <Ruler className="w-4 h-4" />
-                        {listing.sqft?.toLocaleString()} sqft
-                      </span>
+                      {listing.sqft && (
+                        <span className="flex items-center gap-1.5">
+                          <Ruler className="w-3.5 h-3.5" />
+                          {listing.sqft.toLocaleString()} sqft
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>
@@ -200,6 +212,17 @@ export default async function FeaturedListings() {
             })}
           </div>
         )}
+
+        {/* Footer link */}
+        <div className="text-center mt-12">
+          <Link
+            href="/properties"
+            className="inline-flex items-center gap-2 border border-[#0A1628]/20 text-[#0A1628] font-semibold text-sm px-8 py-3.5 rounded-full hover:bg-[#0A1628] hover:text-white hover:border-[#0A1628] transition-all duration-200"
+          >
+            Browse All Properties
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </section>
   );

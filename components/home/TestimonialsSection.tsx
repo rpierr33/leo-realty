@@ -1,24 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 const testimonials = [
   {
     id: 1,
     name: "Sarah Johnson",
     role: "Tenant",
-    text: "Leo Realty made finding my apartment incredibly easy. They understood exactly what I was looking for and had me in my new place within two weeks. Truly professional service!",
+    text: "Leo Realty made finding my apartment incredibly easy. They understood exactly what I was looking for and had me in my new place within two weeks. Truly professional service.",
     rating: 5,
-    avatar: "https://randomuser.me/api/portraits/women/32.jpg",
   },
   {
     id: 2,
     name: "Michael Smith",
     role: "First-Time Homebuyer",
-    text: "As a first-time homebuyer, I was nervous about the process. The team at Leo Realty walked me through everything. Their MR 2% commission saved me thousands. Couldn't be happier!",
+    text: "As a first-time homebuyer, I was nervous about the process. The team at Leo Realty walked me through everything. Their MR 2% commission saved me thousands. Couldn't be happier.",
     rating: 5,
-    avatar: "https://randomuser.me/api/portraits/men/45.jpg",
   },
   {
     id: 3,
@@ -26,126 +25,79 @@ const testimonials = [
     role: "Business Owner",
     text: "I needed a commercial property that fit my budget and growth plans. Leo Realty Capital Investments found the perfect location. Their 32 years of experience really shows.",
     rating: 5,
-    avatar: "https://randomuser.me/api/portraits/men/68.jpg",
   },
   {
     id: 4,
-    name: "Emily Chen",
-    role: "Real Estate Investor",
-    text: "The DSCR loan program through Leo Realty was exactly what I needed to expand my rental portfolio. Olivier was knowledgeable, fast, and made the process seamless.",
-    rating: 5,
-    avatar: "https://randomuser.me/api/portraits/women/56.jpg",
-  },
-  {
-    id: 5,
     name: "James Thompson",
     role: "Property Owner",
     text: "Sold my home in just 21 days at asking price. Leopold's market knowledge and negotiation skills are unmatched. Leo Realty is the gold standard in South Florida real estate.",
     rating: 5,
-    avatar: "https://randomuser.me/api/portraits/men/29.jpg",
   },
 ];
 
 export default function TestimonialsSection() {
   return (
-    <section className="py-24 bg-[#0A1628] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-24 md:py-32 bg-[#FAF8F5] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 bg-[#C5A55A]/20 border border-[#C5A55A]/30 rounded-full px-4 py-1.5 mb-4"
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <span className="section-label">Client Stories</span>
+            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-[#0A1628] leading-tight">
+              What Our Clients Say
+            </h2>
+          </div>
+          <Link
+            href="/testimonials"
+            className="group inline-flex items-center gap-2 text-[#0A1628] font-semibold text-sm hover:text-[#C5A55A] transition-colors"
           >
-            <span className="text-[#C5A55A] text-sm font-semibold uppercase tracking-wider">
-              Client Stories
-            </span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold text-white font-[var(--font-playfair)] mb-4"
-          >
-            What Our Clients Say
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-white/60 text-lg max-w-2xl mx-auto"
-          >
-            Over 32 years of helping South Florida families. Here are some of their stories.
-          </motion.p>
+            All Testimonials
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.slice(0, 3).map((t, i) => (
+        {/* Testimonials — editorial style */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {testimonials.map((t, i) => (
             <motion.div
               key={t.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-white/5 border border-white/10 rounded-2xl p-7 hover:bg-white/10 transition-colors"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.55, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className="relative"
             >
-              <Quote className="w-8 h-8 text-[#C5A55A] mb-4" />
-              <p className="text-white/80 text-sm leading-relaxed mb-6">
-                &quot;{t.text}&quot;
-              </p>
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star key={j} className="w-4 h-4 text-[#C5A55A] fill-[#C5A55A]" />
-                ))}
+              {/* Large quote mark */}
+              <div className="absolute -top-4 -left-2 font-playfair text-[7rem] leading-none text-[#C5A55A]/12 select-none pointer-events-none">
+                &ldquo;
               </div>
-              <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <div className="text-white font-semibold text-sm">{t.name}</div>
-                  <div className="text-white/50 text-xs">{t.role}</div>
+
+              <div className="relative bg-white border border-[#E8E4DE] rounded-2xl p-8 hover:border-[#C5A55A]/30 transition-colors duration-300">
+                {/* Stars */}
+                <div className="flex gap-1 mb-6">
+                  {Array.from({ length: t.rating }).map((_, j) => (
+                    <svg key={j} className="w-4 h-4 fill-[#C5A55A]" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-4xl mx-auto">
-          {testimonials.slice(3).map((t, i) => (
-            <motion.div
-              key={t.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: (i + 3) * 0.1 }}
-              className="bg-white/5 border border-white/10 rounded-2xl p-7 hover:bg-white/10 transition-colors"
-            >
-              <Quote className="w-8 h-8 text-[#C5A55A] mb-4" />
-              <p className="text-white/80 text-sm leading-relaxed mb-6">
-                &quot;{t.text}&quot;
-              </p>
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star key={j} className="w-4 h-4 text-[#C5A55A] fill-[#C5A55A]" />
-                ))}
-              </div>
-              <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={t.avatar}
-                  alt={t.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <div className="text-white font-semibold text-sm">{t.name}</div>
-                  <div className="text-white/50 text-xs">{t.role}</div>
+                {/* Quote text */}
+                <p className="font-playfair text-[#1A1A1A] text-lg leading-relaxed mb-8 italic">
+                  &ldquo;{t.text}&rdquo;
+                </p>
+
+                {/* Attribution */}
+                <div className="flex items-center gap-3 pt-5 border-t border-[#E8E4DE]">
+                  <div className="w-10 h-10 rounded-full bg-[#0A1628] flex items-center justify-center flex-shrink-0">
+                    <span className="font-playfair text-[#C5A55A] font-bold text-sm">
+                      {t.name.charAt(0)}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0A1628] text-sm">{t.name}</div>
+                    <div className="text-[#6B7280] text-xs">{t.role}</div>
+                  </div>
                 </div>
               </div>
             </motion.div>

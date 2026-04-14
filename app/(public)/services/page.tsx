@@ -26,7 +26,7 @@ const services = [
     ],
     cta: "Start Your Home Search",
     href: "/properties",
-    color: "from-[#0A1628] to-[#162447]",
+    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=85",
   },
   {
     id: "selling",
@@ -45,8 +45,7 @@ const services = [
     ],
     cta: "Get A Free Valuation",
     href: "/contact",
-    color: "from-[#C5A55A] to-[#D4B96A]",
-    dark: false,
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=85",
   },
   {
     id: "renting",
@@ -64,8 +63,8 @@ const services = [
       "Application processing assistance",
     ],
     cta: "Browse Rentals",
-    href: "/properties?status=for_rent",
-    color: "from-[#0A1628] to-[#162447]",
+    href: "/properties",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=85",
   },
   {
     id: "mortgage",
@@ -84,8 +83,7 @@ const services = [
     ],
     cta: "Explore Loan Programs",
     href: "/loan-programs",
-    color: "from-[#C5A55A] to-[#D4B96A]",
-    dark: false,
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=85",
   },
 ];
 
@@ -93,90 +91,95 @@ export default function ServicesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-[#0A1628] pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="inline-flex items-center gap-2 bg-[#C5A55A]/20 border border-[#C5A55A]/40 rounded-full px-4 py-2 mb-6">
-            <span className="text-[#C5A55A] text-sm font-medium">Our Services</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white font-[var(--font-playfair)] mb-6">
-            Everything You Need in{" "}
-            <span className="text-[#C5A55A]">One Place</span>
+      <section className="relative bg-[#0A1628] pt-40 pb-24 overflow-hidden">
+        <div
+          className="absolute inset-0 opacity-20 bg-cover bg-center"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=80')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628] to-[#0A1628]/70" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <span className="section-label">Our Services</span>
+          <h1 className="font-playfair text-[clamp(2.8rem,6vw,5rem)] font-bold text-white leading-tight mb-6">
+            Everything You Need{" "}
+            <span className="text-[#C5A55A]">In One Place</span>
           </h1>
-          <p className="text-white/70 text-xl max-w-2xl">
+          <p className="text-white/60 text-xl max-w-2xl leading-relaxed">
             From buying and selling to renting and financing — Leo Realty provides
             comprehensive real estate services to meet every client need.
           </p>
         </div>
       </section>
 
-      {/* Services */}
-      <section className="py-24 bg-[#F8F7F4]">
-        <div className="max-w-7xl mx-auto px-4 space-y-24">
-          {services.map((service, i) => (
-            <div
-              key={service.id}
-              id={service.id}
-              className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                i % 2 === 1 ? "lg:flex-row-reverse" : ""
-              }`}
-            >
-              <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-                <div className={`rounded-3xl bg-gradient-to-br ${service.color} p-10 h-80 flex items-center justify-center`}>
-                  <service.icon className={`w-24 h-24 ${service.dark === false ? "text-[#0A1628]" : "text-[#C5A55A]"}`} strokeWidth={1} />
-                </div>
-              </div>
-              <div className={i % 2 === 1 ? "lg:order-1" : ""}>
-                <div className="inline-flex items-center gap-2 bg-[#C5A55A]/10 rounded-full px-4 py-1.5 mb-4">
-                  <span className="text-[#C5A55A] text-sm font-semibold uppercase tracking-wider">
-                    {service.tagline}
-                  </span>
-                </div>
-                <h2 className="text-4xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-4">
-                  {service.title}
-                </h2>
-                <p className="text-gray-600 leading-relaxed mb-6">{service.description}</p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                  {service.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-gray-600 text-sm">
-                      <CheckCircle className="w-4 h-4 text-[#C5A55A] flex-shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href={service.href}
-                  className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-semibold px-8 py-4 rounded-full hover:bg-[#162447] transition-colors"
-                >
-                  {service.cta} <ArrowRight className="w-4 h-4" />
-                </Link>
+      {/* Services — editorial alternating layout */}
+      <section className="bg-[#FAF8F5]">
+        {services.map((service, i) => (
+          <div
+            key={service.id}
+            id={service.id}
+            className={`grid grid-cols-1 lg:grid-cols-2 ${i % 2 === 1 ? "" : ""}`}
+          >
+            {/* Image half */}
+            <div className={`relative h-72 lg:h-auto min-h-96 overflow-hidden ${i % 2 === 1 ? "lg:order-2" : ""}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={service.image}
+                alt={service.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[#0A1628]/30" />
+              {/* Icon overlay */}
+              <div className="absolute bottom-6 left-6 w-14 h-14 rounded-2xl bg-[#C5A55A] flex items-center justify-center">
+                <service.icon className="w-7 h-7 text-[#0A1628]" />
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Content half */}
+            <div className={`flex flex-col justify-center p-10 lg:p-16 bg-white ${i % 2 === 1 ? "lg:order-1" : ""}`}>
+              <span className="section-label">{service.tagline}</span>
+              <h2 className="font-playfair text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-[#0A1628] mb-4 leading-tight">
+                {service.title}
+              </h2>
+              <p className="text-[#6B7280] leading-relaxed mb-7 text-[15px]">{service.description}</p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-8">
+                {service.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-[#6B7280] text-sm">
+                    <CheckCircle className="w-4 h-4 text-[#C5A55A] flex-shrink-0 mt-0.5" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={service.href}
+                className="group inline-flex items-center gap-2 bg-[#0A1628] text-white font-semibold text-sm px-7 py-3.5 rounded-full hover:bg-[#152238] transition-colors self-start"
+              >
+                {service.cta}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        ))}
       </section>
 
       {/* Why Leo Realty */}
       <section className="py-24 bg-[#0A1628]">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white font-[var(--font-playfair)] mb-4">
-              Why Choose Leo Realty?
+            <span className="section-label justify-center">Why Leo Realty</span>
+            <h2 className="font-playfair text-[clamp(2rem,4vw,3rem)] font-bold text-white">
+              A Track Record That Speaks for Itself
             </h2>
-            <p className="text-white/60 max-w-2xl mx-auto">
-              Three decades of excellence and a track record that speaks for itself.
-            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
             {[
               { stat: "MR 2%", label: "Commission Model", detail: "More money stays in your pocket" },
-              { stat: "32+", label: "Years Experience", detail: "Decades of proven market expertise" },
-              { stat: "1,000+", label: "Transactions", detail: "Successful closings across South Florida" },
+              { stat: "32+", label: "Years Experience", detail: "Decades of proven expertise" },
+              { stat: "1,000+", label: "Transactions", detail: "Successful closings" },
               { stat: "6", label: "Team Members", detail: "Dedicated licensed professionals" },
             ].map((item) => (
-              <div key={item.label} className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
-                <div className="text-4xl font-bold text-[#C5A55A] font-[var(--font-playfair)] mb-2">{item.stat}</div>
-                <div className="text-white font-semibold mb-2">{item.label}</div>
-                <div className="text-white/50 text-sm">{item.detail}</div>
+              <div key={item.label} className="bg-white/4 border border-white/6 rounded-2xl p-7 text-center hover:border-[#C5A55A]/25 transition-colors">
+                <div className="font-playfair text-4xl font-bold text-[#C5A55A] mb-2">{item.stat}</div>
+                <div className="text-white font-semibold text-sm mb-2">{item.label}</div>
+                <div className="text-white/40 text-xs">{item.detail}</div>
               </div>
             ))}
           </div>
@@ -185,18 +188,19 @@ export default function ServicesPage() {
 
       {/* CTA */}
       <section className="py-16 bg-[#C5A55A]">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="font-playfair text-3xl md:text-4xl font-bold text-[#0A1628] mb-4">
             Ready to Get Started?
           </h2>
-          <p className="text-[#0A1628]/70 mb-8">
+          <p className="text-[#0A1628]/65 mb-8">
             Contact Leo Realty today for a free consultation.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-bold px-8 py-4 rounded-full hover:bg-[#162447] transition-colors"
+            className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-bold text-sm px-9 py-4 rounded-full hover:bg-[#152238] transition-colors shadow-xl shadow-[#0A1628]/20"
           >
-            Free Consultation <ArrowRight className="w-4 h-4" />
+            Free Consultation
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

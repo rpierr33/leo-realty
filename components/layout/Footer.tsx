@@ -1,61 +1,41 @@
 import Link from "next/link";
-import { Phone, Mail, MapPin, Clock, Globe } from "lucide-react";
+import Image from "next/image";
+import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
   return (
     <footer className="bg-[#0A1628] text-white">
+      {/* Gold accent line */}
+      <div className="h-px bg-gradient-to-r from-transparent via-[#C5A55A]/50 to-transparent" />
+
       {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
-          <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full bg-[#C5A55A] flex items-center justify-center">
-                <span className="text-[#0A1628] font-bold text-lg font-serif">L</span>
-              </div>
-              <div>
-                <div className="text-white font-bold tracking-wide font-serif">Leo Realty</div>
-                <div className="text-[#C5A55A] text-xs tracking-wider">Capital Investments</div>
-              </div>
-            </div>
-            <p className="text-white/60 text-sm leading-relaxed mb-5">
+          <div className="lg:col-span-1">
+            <Link href="/" className="inline-block mb-5">
+              <Image
+                src="/leo-logo.png"
+                alt="Leo Realty Capital Investments"
+                width={140}
+                height={80}
+                className="h-10 w-auto object-contain brightness-0 invert"
+              />
+            </Link>
+            <p className="text-white/45 text-sm leading-relaxed mb-6 max-w-xs">
               32 years of trusted real estate expertise in South Florida.
-              Mortgages Made Easy, Dreams Made Real.
+              Mortgages Made Easy. Dreams Made Real.
             </p>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#C5A55A] transition-colors"
-                aria-label="Facebook"
-              >
-                <Globe className="w-4 h-4" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#C5A55A] transition-colors"
-                aria-label="Instagram"
-              >
-                <Globe className="w-4 h-4" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#C5A55A] transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Globe className="w-4 h-4" />
-              </a>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[#C5A55A] text-xs font-semibold tracking-wider uppercase">MR 2%</span>
+              <span className="text-white/25 text-xs">·</span>
+              <span className="text-white/40 text-xs">No One Does It Better</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#C5A55A] font-semibold text-sm uppercase tracking-wider mb-5">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C5A55A] mb-6">
               Quick Links
             </h3>
             <ul className="space-y-2.5">
@@ -73,7 +53,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/60 text-sm hover:text-[#C5A55A] transition-colors"
+                    className="text-white/45 text-sm hover:text-[#C5A55A] transition-colors duration-150"
                   >
                     {link.label}
                   </Link>
@@ -84,7 +64,7 @@ export default function Footer() {
 
           {/* Loan Programs */}
           <div>
-            <h3 className="text-[#C5A55A] font-semibold text-sm uppercase tracking-wider mb-5">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C5A55A] mb-6">
               Loan Programs
             </h3>
             <ul className="space-y-2.5">
@@ -100,7 +80,7 @@ export default function Footer() {
                 <li key={item}>
                   <Link
                     href="/loan-programs"
-                    className="text-white/60 text-sm hover:text-[#C5A55A] transition-colors"
+                    className="text-white/45 text-sm hover:text-[#C5A55A] transition-colors duration-150"
                   >
                     {item}
                   </Link>
@@ -111,13 +91,13 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-[#C5A55A] font-semibold text-sm uppercase tracking-wider mb-5">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C5A55A] mb-6">
               Contact Us
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-[#C5A55A] flex-shrink-0 mt-0.5" />
-                <span className="text-white/60 text-sm">
+                <span className="text-white/45 text-sm leading-relaxed">
                   909 North Miami Beach Blvd<br />
                   Suite 301A<br />
                   North Miami Beach, FL
@@ -125,22 +105,25 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#C5A55A] flex-shrink-0" />
-                <a href="tel:+13057052030" className="text-white/60 text-sm hover:text-[#C5A55A] transition-colors">
+                <a
+                  href="tel:+13057052030"
+                  className="text-white/45 text-sm hover:text-[#C5A55A] transition-colors"
+                >
                   (305) 705-2030
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-[#C5A55A] flex-shrink-0" />
+              <li className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-[#C5A55A] flex-shrink-0 mt-0.5" />
                 <a
                   href="mailto:Info@leorealtycapitalinvestments.com"
-                  className="text-white/60 text-sm hover:text-[#C5A55A] transition-colors break-all"
+                  className="text-white/45 text-sm hover:text-[#C5A55A] transition-colors break-all"
                 >
-                  Info@leorealtycapital<br />investments.com
+                  Info@leorealty<br />capitalinvestments.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-[#C5A55A] flex-shrink-0" />
-                <span className="text-white/60 text-sm">
+                <span className="text-white/45 text-sm">
                   Mon–Fri: 9:00am – 5:00pm
                 </span>
               </li>
@@ -150,21 +133,20 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm text-center md:text-left">
+      <div className="border-t border-white/6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/25 text-xs text-center sm:text-left">
             © {new Date().getFullYear()} Leo Realty Capital Investments. All rights reserved.
+            &nbsp;· Equal Housing Opportunity.
           </p>
-          <div className="flex items-center gap-4 text-sm">
-            <Link href="/privacy" className="text-white/40 hover:text-[#C5A55A] transition-colors">
+          <div className="flex items-center gap-5 text-xs">
+            <Link href="/privacy" className="text-white/25 hover:text-[#C5A55A] transition-colors">
               Privacy Policy
             </Link>
-            <span className="text-white/20">|</span>
-            <Link href="/terms" className="text-white/40 hover:text-[#C5A55A] transition-colors">
+            <Link href="/terms" className="text-white/25 hover:text-[#C5A55A] transition-colors">
               Terms of Service
             </Link>
-            <span className="text-white/20">|</span>
-            <Link href="/fair-housing" className="text-white/40 hover:text-[#C5A55A] transition-colors">
+            <Link href="/fair-housing" className="text-white/25 hover:text-[#C5A55A] transition-colors">
               Fair Housing
             </Link>
           </div>

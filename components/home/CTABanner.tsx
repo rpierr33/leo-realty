@@ -6,34 +6,50 @@ import { Phone, ArrowRight } from "lucide-react";
 
 export default function CTABanner() {
   return (
-    <section className="py-20 bg-gradient-to-r from-[#0A1628] via-[#162447] to-[#0A1628] relative overflow-hidden">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: "repeating-linear-gradient(45deg, #C5A55A 0px, #C5A55A 1px, transparent 1px, transparent 60px)",
-        }} />
-      </div>
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1582407947304-fd86f28f8b4e?w=1800&q=85')",
+        }}
+      />
+      <div className="absolute inset-0 bg-[#0A1628]/88" />
 
-      <div className="relative max-w-7xl mx-auto px-4 text-center">
+      {/* Grid texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage: "repeating-linear-gradient(0deg, #C5A55A 0px, #C5A55A 1px, transparent 1px, transparent 72px), repeating-linear-gradient(90deg, #C5A55A 0px, #C5A55A 1px, transparent 1px, transparent 72px)",
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl mx-auto text-center"
         >
-          <div className="inline-flex items-center gap-2 bg-[#C5A55A]/20 border border-[#C5A55A]/40 rounded-full px-4 py-2 mb-6">
-            <span className="text-[#C5A55A] text-sm font-medium">
-              Ready to Get Started?
+          {/* Gold line */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-12 h-px bg-[#C5A55A]/50" />
+            <span className="text-[#C5A55A] text-xs font-semibold tracking-[0.18em] uppercase">
+              Start Your Journey
             </span>
+            <div className="w-12 h-px bg-[#C5A55A]/50" />
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-bold text-white font-[var(--font-playfair)] mb-6">
+          <h2 className="font-playfair text-[clamp(2.2rem,5vw,4rem)] font-bold text-white leading-tight mb-6">
             Your Dream Home
             <br />
             <span className="text-[#C5A55A]">Awaits You</span>
           </h2>
 
-          <p className="text-white/60 text-lg max-w-2xl mx-auto mb-10">
-            Whether you&apos;re buying, selling, renting, or financing, Leo Realty&apos;s
+          <p className="text-white/55 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+            Whether you&apos;re buying, selling, renting, or financing — Leo Realty&apos;s
             team of experts is ready to guide you every step of the way.
             32 years of trust. One call away.
           </p>
@@ -41,17 +57,17 @@ export default function CTABanner() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold px-10 py-4 rounded-full hover:bg-[#D4B96A] transition-all hover:shadow-lg hover:shadow-[#C5A55A]/30"
+              className="inline-flex items-center gap-2.5 bg-[#C5A55A] text-[#0A1628] font-bold text-sm px-9 py-4 rounded-full hover:bg-[#D4BA7A] transition-all hover:shadow-xl hover:shadow-[#C5A55A]/30 hover:scale-[1.02]"
             >
               Schedule a Consultation
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
             <a
               href="tel:+13057052030"
-              className="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-semibold px-10 py-4 rounded-full hover:bg-white/20 transition-all"
+              className="inline-flex items-center gap-2.5 border border-white/20 text-white font-semibold text-sm px-9 py-4 rounded-full hover:bg-white/10 hover:border-white/40 transition-all"
             >
-              <Phone className="w-5 h-5" />
-              Call (305) 705-2030
+              <Phone className="w-4 h-4" />
+              (305) 705-2030
             </a>
           </div>
         </motion.div>

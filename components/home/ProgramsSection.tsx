@@ -10,7 +10,7 @@ const programs = [
     title: "Homebuyer Program",
     tagline: "First Home Made Simple",
     description:
-      "From pre-approval to closing, we guide first-time homebuyers through every step. Low down payments, competitive rates, and expert support.",
+      "From pre-approval to closing, we guide first-time homebuyers through every step with low down payments and competitive rates.",
     href: "/loan-programs#first-time-buyer",
     highlight: "As low as 3% down",
   },
@@ -19,7 +19,7 @@ const programs = [
     title: "Hometown Heroes",
     tagline: "Serving Those Who Serve",
     description:
-      "Special mortgage benefits for Florida's frontline workers — teachers, nurses, law enforcement, firefighters, and more.",
+      "Special mortgage benefits for Florida's frontline workers — teachers, nurses, law enforcement, and firefighters.",
     href: "/loan-programs#hometown-heroes",
     highlight: "Exclusive FL program",
     featured: true,
@@ -29,7 +29,7 @@ const programs = [
     title: "FHA Loans",
     tagline: "Government-Backed Confidence",
     description:
-      "Accessible financing with flexible credit requirements. Perfect for buyers with moderate credit or limited savings.",
+      "Accessible financing with flexible credit requirements, perfect for buyers with moderate credit or limited savings.",
     href: "/loan-programs#fha",
     highlight: "3.5% minimum down",
   },
@@ -64,77 +64,55 @@ const programs = [
 
 export default function ProgramsSection() {
   return (
-    <section className="py-24 bg-[#F8F7F4]">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-24 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 bg-[#C5A55A]/10 rounded-full px-4 py-1.5 mb-4"
-          >
-            <span className="text-[#C5A55A] text-sm font-semibold uppercase tracking-wider">
-              Mortgage Programs
-            </span>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-4"
-          >
-            Financing For Every Dream
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-500 text-lg max-w-2xl mx-auto"
-          >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end mb-16">
+          <div>
+            <span className="section-label">Mortgage Programs</span>
+            <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-[#0A1628] leading-tight">
+              Financing For
+              <br />
+              Every Dream
+            </h2>
+          </div>
+          <p className="text-[#6B7280] text-lg leading-relaxed lg:text-right">
             Leo Realty offers a comprehensive range of mortgage programs.
             Our licensed loan originators find the right fit for your unique situation.
-          </motion.p>
+          </p>
         </div>
 
         {/* Programs grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {programs.map((program, i) => (
             <motion.div
               key={program.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
             >
               <Link
                 href={program.href}
-                className={`group block relative rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+                className={`group flex flex-col h-full rounded-2xl p-7 transition-all duration-250 hover:-translate-y-0.5 border ${
                   program.featured
-                    ? "bg-[#0A1628] text-white"
-                    : "bg-white text-[#0A1628] hover:shadow-[#C5A55A]/10"
+                    ? "bg-[#0A1628] border-[#C5A55A]/20 hover:border-[#C5A55A]/50 hover:shadow-xl hover:shadow-[#0A1628]/30"
+                    : "bg-[#FAF8F5] border-[#E8E4DE] hover:border-[#C5A55A]/30 hover:shadow-lg hover:shadow-black/5"
                 }`}
               >
-                {program.featured && (
-                  <div className="absolute top-4 right-4 bg-[#C5A55A] text-[#0A1628] text-xs font-bold px-3 py-1 rounded-full">
-                    FEATURED
-                  </div>
-                )}
-
+                {/* Icon */}
                 <div
-                  className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    program.featured ? "bg-[#C5A55A]/20" : "bg-[#0A1628]/5"
+                  className={`w-11 h-11 rounded-xl flex items-center justify-center mb-5 ${
+                    program.featured ? "bg-[#C5A55A]/15" : "bg-[#0A1628]/6"
                   }`}
                 >
                   <program.icon
-                    className={`w-6 h-6 ${program.featured ? "text-[#C5A55A]" : "text-[#C5A55A]"}`}
+                    className={`w-5 h-5 ${program.featured ? "text-[#C5A55A]" : "text-[#C5A55A]"}`}
                   />
                 </div>
 
                 <div
-                  className={`text-xs font-semibold uppercase tracking-wider mb-2 ${
+                  className={`text-[11px] font-semibold uppercase tracking-[0.14em] mb-2 ${
                     program.featured ? "text-[#C5A55A]" : "text-[#C5A55A]"
                   }`}
                 >
@@ -142,7 +120,7 @@ export default function ProgramsSection() {
                 </div>
 
                 <h3
-                  className={`text-xl font-bold font-[var(--font-playfair)] mb-3 ${
+                  className={`font-playfair text-xl font-bold mb-3 ${
                     program.featured ? "text-white" : "text-[#0A1628]"
                   }`}
                 >
@@ -150,25 +128,25 @@ export default function ProgramsSection() {
                 </h3>
 
                 <p
-                  className={`text-sm leading-relaxed mb-5 ${
-                    program.featured ? "text-white/70" : "text-gray-500"
+                  className={`text-sm leading-relaxed flex-1 mb-6 ${
+                    program.featured ? "text-white/60" : "text-[#6B7280]"
                   }`}
                 >
                   {program.description}
                 </p>
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-auto pt-5 border-t border-white/8">
                   <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                    className={`text-[11px] font-semibold px-3 py-1.5 rounded-full ${
                       program.featured
-                        ? "bg-white/10 text-white"
-                        : "bg-[#0A1628]/5 text-[#0A1628]"
+                        ? "bg-[#C5A55A]/15 text-[#C5A55A]"
+                        : "bg-[#0A1628]/6 text-[#0A1628]"
                     }`}
                   >
                     {program.highlight}
                   </span>
                   <ArrowRight
-                    className={`w-5 h-5 group-hover:translate-x-1 transition-transform ${
+                    className={`w-4 h-4 group-hover:translate-x-1 transition-transform duration-200 ${
                       program.featured ? "text-[#C5A55A]" : "text-[#C5A55A]"
                     }`}
                   />
@@ -178,10 +156,10 @@ export default function ProgramsSection() {
           ))}
         </div>
 
-        <div className="text-center mt-10">
+        <div className="text-center mt-12">
           <Link
             href="/loan-programs"
-            className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-semibold px-8 py-4 rounded-full hover:bg-[#162447] transition-colors"
+            className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-semibold text-sm px-8 py-4 rounded-full hover:bg-[#152238] transition-colors shadow-lg shadow-[#0A1628]/20"
           >
             View All Programs
             <ArrowRight className="w-4 h-4" />
