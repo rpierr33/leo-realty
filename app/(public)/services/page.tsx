@@ -26,7 +26,7 @@ const services = [
     ],
     cta: "Start Your Home Search",
     href: "/properties",
-    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&q=85",
+    image: "/service-buy.jpg",
   },
   {
     id: "selling",
@@ -45,7 +45,7 @@ const services = [
     ],
     cta: "Get A Free Valuation",
     href: "/contact",
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=85",
+    image: "/service-sell.jpg",
   },
   {
     id: "renting",
@@ -64,7 +64,7 @@ const services = [
     ],
     cta: "Browse Rentals",
     href: "/properties",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=85",
+    image: "/service-rent.jpg",
   },
   {
     id: "mortgage",

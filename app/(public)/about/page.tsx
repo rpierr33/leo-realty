@@ -51,8 +51,8 @@ export default async function AboutPage() {
       {/* Hero — full bleed dark */}
       <section className="relative bg-[#0A1628] pt-40 pb-24 overflow-hidden">
         <div
-          className="absolute inset-0 opacity-20 bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1800&q=80')" }}
+          className="absolute inset-0 opacity-30 bg-cover bg-center"
+          style={{ backgroundImage: "url('/leopold-hero.jpg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628] via-[#0A1628]/90 to-[#0A1628]/60" />
 
@@ -113,11 +113,11 @@ export default async function AboutPage() {
             <div className="relative">
               <div className="rounded-2xl overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=700&q=85"
-                  alt="Leo Realty Office — South Florida"
+                  src="/leopold-hero.jpg"
+                  alt="Leo Realty — Leopold Evariste"
                   width={700}
                   height={500}
-                  className="w-full h-[480px] object-cover"
+                  className="w-full h-[480px] object-cover object-top"
                 />
               </div>
               {/* Floating stat */}
