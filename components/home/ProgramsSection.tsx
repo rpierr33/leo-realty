@@ -2,7 +2,14 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+// Use inline SVG to avoid lucide-react Turbopack module evaluation bug
+function ArrowRightIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+    </svg>
+  );
+}
 
 const programs = [
   {
@@ -102,7 +109,7 @@ export default function ProgramsSection() {
                   <span className="text-[#0A1628] text-sm font-medium hidden md:block">
                     {program.highlight}
                   </span>
-                  <ArrowRight className="w-4 h-4 text-[#C5A55A] group-hover:translate-x-1 transition-transform duration-200" />
+                  <ArrowRightIcon className="w-4 h-4 text-[#C5A55A] group-hover:translate-x-1 transition-transform duration-200" />
                 </div>
               </Link>
             </motion.div>
@@ -115,7 +122,7 @@ export default function ProgramsSection() {
             className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-medium text-sm px-8 py-4 rounded-full hover:bg-[#152238] transition-colors"
           >
             View All Programs
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRightIcon className="w-4 h-4" />
           </Link>
         </div>
       </div>
