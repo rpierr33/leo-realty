@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { useRef } from "react";
 import { Search, Phone } from "lucide-react";
 
@@ -34,12 +35,13 @@ export default function HeroSection() {
       {/* Bottom fade */}
       <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#07101F] to-transparent" />
 
-      {/* Content */}
+      {/* Content — two column: text left, Leopold right */}
       <motion.div
         className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-36 pb-24"
         style={{ opacity }}
       >
-        <div className="max-w-3xl">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-xl">
           {/* Overline — "MR 2% · 32 Years In Business" */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -137,6 +139,35 @@ export default function HeroSection() {
                 <div className="text-white/40 text-xs tracking-wider uppercase">{stat.label}</div>
               </div>
             ))}
+          </motion.div>
+        </div>
+
+          {/* Leopold's photo — right column */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:flex justify-center"
+          >
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-[#C5A55A]/20 to-transparent blur-2xl" />
+              <Image
+                src="/leopold-hero.jpg"
+                alt="Leopold Evariste — CEO & Founder"
+                width={420}
+                height={520}
+                className="relative rounded-2xl object-cover shadow-2xl"
+                style={{ maxHeight: "520px" }}
+                priority
+              />
+              <div
+                className="absolute -bottom-4 -left-4 px-5 py-3 rounded-xl shadow-lg"
+                style={{ backgroundColor: "#C5A55A", color: "#07101F" }}
+              >
+                <p className="font-playfair text-sm font-semibold">Leopold Evariste</p>
+                <p className="text-xs opacity-80">CEO & Founder · 32 Years</p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </motion.div>
