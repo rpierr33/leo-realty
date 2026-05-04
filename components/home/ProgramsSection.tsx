@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import LendingPartnerCallout from "@/components/shared/LendingPartnerCallout";
 // Use inline SVG to avoid lucide-react Turbopack module evaluation bug
 function ArrowRightIcon({ className }: { className?: string }) {
   return (
@@ -66,8 +67,13 @@ export default function ProgramsSection() {
             </h2>
           </div>
           <p className="text-[#9CA3AF] text-base leading-relaxed lg:text-right max-w-sm lg:ml-auto">
-            Our licensed loan originators find the right program for your unique situation — not just the standard option.
+            KLE Mortgage&apos;s licensed loan originators find the right program for your unique situation — not just the standard option.
           </p>
+        </div>
+
+        {/* Lending partner disclosure */}
+        <div className="mb-12">
+          <LendingPartnerCallout />
         </div>
 
         {/* Programs — editorial text list with gold accent lines */}

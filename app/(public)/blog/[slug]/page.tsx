@@ -61,7 +61,7 @@ South Florida's real estate market has consistently outperformed national averag
 
 ## Financing Your Investment
 
-Leo Realty's mortgage team offers several programs specifically designed for investment properties:
+KLE Mortgage's loan originators (our lending partner) offers several programs specifically designed for investment properties:
 
 - **DSCR Loans:** Qualify based on rental income, not personal income
 - **Conventional Investment Loans:** 20-25% down, competitive rates
@@ -146,13 +146,13 @@ Eligible buyers can receive:
 
 ## How to Apply
 
-1. **Speak with a Leo Realty loan originator** for a free eligibility assessment
+1. **Speak with a KLE Mortgage loan originator (our lending partner)** for a free eligibility assessment
 2. Complete homebuyer education course (required)
 3. Get pre-approved for your first mortgage
 4. Find your dream home with Leo Realty
 5. Apply for Hometown Heroes assistance at closing
 
-## Why Choose Leo Realty for Hometown Heroes?
+## Why Use KLE Mortgage Through Leo Realty for Hometown Heroes?
 
 Our team has extensive experience with the Hometown Heroes program and has helped dozens of frontline workers become homeowners. We guide you through every step and maximize the benefits available to you.
 

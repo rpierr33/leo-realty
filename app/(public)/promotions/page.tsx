@@ -54,7 +54,7 @@ const promotions = [
     badge: "Year-Round",
     badgeColor: "bg-purple-100 text-purple-700",
     description:
-      "Leo Realty's comprehensive first-time buyer package includes buyer education, mortgage pre-approval, property search, and hand-holding through closing — all in one seamless service.",
+      "Leo Realty's comprehensive first-time buyer package includes buyer education, property search, and hand-holding through closing. Mortgage pre-approval is handled by our lending partner KLE Mortgage (NMLS #2380070).",
     highlight: "End-to-end first-time buyer support",
     details: ["Buyer consultation", "Mortgage pre-approval", "FHA/USDA/Conventional options", "Inspection guidance", "Post-closing support"],
     cta: "Start Your Journey",

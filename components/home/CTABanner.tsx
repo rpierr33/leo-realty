@@ -34,8 +34,9 @@ export default function CTABanner() {
           </h2>
 
           <p className="text-white/45 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-            Whether you&apos;re buying, selling, renting, or financing — Leo Realty&apos;s
-            team of experts is ready to guide you every step of the way.
+            Whether you&apos;re buying, selling, or renting — Leo Realty&apos;s
+            team is ready to guide you every step of the way. For mortgage financing,
+            our lending partner KLE Mortgage (NMLS #2380070) handles every loan.
             32 years of trust. One call away.
           </p>
 

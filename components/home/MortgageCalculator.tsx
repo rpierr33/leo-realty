@@ -55,10 +55,12 @@ export default function MortgageCalculator() {
               <br />
               <span className="text-[#C5A55A]">Monthly Payment</span>
             </h2>
-            <p className="text-white/55 text-lg leading-relaxed mb-8">
-              Use our mortgage calculator to get a quick estimate of your monthly payment.
-              Our licensed loan originators are ready to help you find the perfect
-              financing solution.
+            <p className="text-white/55 text-lg leading-relaxed mb-4">
+              Use this mortgage calculator to get a quick estimate of your monthly payment.
+              KLE Mortgage&apos;s licensed loan originators (NMLS #2380070) are ready to help you find the perfect financing solution.
+            </p>
+            <p className="text-white/35 text-xs leading-relaxed mb-8">
+              Estimates only. Actual rates, fees, and qualification determined by KLE Mortgage Financing, LLC. Leo Realty Capital Investments is not a mortgage lender.
             </p>
             <div className="space-y-3 mb-10">
               {[

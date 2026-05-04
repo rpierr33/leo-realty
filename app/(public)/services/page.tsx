@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Home, DollarSign, Key, TrendingUp, ArrowRight, CheckCircle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Services — Buy, Sell, Rent & Mortgage",
+  title: "Services — Buy, Sell, Rent & Financing",
   description:
-    "Leo Realty offers comprehensive real estate services: buying, selling, renting, and mortgage lending throughout South Florida.",
+    "Leo Realty offers comprehensive real estate services across South Florida: buying, selling, and renting. Mortgage financing through our exclusive lending partner KLE Mortgage (NMLS #2380070).",
 };
 
 const services = [
@@ -69,10 +69,10 @@ const services = [
   {
     id: "mortgage",
     icon: TrendingUp,
-    title: "Mortgage Lending",
-    tagline: "Mortgages Made Easy",
+    title: "Mortgage Financing",
+    tagline: "Through Our Lending Partner",
     description:
-      "Leo Realty Capital Investments includes a full-service mortgage team offering FHA, VA, USDA, Conventional, DSCR, and Hometown Heroes programs.",
+      "Mortgage programs are offered through our exclusive lending partner KLE Mortgage Financing, LLC (NMLS #2380070). Their licensed loan originators handle FHA, VA, USDA, Conventional, DSCR, and Hometown Heroes programs.",
     features: [
       "FHA, VA, USDA, Conventional loans",
       "DSCR for investment properties",

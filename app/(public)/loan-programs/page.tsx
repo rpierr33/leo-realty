@@ -1,11 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle, ArrowRight, Star, Shield, Home, DollarSign, TrendingUp } from "lucide-react";
+import LendingPartnerCallout from "@/components/shared/LendingPartnerCallout";
 
 export const metadata: Metadata = {
   title: "Loan Programs — FHA, VA, USDA, Conventional & More",
   description:
-    "Leo Realty offers FHA, VA, USDA, Conventional, DSCR, and Hometown Heroes mortgage programs. Find the right loan for your situation.",
+    "Through our lending partner KLE Mortgage Financing (NMLS #2380070), Leo Realty clients access FHA, VA, USDA, Conventional, DSCR, and Hometown Heroes mortgage programs.",
 };
 
 const programs = [
@@ -175,8 +176,9 @@ export default function LoanProgramsPage() {
             <span className="text-[#C5A55A]">Every Dream</span>
           </h1>
           <p className="text-white/60 text-xl max-w-2xl leading-relaxed">
-            Leo Realty&apos;s licensed loan originators offer a comprehensive range of mortgage
-            programs — from first-time buyer assistance to investment property financing.
+            Through our exclusive lending partner KLE Mortgage Financing (NMLS #2380070),
+            we connect clients with a comprehensive range of mortgage programs — from
+            first-time buyer assistance to investment property financing.
           </p>
         </div>
       </section>
@@ -184,6 +186,9 @@ export default function LoanProgramsPage() {
       {/* Programs */}
       <section className="py-24 md:py-32 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="mb-10">
+            <LendingPartnerCallout />
+          </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {programs.map((program) => (
               <div
@@ -303,7 +308,7 @@ export default function LoanProgramsPage() {
             Not Sure Which Program is Right for You?
           </h2>
           <p className="text-[#0A1628]/65 mb-8 max-w-xl mx-auto">
-            Our licensed loan originators will evaluate your situation and recommend the best option.
+            KLE Mortgage&apos;s licensed loan originators will evaluate your situation and recommend the best option.
           </p>
           <Link
             href="/contact"

@@ -11,9 +11,9 @@ import HomeValuationCTA from "@/components/home/HomeValuationCTA";
 import SavingsCalculator from "@/components/home/SavingsCalculator";
 
 export const metadata: Metadata = {
-  title: "Leo Realty Capital Investments | South Florida Real Estate & Mortgage",
+  title: "Leo Realty Capital Investments | South Florida Real Estate",
   description:
-    "Leo Realty Inc — MR 2% | 32 Years In Business | No One Does It Better. Buy, sell, rent and finance your dream home with South Florida's most trusted brokerage.",
+    "Leo Realty Inc — MR 2% | 32 Years In Business | No One Does It Better. Buy, sell, and rent with South Florida's most trusted brokerage. Mortgage financing through our partner KLE Mortgage.",
 };
 
 export default function HomePage() {

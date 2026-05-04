@@ -132,6 +132,24 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Lending partner disclosure */}
+      <div className="border-t border-white/6 bg-[#08111F]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+          <p className="text-white/45 text-xs leading-relaxed">
+            <span className="text-[#C5A55A] font-semibold">Lending Partner:</span> Mortgage and lending services are provided by{" "}
+            <a
+              href="https://klemortgage.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#C5A55A] underline hover:no-underline"
+            >
+              KLE Mortgage Financing, LLC
+            </a>{" "}
+            (NMLS #2380070), our exclusive lending partner. Leo Realty Capital Investments is a licensed real estate brokerage and does not originate mortgage loans.
+          </p>
+        </div>
+      </div>
+
       {/* Bottom bar */}
       <div className="border-t border-white/6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
