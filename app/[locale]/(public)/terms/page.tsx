@@ -1,25 +1,28 @@
-import { Metadata } from "next";
-
-export const metadata: Metadata = { title: "Terms of Service", description: "Leo Realty Capital Investments Terms of Service" };
+import { useTranslations } from "next-intl";
 
 export default function TermsPage() {
+  const t = useTranslations("Terms");
+  const tLegal = useTranslations("Legal");
+
+  const sections = [
+    { title: t("s1Title"), body: t("s1Body") },
+    { title: t("s2Title"), body: t("s2Body") },
+    { title: t("s3Title"), body: t("s3Body") },
+    { title: t("s4Title"), body: t("s4Body") },
+    { title: t("s5Title"), body: t("s5Body") },
+  ];
+
   return (
     <div className="bg-[#F8F7F4] pt-32 pb-24 min-h-screen">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-3xl p-8 md:p-12 border border-gray-100">
           <div className="inline-flex items-center gap-2 bg-[#C5A55A]/10 rounded-full px-4 py-1.5 mb-4">
-            <span className="text-[#C5A55A] text-sm font-semibold">Legal</span>
+            <span className="text-[#C5A55A] text-sm font-semibold">{tLegal("label")}</span>
           </div>
-          <h1 className="text-4xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-2">Terms of Service</h1>
-          <p className="text-gray-400 text-sm mb-10">Last updated: January 1, 2024</p>
+          <h1 className="text-4xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-2">{t("title")}</h1>
+          <p className="text-gray-400 text-sm mb-10">{tLegal("lastUpdated", { date: t("lastUpdatedDate") })}</p>
           <div className="space-y-8">
-            {[
-              { title: "1. Acceptance of Terms", body: "By accessing and using this website, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website." },
-              { title: "2. Use of Website", body: "This website is provided for informational purposes about Leo Realty Capital Investments services. You agree to use this site lawfully and not to transmit any harmful, offensive, or disruptive content." },
-              { title: "3. Property Listings", body: "Property information displayed on this website is believed to be accurate but is not guaranteed. Prices, availability, and details are subject to change. Contact us directly to verify current information." },
-              { title: "4. Intellectual Property", body: "All content on this website, including text, images, logos, and design, is the property of Leo Realty Capital Investments and is protected by copyright law." },
-              { title: "5. Limitation of Liability", body: "Leo Realty Capital Investments is not liable for any damages arising from your use of this website or reliance on information provided herein." },
-            ].map((section) => (
+            {sections.map((section) => (
               <section key={section.title}>
                 <h2 className="text-xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-3">{section.title}</h2>
                 <p className="text-gray-600 leading-relaxed">{section.body}</p>
