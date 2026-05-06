@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Home, Mail, Phone, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
-/**
- * HomeValuationCTA — "What's Your Home Worth?" lead magnet.
- * Submits to /api/contact with source "valuation".
- * Dark navy background, gold accent.
- */
 export default function HomeValuationCTA() {
+  const t = useTranslations("Valuation");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,15 +19,15 @@ export default function HomeValuationCTA() {
     setError("");
 
     if (!address.trim()) {
-      setError("Please enter your property address.");
+      setError(t("errorAddress"));
       return;
     }
     if (!email.trim()) {
-      setError("Please enter your email address.");
+      setError(t("errorEmail"));
       return;
     }
     if (!phone.trim() || phone.replace(/\D/g, "").length < 10) {
-      setError("Please enter a valid phone number.");
+      setError(t("errorPhone"));
       return;
     }
 
@@ -52,16 +49,12 @@ export default function HomeValuationCTA() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Submission failed");
+        throw new Error(data.error || t("errorGeneric"));
       }
 
       setSubmitted(true);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong. Please try again."
-      );
+      setError(err instanceof Error ? err.message : t("errorGeneric"));
     } finally {
       setLoading(false);
     }
@@ -69,7 +62,6 @@ export default function HomeValuationCTA() {
 
   return (
     <section className="py-24 md:py-32 bg-[#0A1628] relative overflow-hidden">
-      {/* Subtle diagonal grid */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
         style={{
@@ -77,12 +69,10 @@ export default function HomeValuationCTA() {
             "repeating-linear-gradient(135deg, rgba(197,165,90,0.05) 0px, rgba(197,165,90,0.05) 1px, transparent 1px, transparent 60px)",
         }}
       />
-      {/* Gold left accent */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-[#C5A55A]/30 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left copy */}
           <motion.div
             initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -92,28 +82,21 @@ export default function HomeValuationCTA() {
             <div className="flex items-center gap-3 mb-6">
               <span className="block w-10 h-px bg-[#C5A55A]" />
               <span className="text-[#C5A55A] text-xs font-semibold tracking-[0.18em] uppercase">
-                Free Home Valuation
+                {t("label")}
               </span>
             </div>
 
             <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-white leading-tight mb-5">
-              What&apos;s Your Home{" "}
-              <span className="text-[#C5A55A]">Worth?</span>
+              {t("headline1")}{" "}
+              <span className="text-[#C5A55A]">{t("headline2")}</span>
             </h2>
 
             <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-md">
-              Get a free, no-obligation home valuation from South Florida&apos;s most
-              trusted brokerage — 32 years of experience, thousands of homes
-              closed.
+              {t("subcopy")}
             </p>
 
-            {/* Value props */}
             <div className="space-y-3">
-              {[
-                "Accurate market analysis based on real comps",
-                "No obligation — just real information",
-                "Response within one business day",
-              ].map((item) => (
+              {[t("valueProp1"), t("valueProp2"), t("valueProp3")].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <CheckCircle2 className="w-4 h-4 text-[#C5A55A] flex-shrink-0" />
                   <span className="text-white/70 text-sm">{item}</span>
@@ -122,7 +105,6 @@ export default function HomeValuationCTA() {
             </div>
           </motion.div>
 
-          {/* Right — form */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -135,18 +117,14 @@ export default function HomeValuationCTA() {
                   <CheckCircle2 className="w-8 h-8 text-[#C5A55A]" />
                 </div>
                 <h3 className="font-playfair text-2xl font-bold text-white mb-3">
-                  Request Received!
+                  {t("successTitle")}
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
-                  A Leo Realty expert will reach out within one business day
-                  with your free home valuation.
+                  {t("successCopy")}
                 </p>
                 <p className="text-white/40 text-xs mt-4">
-                  Or call us directly:{" "}
-                  <a
-                    href="tel:+13057052030"
-                    className="text-[#C5A55A] hover:underline"
-                  >
+                  {t("successCallPrefix")}{" "}
+                  <a href="tel:+13057052030" className="text-[#C5A55A] hover:underline">
                     (305) 705-2030
                   </a>
                 </p>
@@ -158,13 +136,12 @@ export default function HomeValuationCTA() {
                 className="bg-white/8 border border-white/12 rounded-2xl p-8 space-y-4"
               >
                 <h3 className="font-playfair text-xl font-semibold text-white mb-2">
-                  Get My Free Valuation
+                  {t("formTitle")}
                 </h3>
 
-                {/* Address */}
                 <div>
                   <label className="text-white/70 text-xs font-semibold uppercase tracking-wider mb-2 block">
-                    Property Address
+                    {t("addressLabel")}
                   </label>
                   <div className="relative">
                     <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C5A55A]" />
@@ -172,16 +149,15 @@ export default function HomeValuationCTA() {
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      placeholder="123 Ocean Dr, Miami, FL"
+                      placeholder={t("addressPlaceholder")}
                       className="w-full pl-10 pr-4 py-3 bg-white/8 border border-white/15 rounded-lg text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#C5A55A]/60 transition-colors"
                     />
                   </div>
                 </div>
 
-                {/* Email */}
                 <div>
                   <label className="text-white/70 text-xs font-semibold uppercase tracking-wider mb-2 block">
-                    Email Address
+                    {t("emailLabel")}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C5A55A]" />
@@ -189,16 +165,15 @@ export default function HomeValuationCTA() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@example.com"
+                      placeholder={t("emailPlaceholder")}
                       className="w-full pl-10 pr-4 py-3 bg-white/8 border border-white/15 rounded-lg text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#C5A55A]/60 transition-colors"
                     />
                   </div>
                 </div>
 
-                {/* Phone */}
                 <div>
                   <label className="text-white/70 text-xs font-semibold uppercase tracking-wider mb-2 block">
-                    Phone Number
+                    {t("phoneLabel")}
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C5A55A]" />
@@ -206,7 +181,7 @@ export default function HomeValuationCTA() {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="(305) 555-0100"
+                      placeholder={t("phonePlaceholder")}
                       className="w-full pl-10 pr-4 py-3 bg-white/8 border border-white/15 rounded-lg text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#C5A55A]/60 transition-colors"
                     />
                   </div>
@@ -226,18 +201,18 @@ export default function HomeValuationCTA() {
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending...
+                      {t("submitting")}
                     </>
                   ) : (
                     <>
-                      Get My Free Valuation
+                      {t("submitCta")}
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
 
                 <p className="text-white/30 text-xs text-center">
-                  No obligation. We never share your information.
+                  {t("privacy")}
                 </p>
               </form>
             )}

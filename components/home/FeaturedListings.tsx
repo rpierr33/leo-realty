@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { ArrowRight, Bed, Bath, Ruler, MapPin } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { properties, agents } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -89,52 +90,52 @@ const FALLBACK_LISTINGS = [
   },
 ];
 
-const STATUS_LABELS: Record<string, { label: string }> = {
-  for_sale: { label: "For Sale" },
-  for_rent: { label: "For Rent" },
-  pending: { label: "Pending" },
-  sold: { label: "Sold" },
-  rented: { label: "Rented" },
-};
-
 export default async function FeaturedListings() {
+  const t = await getTranslations("FeaturedListings");
   const listings = await getFeaturedProperties();
   const displayListings = listings.length > 0 ? listings : FALLBACK_LISTINGS;
+
+  const statusLabels: Record<string, string> = {
+    for_sale: t("statusForSale"),
+    for_rent: t("statusForRent"),
+    pending: t("statusPending"),
+    sold: t("statusSold"),
+    rented: t("statusRented"),
+  };
 
   return (
     <section className="py-24 md:py-32 bg-[#FAF8F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
-            <span className="section-label">Featured Listings</span>
+            <span className="section-label">{t("label")}</span>
             <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-medium text-[#0A1628] leading-tight">
-              Premium South Florida
+              {t("headline1")}
               <br />
-              Properties
+              {t("headline2")}
             </h2>
           </div>
           <Link
             href="/properties"
             className="group inline-flex items-center gap-2 text-[#0A1628] font-medium text-sm hover:text-[#C5A55A] transition-colors"
           >
-            View All Properties
+            {t("viewAll")}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
         </div>
 
         {displayListings.length === 0 ? (
           <div className="text-center py-20 text-[#6B7280]">
-            <p className="text-lg mb-3">No featured properties at this time.</p>
+            <p className="text-lg mb-3">{t("emptyTitle")}</p>
             <Link href="/contact" className="text-[#C5A55A] font-semibold underline underline-offset-4">
-              Contact us to find your perfect home
+              {t("emptyCta")}
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {displayListings.map((listing) => {
               const image = listing.images?.[0]?.url;
-              const statusLabel = STATUS_LABELS[listing.status]?.label ?? listing.status;
+              const statusLabel = statusLabels[listing.status] ?? listing.status;
               const isRent = listing.status === "for_rent";
 
               return (
@@ -143,7 +144,6 @@ export default async function FeaturedListings() {
                   href={`/properties/${listing.slug}`}
                   className="group block"
                 >
-                  {/* Large image — 16/9 aspect, no overlay text */}
                   <div className="relative aspect-[16/9] overflow-hidden bg-[#E8E4DE] mb-5">
                     {image ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -158,47 +158,41 @@ export default async function FeaturedListings() {
                       </div>
                     )}
 
-                    {/* Status badge — top left */}
                     <div className="absolute top-4 left-4 bg-white text-[#0A1628] text-[11px] font-semibold tracking-wider uppercase px-3 py-1.5">
                       {statusLabel}
                     </div>
                   </div>
 
-                  {/* Property info — below image, not overlaid */}
                   <div>
-                    {/* Price */}
                     <div className="text-[#C5A55A] font-medium text-xl mb-1">
                       {formatPrice(listing.price)}
-                      {isRent && <span className="text-sm font-normal text-[#6B7280]">/mo</span>}
+                      {isRent && <span className="text-sm font-normal text-[#6B7280]">{t("perMonth")}</span>}
                     </div>
 
-                    {/* Title */}
                     <h3 className="font-playfair font-medium text-[#0A1628] text-lg leading-snug mb-2 group-hover:text-[#C5A55A] transition-colors duration-200">
                       {listing.title}
                     </h3>
 
-                    {/* Location */}
                     <div className="flex items-center gap-1 text-[#9CA3AF] text-sm mb-3">
                       <MapPin className="w-3 h-3" />
                       {listing.address}, {listing.city}, {listing.state}
                     </div>
 
-                    {/* Specs */}
                     <div className="flex items-center gap-5 text-[#6B7280] text-sm pt-3 border-t border-[#E8E4DE]">
                       {listing.bedrooms > 0 && (
                         <span className="flex items-center gap-1.5">
                           <Bed className="w-3.5 h-3.5" />
-                          {listing.bedrooms} Beds
+                          {listing.bedrooms} {t("beds")}
                         </span>
                       )}
                       <span className="flex items-center gap-1.5">
                         <Bath className="w-3.5 h-3.5" />
-                        {listing.bathrooms} Baths
+                        {listing.bathrooms} {t("baths")}
                       </span>
                       {listing.sqft && (
                         <span className="flex items-center gap-1.5">
                           <Ruler className="w-3.5 h-3.5" />
-                          {listing.sqft.toLocaleString()} sqft
+                          {listing.sqft.toLocaleString()} {t("sqft")}
                         </span>
                       )}
                     </div>
@@ -209,13 +203,12 @@ export default async function FeaturedListings() {
           </div>
         )}
 
-        {/* Footer link */}
         <div className="text-center mt-16">
           <Link
             href="/properties"
             className="inline-flex items-center gap-2 border border-[#0A1628]/20 text-[#0A1628] font-medium text-sm px-8 py-3.5 rounded-full hover:bg-[#0A1628] hover:text-white hover:border-[#0A1628] transition-all duration-200"
           >
-            Browse All Properties
+            {t("browseAll")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

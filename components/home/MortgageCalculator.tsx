@@ -2,16 +2,12 @@
 
 import { useState } from "react";
 import { Calculator, DollarSign, ArrowRight } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
 
-function calculateMortgage(
-  price: number,
-  downPct: number,
-  rate: number,
-  years: number
-): { monthly: number; principal: number; totalInterest: number; totalPayment: number } {
+function calculateMortgage(price: number, downPct: number, rate: number, years: number) {
   const principal = price * (1 - downPct / 100);
   const monthlyRate = rate / 100 / 12;
   const numPayments = years * 12;
@@ -26,6 +22,8 @@ function calculateMortgage(
 }
 
 export default function MortgageCalculator() {
+  const t = useTranslations("MortgageCalc");
+  const locale = useLocale();
   const [homePrice, setHomePrice] = useState("350000");
   const [downPayment, setDownPayment] = useState("20");
   const [interestRate, setInterestRate] = useState("7.5");
@@ -40,35 +38,33 @@ export default function MortgageCalculator() {
     setResult(calculateMortgage(price, down, rate, years));
   };
 
+  const localeMap: Record<string, string> = { en: "en-US", fr: "fr-FR", ht: "fr-HT" };
   const fmt = (n: number) =>
-    new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+    new Intl.NumberFormat(localeMap[locale] || "en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(n);
 
   return (
     <section className="py-24 md:py-32 bg-[#0A1628]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left: Info */}
           <div className="lg:pt-4">
-            <span className="section-label">Mortgage Calculator</span>
+            <span className="section-label">{t("label")}</span>
             <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-bold text-white leading-tight mb-6">
-              Estimate Your
+              {t("headline1")}
               <br />
-              <span className="text-[#C5A55A]">Monthly Payment</span>
+              <span className="text-[#C5A55A]">{t("headline2")}</span>
             </h2>
             <p className="text-white/55 text-lg leading-relaxed mb-4">
-              Use this mortgage calculator to get a quick estimate of your monthly payment.
-              KLE Mortgage&apos;s licensed loan originators (NMLS #2380070) are ready to help you find the perfect financing solution.
+              {t("subcopy")}
             </p>
             <p className="text-white/35 text-xs leading-relaxed mb-8">
-              Estimates only. Actual rates, fees, and qualification determined by KLE Mortgage Financing, LLC. Leo Realty Capital Investments is not a mortgage lender.
+              {t("disclaimer")}
             </p>
             <div className="space-y-3 mb-10">
-              {[
-                "FHA loans from 3.5% down",
-                "VA loans with 0% down for veterans",
-                "Hometown Heroes program benefits",
-                "Conventional loans with competitive rates",
-              ].map((item) => (
+              {[t("valueProp1"), t("valueProp2"), t("valueProp3"), t("valueProp4")].map((item) => (
                 <div key={item} className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#C5A55A] flex-shrink-0" />
                   <span className="text-white/55 text-sm">{item}</span>
@@ -79,24 +75,23 @@ export default function MortgageCalculator() {
               href="/contact"
               className="group inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold text-sm px-7 py-3.5 rounded-full hover:bg-[#D4BA7A] transition-colors"
             >
-              Speak With A Loan Originator
+              {t("speakCta")}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
-          {/* Right: Calculator */}
           <div className="bg-[#152238] border border-white/8 rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-7">
               <div className="w-10 h-10 rounded-xl bg-[#C5A55A]/15 flex items-center justify-center">
                 <Calculator className="w-5 h-5 text-[#C5A55A]" />
               </div>
-              <h3 className="font-playfair text-xl font-bold text-white">Payment Estimator</h3>
+              <h3 className="font-playfair text-xl font-bold text-white">{t("estimatorTitle")}</h3>
             </div>
 
             <div className="space-y-5 mb-6">
               <div>
                 <Label htmlFor="home-price" className="text-white/70 font-medium mb-1.5 block text-sm">
-                  Home Price
+                  {t("homePriceLabel")}
                 </Label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -113,7 +108,7 @@ export default function MortgageCalculator() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="down-payment" className="text-white/70 font-medium mb-1.5 block text-sm">
-                    Down Payment (%)
+                    {t("downPaymentLabel")}
                   </Label>
                   <Input
                     id="down-payment"
@@ -125,7 +120,7 @@ export default function MortgageCalculator() {
                 </div>
                 <div>
                   <Label htmlFor="interest-rate" className="text-white/70 font-medium mb-1.5 block text-sm">
-                    Interest Rate (%)
+                    {t("interestRateLabel")}
                   </Label>
                   <Input
                     id="interest-rate"
@@ -139,7 +134,7 @@ export default function MortgageCalculator() {
 
               <div>
                 <Label htmlFor="loan-term" className="text-white/70 font-medium mb-1.5 block text-sm">
-                  Loan Term
+                  {t("loanTermLabel")}
                 </Label>
                 <select
                   id="loan-term"
@@ -147,10 +142,10 @@ export default function MortgageCalculator() {
                   onChange={(e) => setLoanTerm(e.target.value)}
                   className="w-full h-10 px-3 rounded-md border border-white/10 bg-[#0A1628]/50 text-white text-sm focus:outline-none focus:border-[#C5A55A]"
                 >
-                  <option value="10">10 Years</option>
-                  <option value="15">15 Years</option>
-                  <option value="20">20 Years</option>
-                  <option value="30">30 Years</option>
+                  <option value="10">{t("term10")}</option>
+                  <option value="15">{t("term15")}</option>
+                  <option value="20">{t("term20")}</option>
+                  <option value="30">{t("term30")}</option>
                 </select>
               </div>
             </div>
@@ -159,23 +154,23 @@ export default function MortgageCalculator() {
               onClick={handleCalculate}
               className="w-full bg-[#C5A55A] text-[#0A1628] font-bold text-sm py-3.5 rounded-xl hover:bg-[#D4BA7A] transition-colors"
             >
-              Calculate Payment
+              {t("calculateCta")}
             </button>
 
             {result && (
               <div className="mt-6 p-6 bg-[#0A1628] rounded-xl border border-white/6">
                 <div className="text-center mb-5">
-                  <div className="text-white/40 text-xs mb-1 uppercase tracking-wider">Estimated Monthly Payment</div>
+                  <div className="text-white/40 text-xs mb-1 uppercase tracking-wider">{t("estimatedMonthly")}</div>
                   <div className="font-playfair text-4xl font-bold text-[#C5A55A]">
                     {fmt(result.monthly)}
                   </div>
-                  <div className="text-white/30 text-xs mt-1">Principal &amp; Interest only</div>
+                  <div className="text-white/30 text-xs mt-1">{t("principalInterestNote")}</div>
                 </div>
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/8">
                   {[
-                    { label: "Loan Amount", value: fmt(result.principal) },
-                    { label: "Total Interest", value: fmt(result.totalInterest) },
-                    { label: "Total Payment", value: fmt(result.totalPayment) },
+                    { label: t("loanAmount"), value: fmt(result.principal) },
+                    { label: t("totalInterest"), value: fmt(result.totalInterest) },
+                    { label: t("totalPayment"), value: fmt(result.totalPayment) },
                   ].map((s) => (
                     <div key={s.label} className="text-center">
                       <div className="text-white/35 text-[10px] mb-1 uppercase tracking-wide">{s.label}</div>

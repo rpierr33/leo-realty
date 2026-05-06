@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -31,14 +32,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${playfair.variable} ${inter.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">

@@ -1,18 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const stats = [
-  { value: "32+", label: "Years of Excellence", detail: "Since 1992" },
-  { value: "1,000+", label: "Homes Closed", detail: "Across South Florida" },
-  { value: "MR 2%", label: "Commission Rate", detail: "Maximum client savings" },
-  { value: "6", label: "Licensed Professionals", detail: "Realtors & loan originators" },
-];
+import { useTranslations } from "next-intl";
 
 export default function StatsBar() {
+  const t = useTranslations("StatsBar");
+
+  const stats = [
+    { value: "32+", label: t("stat1Label"), detail: t("stat1Detail") },
+    { value: "1,000+", label: t("stat2Label"), detail: t("stat2Detail") },
+    { value: "MR 2%", label: t("stat3Label"), detail: t("stat3Detail") },
+    { value: "6", label: t("stat4Label"), detail: t("stat4Detail") },
+  ];
+
   return (
     <section className="relative bg-[#0A1628] overflow-hidden">
-      {/* Subtle gold accent line at top */}
       <div className="h-px bg-gradient-to-r from-transparent via-[#C5A55A]/40 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
@@ -26,7 +28,6 @@ export default function StatsBar() {
               transition={{ duration: 0.5, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] }}
               className="relative text-center md:text-left md:pl-8 first:pl-0 group"
             >
-              {/* Vertical divider */}
               {i > 0 && (
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 h-12 w-px bg-white/8 hidden md:block" />
               )}
