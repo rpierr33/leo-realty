@@ -143,3 +143,5 @@ main().catch((err) => {
   console.error("Audit script crashed:", err);
   process.exit(2);
 });
+
+export {};

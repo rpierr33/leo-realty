@@ -145,3 +145,5 @@ main().catch((err) => {
   console.error("Health check crashed:", err);
   process.exit(2);
 });
+
+export {};
