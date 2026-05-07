@@ -1,7 +1,8 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Calendar } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { db } from "@/lib/db";
 import { blogPosts, agents } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -167,6 +168,7 @@ Contact us today to find out if you qualify.`,
 };
 
 export default async function BlogPostPage({ params }: Props) {
+  const t = await getTranslations("BlogPost");
   const { slug } = await params;
 
   let post = null;
@@ -203,33 +205,23 @@ export default async function BlogPostPage({ params }: Props) {
   const fallback = FALLBACK_POSTS[slug];
   if (!post && !fallback) notFound();
 
-  const displayPost = post ?? {
-    id: 0,
-    slug,
-    ...fallback!,
-  };
+  const displayPost = post ?? { id: 0, slug, ...fallback! };
   const displayAuthor = authorName ?? displayPost.authorName;
 
   return (
     <div className="pt-24 pb-24 bg-[#F8F7F4] min-h-screen">
       <div className="max-w-4xl mx-auto px-4">
         <Link href="/blog" className="inline-flex items-center gap-2 text-gray-500 hover:text-[#C5A55A] transition-colors mb-8">
-          <ArrowLeft className="w-4 h-4" /> Back to Blog
+          <ArrowLeft className="w-4 h-4" /> {t("backToBlog")}
         </Link>
 
         <article className="bg-white rounded-3xl overflow-hidden border border-gray-100">
-          {/* Cover image */}
           <div className="h-72 md:h-96 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={displayPost.coverImageUrl}
-              alt={displayPost.title}
-              className="w-full h-full object-cover"
-            />
+            <img src={displayPost.coverImageUrl ?? ""} alt={displayPost.title} className="w-full h-full object-cover" />
           </div>
 
           <div className="p-8 md:p-12">
-            {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-gray-400">
               {displayPost.publishedAt && (
                 <span className="flex items-center gap-1">
@@ -240,11 +232,11 @@ export default async function BlogPostPage({ params }: Props) {
               {displayPost.readTimeMinutes && (
                 <span className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  {displayPost.readTimeMinutes} min read
+                  {t("minRead", { minutes: displayPost.readTimeMinutes })}
                 </span>
               )}
               {displayAuthor && (
-                <span>By <span className="text-[#C5A55A] font-medium">{displayAuthor}</span></span>
+                <span>{t("byAuthor")} <span className="text-[#C5A55A] font-medium">{displayAuthor}</span></span>
               )}
             </div>
 
@@ -257,10 +249,8 @@ export default async function BlogPostPage({ params }: Props) {
             </p>
 
             <div className="prose prose-lg prose-gray max-w-none">
-              {displayPost.content.split('\n\n').map((paragraph, i) => {
-                if (paragraph.startsWith('# ')) {
-                  return null; // Skip H1 (shown above)
-                }
+              {(displayPost.content ?? "").split('\n\n').map((paragraph: string, i: number) => {
+                if (paragraph.startsWith('# ')) return null;
                 if (paragraph.startsWith('## ')) {
                   return <h2 key={i} className="text-2xl font-bold text-[#0A1628] font-[var(--font-playfair)] mt-8 mb-4">{paragraph.replace('## ', '')}</h2>;
                 }
@@ -279,7 +269,7 @@ export default async function BlogPostPage({ params }: Props) {
                   );
                 }
                 if (paragraph.startsWith('- ')) {
-                  const items = paragraph.split('\n').filter(l => l.startsWith('- '));
+                  const items = paragraph.split('\n').filter((l: string) => l.startsWith('- '));
                   return (
                     <ul key={i} className="list-disc pl-6 mb-4 space-y-1">
                       {items.map((item, j) => (
@@ -289,7 +279,7 @@ export default async function BlogPostPage({ params }: Props) {
                   );
                 }
                 if (paragraph.match(/^\d+\./)) {
-                  const items = paragraph.split('\n').filter(l => l.match(/^\d+\./));
+                  const items = paragraph.split('\n').filter((l: string) => l.match(/^\d+\./));
                   return (
                     <ol key={i} className="list-decimal pl-6 mb-4 space-y-1">
                       {items.map((item, j) => (
@@ -302,7 +292,6 @@ export default async function BlogPostPage({ params }: Props) {
               })}
             </div>
 
-            {/* Tags */}
             {displayPost.tags && (displayPost.tags as string[]).length > 0 && (
               <div className="flex flex-wrap gap-2 mt-8 pt-8 border-t border-gray-100">
                 {(displayPost.tags as string[]).map((tag) => (
@@ -315,19 +304,11 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </article>
 
-        {/* CTA */}
         <div className="mt-8 bg-[#0A1628] rounded-3xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-white font-[var(--font-playfair)] mb-3">
-            Ready to Take the Next Step?
-          </h3>
-          <p className="text-white/60 mb-6">
-            Leo Realty&apos;s experts are ready to help you achieve your real estate goals.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold px-8 py-4 rounded-full hover:bg-[#D4B96A] transition-colors"
-          >
-            Contact Us Today
+          <h3 className="text-2xl font-bold text-white font-[var(--font-playfair)] mb-3">{t("ctaTitle")}</h3>
+          <p className="text-white/60 mb-6">{t("ctaSubcopy")}</p>
+          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold px-8 py-4 rounded-full hover:bg-[#D4B96A] transition-colors">
+            {t("ctaButton")}
           </Link>
         </div>
       </div>

@@ -1,103 +1,58 @@
-import { Metadata } from "next";
-import Link from "next/link";
 import { Tag, Clock, ArrowRight, Star } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Leo Promotions — Current Deals & Special Programs",
-  description:
-    "Check out Leo Realty's current promotions, special mortgage programs, and seasonal offers for buyers, sellers, and investors.",
-};
-
-const promotions = [
-  {
-    id: 1,
-    title: "MR 2% Commission — Always",
-    badge: "Ongoing",
-    badgeColor: "bg-green-100 text-green-700",
-    description:
-      "Leo Realty's signature offer: sell your home with just 2% total commission. Keep more of your equity while receiving full-service representation. No catch, no fine print.",
-    highlight: "Save thousands on every transaction",
-    details: ["Full MLS listing", "Professional photography", "Open houses", "Negotiation support", "Closing coordination"],
-    cta: "List With Us",
-    href: "/contact",
-    featured: true,
-  },
-  {
-    id: 2,
-    title: "Hometown Heroes Spring Program",
-    badge: "Limited Time",
-    badgeColor: "bg-orange-100 text-orange-700",
-    description:
-      "Frontline workers — teachers, nurses, law enforcement, firefighters — can qualify for up to $35,000 in down payment and closing cost assistance through the Florida Hometown Heroes program.",
-    highlight: "Up to $35,000 in assistance",
-    details: ["Zero down payment options", "Below-market interest rates", "Fast pre-approval", "Expert guidance", "Available statewide"],
-    cta: "Check Eligibility",
-    href: "/loan-programs#hometown-heroes",
-    featured: false,
-  },
-  {
-    id: 3,
-    title: "Free Home Valuation",
-    badge: "Always Free",
-    badgeColor: "bg-blue-100 text-blue-700",
-    description:
-      "Thinking of selling? Get a comprehensive, no-obligation Comparative Market Analysis (CMA) from Leo Realty's experienced agents. Know your home's true market value.",
-    highlight: "No obligation, 100% free",
-    details: ["Detailed market analysis", "Comparable sales review", "Price optimization", "Timing recommendations", "Written report"],
-    cta: "Get Your CMA",
-    href: "/contact",
-    featured: false,
-  },
-  {
-    id: 4,
-    title: "First-Time Buyer Package",
-    badge: "Year-Round",
-    badgeColor: "bg-purple-100 text-purple-700",
-    description:
-      "Leo Realty's comprehensive first-time buyer package includes buyer education, property search, and hand-holding through closing. Mortgage pre-approval is handled by our lending partner KLE Mortgage (NMLS #2380070).",
-    highlight: "End-to-end first-time buyer support",
-    details: ["Buyer consultation", "Mortgage pre-approval", "FHA/USDA/Conventional options", "Inspection guidance", "Post-closing support"],
-    cta: "Start Your Journey",
-    href: "/contact",
-    featured: false,
-  },
-  {
-    id: 5,
-    title: "Investor Consultation",
-    badge: "Free",
-    badgeColor: "bg-yellow-100 text-yellow-700",
-    description:
-      "Free investment property consultation with Leo Realty's investment specialists. Analysis of ROI, cap rates, financing options, and market opportunities across South Florida.",
-    highlight: "Free 60-minute strategy session",
-    details: ["ROI analysis", "DSCR loan options", "Market opportunity review", "Portfolio strategy", "Property sourcing"],
-    cta: "Book Consultation",
-    href: "/contact",
-    featured: false,
-  },
-];
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export default function PromotionsPage() {
+  const t = useTranslations("Promotions");
+
+  const promotions = [
+    {
+      id: 1, title: t("p1Title"), badge: t("p1Badge"), badgeColor: "bg-green-100 text-green-700",
+      description: t("p1Desc"), highlight: t("p1Highlight"),
+      details: [t("p1D1"), t("p1D2"), t("p1D3"), t("p1D4"), t("p1D5")],
+      cta: t("p1Cta"), href: "/contact", featured: true,
+    },
+    {
+      id: 2, title: t("p2Title"), badge: t("p2Badge"), badgeColor: "bg-orange-100 text-orange-700",
+      description: t("p2Desc"), highlight: t("p2Highlight"),
+      details: [t("p2D1"), t("p2D2"), t("p2D3"), t("p2D4"), t("p2D5")],
+      cta: t("p2Cta"), href: "/loan-programs#hometown-heroes", featured: false,
+    },
+    {
+      id: 3, title: t("p3Title"), badge: t("p3Badge"), badgeColor: "bg-blue-100 text-blue-700",
+      description: t("p3Desc"), highlight: t("p3Highlight"),
+      details: [t("p3D1"), t("p3D2"), t("p3D3"), t("p3D4"), t("p3D5")],
+      cta: t("p3Cta"), href: "/contact", featured: false,
+    },
+    {
+      id: 4, title: t("p4Title"), badge: t("p4Badge"), badgeColor: "bg-purple-100 text-purple-700",
+      description: t("p4Desc"), highlight: t("p4Highlight"),
+      details: [t("p4D1"), t("p4D2"), t("p4D3"), t("p4D4"), t("p4D5")],
+      cta: t("p4Cta"), href: "/contact", featured: false,
+    },
+    {
+      id: 5, title: t("p5Title"), badge: t("p5Badge"), badgeColor: "bg-yellow-100 text-yellow-700",
+      description: t("p5Desc"), highlight: t("p5Highlight"),
+      details: [t("p5D1"), t("p5D2"), t("p5D3"), t("p5D4"), t("p5D5")],
+      cta: t("p5Cta"), href: "/contact", featured: false,
+    },
+  ];
+
   return (
     <>
-      {/* Hero */}
       <section className="bg-[#0A1628] pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="inline-flex items-center gap-2 bg-[#C5A55A]/20 border border-[#C5A55A]/40 rounded-full px-4 py-2 mb-6">
             <Star className="w-4 h-4 text-[#C5A55A]" />
-            <span className="text-[#C5A55A] text-sm font-medium">Leo Promotions</span>
+            <span className="text-[#C5A55A] text-sm font-medium">{t("label")}</span>
           </div>
           <h1 className="text-5xl font-bold text-white font-[var(--font-playfair)] mb-4">
-            Current Offers &{" "}
-            <span className="text-[#C5A55A]">Special Programs</span>
+            {t("title1")}{" "}<span className="text-[#C5A55A]">{t("title2")}</span>
           </h1>
-          <p className="text-white/70 text-xl max-w-2xl">
-            Leo Realty is committed to delivering maximum value. Take advantage
-            of our current promotions and special programs.
-          </p>
+          <p className="text-white/70 text-xl max-w-2xl">{t("subcopy")}</p>
         </div>
       </section>
 
-      {/* Promotions */}
       <section className="py-24 bg-[#F8F7F4]">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -112,7 +67,7 @@ export default function PromotionsPage() {
               >
                 <div className="flex items-start justify-between mb-5">
                   <div className="flex items-center gap-2">
-                    <Tag className={`w-5 h-5 ${promo.featured ? "text-[#C5A55A]" : "text-[#C5A55A]"}`} />
+                    <Tag className="w-5 h-5 text-[#C5A55A]" />
                     <span className={`text-xs font-bold px-3 py-1 rounded-full ${promo.badgeColor}`}>
                       {promo.badge}
                     </span>
@@ -120,20 +75,16 @@ export default function PromotionsPage() {
                   {promo.featured && (
                     <div className="flex items-center gap-1 text-[#C5A55A] text-xs font-medium">
                       <Clock className="w-3.5 h-3.5" />
-                      Our Signature Offer
+                      {t("signatureOffer")}
                     </div>
                   )}
                 </div>
 
-                <h2 className={`text-2xl font-bold font-[var(--font-playfair)] mb-3 ${
-                  promo.featured ? "text-white" : "text-[#0A1628]"
-                }`}>
+                <h2 className={`text-2xl font-bold font-[var(--font-playfair)] mb-3 ${promo.featured ? "text-white" : "text-[#0A1628]"}`}>
                   {promo.title}
                 </h2>
 
-                <div className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-4 ${
-                  promo.featured ? "bg-[#C5A55A]/20 text-[#C5A55A]" : "bg-[#0A1628]/5 text-[#0A1628]"
-                }`}>
+                <div className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-4 ${promo.featured ? "bg-[#C5A55A]/20 text-[#C5A55A]" : "bg-[#0A1628]/5 text-[#0A1628]"}`}>
                   <Star className="w-3.5 h-3.5" />
                   <span className="text-sm font-semibold">{promo.highlight}</span>
                 </div>
@@ -164,9 +115,7 @@ export default function PromotionsPage() {
                 <Link
                   href={promo.href}
                   className={`inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full transition-colors ${
-                    promo.featured
-                      ? "bg-[#C5A55A] text-[#0A1628] hover:bg-[#D4B96A]"
-                      : "bg-[#0A1628] text-white hover:bg-[#162447]"
+                    promo.featured ? "bg-[#C5A55A] text-[#0A1628] hover:bg-[#D4B96A]" : "bg-[#0A1628] text-white hover:bg-[#162447]"
                   }`}
                 >
                   {promo.cta} <ArrowRight className="w-4 h-4" />
@@ -177,20 +126,12 @@ export default function PromotionsPage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-16 bg-[#C5A55A]">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-4">
-            Questions About Our Programs?
-          </h2>
-          <p className="text-[#0A1628]/70 mb-8">
-            Our team is ready to explain every option and help you find the best fit.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-bold px-8 py-4 rounded-full hover:bg-[#162447] transition-colors"
-          >
-            Contact Us Today <ArrowRight className="w-4 h-4" />
+          <h2 className="text-3xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-4">{t("ctaTitle")}</h2>
+          <p className="text-[#0A1628]/70 mb-8">{t("ctaSubcopy")}</p>
+          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-bold px-8 py-4 rounded-full hover:bg-[#162447] transition-colors">
+            {t("ctaButton")} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
