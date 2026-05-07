@@ -33,12 +33,35 @@ function safeJson(value: unknown): string {
     .replace(/&/g, "\\u0026");
 }
 
+// Map neighborhood slugs to translation key prefixes
+const SLUG_TO_KEY: Record<string, string> = {
+  "north-miami-beach": "nmb",
+  "miami-beach": "mb",
+  "brickell": "br",
+  "aventura": "av",
+  "coral-gables": "cg",
+  "doral": "do",
+  "hollywood": "ho",
+  "pembroke-pines": "pp",
+};
+
 export default async function NeighborhoodPage({ params }: Props) {
   const { slug } = await params;
   const n = getNeighborhoodBySlug(slug);
   if (!n) notFound();
 
   const t = await getTranslations("Neighborhood");
+  const tN = await getTranslations("Neighborhoods");
+  const keyPrefix = SLUG_TO_KEY[slug] ?? "nmb";
+
+  const description = tN(`${keyPrefix}_description` as "nmb_description");
+  const vibe = tN(`${keyPrefix}_vibe` as "nmb_vibe");
+  const highlights = [
+    tN(`${keyPrefix}_h1` as "nmb_h1"),
+    tN(`${keyPrefix}_h2` as "nmb_h2"),
+    tN(`${keyPrefix}_h3` as "nmb_h3"),
+    tN(`${keyPrefix}_h4` as "nmb_h4"),
+  ];
 
   // Try to fetch a few listings filtered to this neighborhood (best-effort).
   let listings: Awaited<ReturnType<typeof searchProperties>>["listings"] = [];
@@ -49,12 +72,12 @@ export default async function NeighborhoodPage({ params }: Props) {
     // MLS may not be activated yet — skip gracefully.
   }
 
-  // Place schema for this neighborhood
+  // Place schema for this neighborhood (always English description for AI context)
   const placeSchema = {
     "@context": "https://schema.org",
     "@type": "Place",
     name: `${n.name}, ${n.state}`,
-    description: n.description,
+    description,
     geo: { "@type": "GeoCoordinates", latitude: n.lat, longitude: n.lng },
     containedInPlace: { "@type": "AdministrativeArea", name: n.county },
   };
@@ -80,7 +103,7 @@ export default async function NeighborhoodPage({ params }: Props) {
               {n.name}, {n.state}
             </span>
           </h1>
-          <p className="text-white/60 text-xl max-w-2xl leading-relaxed">{n.vibe}</p>
+          <p className="text-white/60 text-xl max-w-2xl leading-relaxed">{vibe}</p>
         </div>
       </section>
 
@@ -92,14 +115,14 @@ export default async function NeighborhoodPage({ params }: Props) {
                 {t("intro")}
               </h2>
               <p className="text-[#374151] text-lg leading-relaxed mb-10">
-                {n.description}
+                {description}
               </p>
 
               <h3 className="font-playfair text-2xl font-bold text-[#0A1628] mb-5">
                 {t("highlightsHeader")}
               </h3>
               <ul className="space-y-3 mb-10">
-                {n.highlights.map((h) => (
+                {highlights.map((h) => (
                   <li
                     key={h}
                     className="flex items-start gap-3 text-[#374151] leading-relaxed"

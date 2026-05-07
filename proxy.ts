@@ -7,6 +7,8 @@ export const config = {
   matcher: [
     // Exclude API, Next internals, admin, files with extensions, and Next.js
     // metadata routes (sitemap.xml, robots.txt, opengraph-image, etc.)
-    "/((?!api|_next|_vercel|admin|sitemap\\.xml|robots\\.txt|opengraph-image|twitter-image|icon|apple-icon|manifest\\.json|llms\\.txt|.*\\..*).*)",
+    // The (?:.*?/)? lets per-locale metadata routes (/fr/opengraph-image,
+    // /ht/opengraph-image) bypass the i18n routing too.
+    "/((?!api|_next|_vercel|admin|sitemap\\.xml|robots\\.txt|llms\\.txt|manifest\\.json|.*\\..*|(?:[a-z]{2}/)?(?:opengraph-image|twitter-image|icon|apple-icon)).*)",
   ],
 };

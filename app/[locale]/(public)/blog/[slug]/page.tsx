@@ -21,10 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const FALLBACK_POSTS: Record<string, {
+const FALLBACK_POSTS_DATA: Record<string, {
   title: string;
   excerpt: string;
-  content: string;
+  legacyContent: string;
   coverImageUrl: string;
   publishedAt: Date;
   readTimeMinutes: number;
@@ -35,7 +35,7 @@ const FALLBACK_POSTS: Record<string, {
   "investing-in-real-estate": {
     title: "Investing in Real Estate: A Complete Guide",
     excerpt: "Real estate remains one of the most powerful wealth-building tools available.",
-    content: `# Investing in Real Estate: A Complete Guide
+    legacyContent: `# Investing in Real Estate: A Complete Guide
 
 Real estate investment has long been one of the most reliable paths to building wealth. Unlike stocks or bonds, real estate provides tangible assets that can generate passive income while appreciating in value over time.
 
@@ -81,7 +81,7 @@ Contact Leo Realty today for a free investment consultation. Our experienced tea
   "investment-properties-south-florida": {
     title: "Investment Properties in South Florida",
     excerpt: "South Florida's real estate market continues to offer exceptional investment opportunities.",
-    content: `# Investment Properties in South Florida
+    legacyContent: `# Investment Properties in South Florida
 
 South Florida remains one of the hottest real estate markets in the United States. With year-round sunshine, no state income tax, and a rapidly growing population, the region offers exceptional opportunities for real estate investors.
 
@@ -122,7 +122,7 @@ Ready to start investing? Contact Leo Realty today.`,
   "hometown-heroes-program": {
     title: "Understanding the Hometown Heroes Program",
     excerpt: "Florida's Hometown Heroes Housing Program is changing lives for frontline workers.",
-    content: `# Understanding the Hometown Heroes Program
+    legacyContent: `# Understanding the Hometown Heroes Program
 
 Florida's Hometown Heroes Housing Program is one of the most significant housing assistance initiatives in the state's history. Designed to help frontline workers achieve homeownership, this program provides substantial financial assistance to eligible buyers.
 
@@ -167,8 +167,16 @@ Contact us today to find out if you qualify.`,
   },
 };
 
+// Map fallback slugs to translation keys for translated content body
+const FALLBACK_CONTENT_KEYS: Record<string, "p1Content" | "p2Content" | "p3Content"> = {
+  "investing-in-real-estate": "p1Content",
+  "investment-properties-south-florida": "p2Content",
+  "hometown-heroes-program": "p3Content",
+};
+
 export default async function BlogPostPage({ params }: Props) {
   const t = await getTranslations("BlogPost");
+  const tBlog = await getTranslations("BlogContent");
   const { slug } = await params;
 
   let post = null;
@@ -202,11 +210,22 @@ export default async function BlogPostPage({ params }: Props) {
     // fallback
   }
 
-  const fallback = FALLBACK_POSTS[slug];
+  const fallback = FALLBACK_POSTS_DATA[slug];
   if (!post && !fallback) notFound();
 
-  const displayPost = post ?? { id: 0, slug, ...fallback! };
-  const displayAuthor = authorName ?? displayPost.authorName;
+  // For fallback posts, pull the translated content from the catalog
+  const fallbackContentKey = FALLBACK_CONTENT_KEYS[slug];
+  const fallbackContent = fallbackContentKey
+    ? tBlog(fallbackContentKey)
+    : fallback?.legacyContent ?? "";
+
+  const displayPost = post ?? {
+    id: 0,
+    slug,
+    ...fallback!,
+    content: fallbackContent,
+  };
+  const displayAuthor = authorName ?? (displayPost as { authorName?: string }).authorName;
 
   return (
     <div className="pt-24 pb-24 bg-[#F8F7F4] min-h-screen">
