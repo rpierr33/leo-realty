@@ -3,6 +3,7 @@ import { Home, DollarSign, Key, TrendingUp, ArrowRight, CheckCircle } from "luci
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { FaqSection } from "@/components/seo/FaqSection";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -12,6 +13,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default function ServicesPage() {
   const t = useTranslations("Services");
+  const tFaq = useTranslations("FaqServices");
+  const tSection = useTranslations("FaqSection");
+
+  const faqItems = [
+    { question: tFaq("q1"), answer: tFaq("a1") },
+    { question: tFaq("q2"), answer: tFaq("a2") },
+    { question: tFaq("q3"), answer: tFaq("a3") },
+    { question: tFaq("q4"), answer: tFaq("a4") },
+    { question: tFaq("q5"), answer: tFaq("a5") },
+  ];
 
   const services = [
     {
@@ -138,6 +149,8 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      <FaqSection label={tSection("label")} items={faqItems} />
 
       <section className="py-16 bg-[#C5A55A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { NEIGHBORHOODS } from "@/lib/neighborhoods";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://leorealtycapitalinvestments.com";
@@ -41,6 +42,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
         alternates: {
           languages: Object.fromEntries(
             routing.locales.map((alt) => [alt, localePath(alt, route.path)])
+          ),
+        },
+      });
+    }
+  }
+
+  // Programmatic neighborhood pages — one per (locale × neighborhood)
+  for (const n of NEIGHBORHOODS) {
+    for (const locale of routing.locales) {
+      const path = `/neighborhoods/${n.slug}`;
+      entries.push({
+        url: localePath(locale, path),
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.7,
+        alternates: {
+          languages: Object.fromEntries(
+            routing.locales.map((alt) => [alt, localePath(alt, path)])
           ),
         },
       });

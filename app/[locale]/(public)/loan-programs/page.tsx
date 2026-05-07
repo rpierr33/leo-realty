@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import LendingPartnerCallout from "@/components/shared/LendingPartnerCallout";
+import { FaqSection } from "@/components/seo/FaqSection";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -13,6 +14,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default function LoanProgramsPage() {
   const t = useTranslations("LoanPrograms");
+  const tFaq = useTranslations("FaqLoanPrograms");
+  const tSection = useTranslations("FaqSection");
+
+  const faqItems = [
+    { question: tFaq("q1"), answer: tFaq("a1") },
+    { question: tFaq("q2"), answer: tFaq("a2") },
+    { question: tFaq("q3"), answer: tFaq("a3") },
+    { question: tFaq("q4"), answer: tFaq("a4") },
+    { question: tFaq("q5"), answer: tFaq("a5") },
+    { question: tFaq("q6"), answer: tFaq("a6") },
+    { question: tFaq("q7"), answer: tFaq("a7") },
+  ];
 
   const programs = [
     {
@@ -149,6 +162,8 @@ export default function LoanProgramsPage() {
           </div>
         </div>
       </section>
+
+      <FaqSection label={tSection("label")} items={faqItems} />
 
       <section className="py-16 bg-[#C5A55A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">

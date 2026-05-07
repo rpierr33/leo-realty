@@ -5,6 +5,8 @@ export default createMiddleware(routing);
 
 export const config = {
   matcher: [
-    "/((?!api|_next|_vercel|admin|.*\\..*).*)",
+    // Exclude API, Next internals, admin, files with extensions, and Next.js
+    // metadata routes (sitemap.xml, robots.txt, opengraph-image, etc.)
+    "/((?!api|_next|_vercel|admin|sitemap\\.xml|robots\\.txt|opengraph-image|twitter-image|icon|apple-icon|manifest\\.json|llms\\.txt|.*\\..*).*)",
   ],
 };

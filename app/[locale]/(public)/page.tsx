@@ -10,6 +10,7 @@ import MortgageCalculator from "@/components/home/MortgageCalculator";
 import CTABanner from "@/components/home/CTABanner";
 import HomeValuationCTA from "@/components/home/HomeValuationCTA";
 import SavingsCalculator from "@/components/home/SavingsCalculator";
+import { FaqSection } from "@/components/seo/FaqSection";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -17,19 +18,32 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t("homeTitle"), description: t("homeDescription") };
 }
 
-export default function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const tFaq = await getTranslations({ locale, namespace: "FaqHome" });
+  const tSection = await getTranslations({ locale, namespace: "FaqSection" });
+
+  const faqItems = [
+    { question: tFaq("q1"), answer: tFaq("a1") },
+    { question: tFaq("q2"), answer: tFaq("a2") },
+    { question: tFaq("q3"), answer: tFaq("a3") },
+    { question: tFaq("q4"), answer: tFaq("a4") },
+    { question: tFaq("q5"), answer: tFaq("a5") },
+    { question: tFaq("q6"), answer: tFaq("a6") },
+  ];
+
   return (
     <>
       <HeroSection />
       <StatsBar />
       <ProgramsSection />
       <FeaturedListings />
-      {/* Lead magnet between featured properties and testimonials */}
       <HomeValuationCTA />
       <SavingsCalculator />
       <TeamPreview />
       <MortgageCalculator />
       <TestimonialsSection />
+      <FaqSection label={tSection("label")} items={faqItems} />
       <CTABanner />
     </>
   );

@@ -754,6 +754,63 @@
     "defaultPrefix": "Tous les programmes hypothécaires et services de prêt sont offerts via notre partenaire de prêt exclusif,",
     "defaultSuffix": "(NMLS #2380070). Leo Realty Capital Investments est un courtier immobilier agréé et n'octroie pas de prêts hypothécaires."
   },
+  "FaqSection": {
+    "label": "Questions fréquemment posées"
+  },
+  "FaqHome": {
+    "q1": "Qu'est-ce que la commission MR 2% ?",
+    "a1": "MR 2% est le modèle de commission forfaitaire de Leo Realty — les vendeurs ne paient que 2% de commission totale sur la vente d'une maison, contre la norme de 4-6% de l'industrie. Sur une maison à 500 000 $, cela permet au vendeur d'économiser environ 20 000 $ par rapport à une commission de 6%. Fondé en 1992 par Leopold Evariste, ce modèle de commission est l'offre signature de la maison de courtage.",
+    "q2": "Depuis combien de temps Leo Realty est-il en activité ?",
+    "a2": "Leo Realty Capital Investments a été fondé en 1992 par Leopold Evariste — plus de 32 ans d'expertise immobilière dans le sud de la Floride. La maison de courtage a clôturé plus de 1 000 transactions à travers les comtés de Miami-Dade, Broward et Palm Beach.",
+    "q3": "Où se trouve le bureau de Leo Realty ?",
+    "a3": "Le bureau de Leo Realty est situé au 909 North Miami Beach Blvd, Suite 301A, North Miami Beach, FL 33162. Heures d'ouverture : du lundi au vendredi, de 9h00 à 17h00 (heure de l'Est). Téléphone : (305) 705-2030.",
+    "q4": "Quelles langues Leo Realty propose-t-il à ses clients ?",
+    "a4": "Leo Realty sert ses clients en anglais, en français et en créole haïtien — reflétant les communautés diverses du sud de la Floride et la grande diaspora haïtienne des comtés de Miami-Dade et Broward.",
+    "q5": "Quelles régions du sud de la Floride Leo Realty dessert-il ?",
+    "a5": "Leo Realty opère dans tout le sud de la Floride — comtés de Miami-Dade, Broward et Palm Beach. Les zones de service courantes incluent Miami Beach, Brickell, Aventura, Coral Gables, Doral, Hialeah, North Miami Beach, Hollywood, Pembroke Pines et Fort Lauderdale.",
+    "q6": "Qui gère les hypothèques pour les clients de Leo Realty ?",
+    "a6": "Le financement hypothécaire est fourni par le partenaire de prêt exclusif de Leo Realty, KLE Mortgage Financing, LLC (NMLS #2380070). Les prêteurs agréés de KLE gèrent les programmes FHA, VA, USDA, conventionnels, DSCR et Hometown Heroes."
+  },
+  "FaqLoanPrograms": {
+    "q1": "Qu'est-ce que le programme Florida Hometown Heroes Housing ?",
+    "a1": "Le programme Florida Hometown Heroes Housing est une initiative financée par l'État offrant une aide à la mise de fonds et aux frais de clôture — jusqu'à 35 000 $ — pour les travailleurs de première ligne de Floride : enseignants, infirmières, policiers, pompiers, vétérans militaires et travailleurs de garde d'enfants. Il comprend des taux d'intérêt sous le marché et une deuxième hypothèque différée. Disponible pour les premiers acheteurs résidents de la Floride.",
+    "q2": "Quelle est la mise de fonds minimale pour un prêt FHA ?",
+    "a2": "Les prêts FHA nécessitent aussi peu que 3,5% de mise de fonds pour les emprunteurs avec une cote de crédit de 580 ou plus. Les emprunteurs ayant des cotes entre 500 et 579 peuvent encore se qualifier avec une mise de fonds de 10%. Les fonds de don sont autorisés pour la mise de fonds.",
+    "q3": "Les vétérans obtiennent-ils vraiment 0% de mise de fonds sur un prêt VA ?",
+    "a3": "Oui. Les prêts VA sont exclusivement disponibles pour les vétérans, les militaires actifs et les conjoints survivants éligibles, sans mise de fonds requise et sans assurance hypothécaire privée (PMI). Les prêts VA offrent également des taux d'intérêt compétitifs et l'avantage d'être cessibles.",
+    "q4": "Qu'est-ce qu'un prêt DSCR et à qui s'adresse-t-il ?",
+    "a4": "Un prêt DSCR (Debt Service Coverage Ratio) qualifie les investisseurs en fonction des revenus locatifs de la propriété — pas du revenu personnel. Cela rend les prêts DSCR idéaux pour les investisseurs immobiliers qui développent leur portefeuille locatif sans avoir besoin de documenter leurs revenus W-2. Mise de fonds minimum de 20% généralement requise.",
+    "q5": "Quelqu'un avec un faible crédit peut-il obtenir une hypothèque ?",
+    "a5": "Oui. Les prêts FHA acceptent des cotes de crédit aussi basses que 580 (et parfois 500 avec une mise de fonds plus importante). Les prêts USDA et VA exigent généralement 620-640+. Les prêteurs agréés de KLE Mortgage Financing évaluent l'ensemble du tableau financier de chaque emprunteur — pas seulement la cote de crédit — pour trouver le bon programme.",
+    "q6": "Quelle est la différence entre les prêts conventionnels et les prêts garantis par l'État ?",
+    "a6": "Les prêts conventionnels ne sont pas assurés par le gouvernement fédéral — ils nécessitent généralement 3-20% de mise de fonds et un crédit de 620+, mais le PMI peut être supprimé à 20% d'équité. Les prêts garantis par l'État (FHA, VA, USDA) ont une assurance fédérale, permettant des mises de fonds plus faibles et un crédit plus flexible, mais ont souvent une assurance hypothécaire permanente.",
+    "q7": "Qui octroie les hypothèques — Leo Realty ou quelqu'un d'autre ?",
+    "a7": "Les prêts hypothécaires sont octroyés par le partenaire de prêt exclusif de Leo Realty, KLE Mortgage Financing, LLC (NMLS #2380070). Leo Realty Capital Investments est un courtier immobilier agréé et n'octroie pas directement de prêts hypothécaires."
+  },
+  "FaqServices": {
+    "q1": "Comment fonctionne la vente avec la commission MR 2% ?",
+    "a1": "Les vendeurs paient à Leo Realty une commission totale forfaitaire de 2% sur la vente — la moitié de la norme de 4-6% de l'industrie. Leo Realty gère l'inscription complète : analyse comparative du marché, photographie professionnelle, placement MLS, marketing numérique, journées portes ouvertes, négociation et coordination de clôture. L'économie par rapport à une commission de 6% sur une maison à 500 000 $ est d'environ 20 000 $.",
+    "q2": "Que comprend le processus d'achat de Leo Realty ?",
+    "a2": "Le processus d'achat de Leo Realty commence par une consultation acheteur gratuite pour comprendre vos objectifs et votre budget. La pré-approbation est gérée par KLE Mortgage Financing (NMLS #2380070). Une fois pré-approuvé, votre agent fournit un accès MLS complet et négocie en votre nom. Leo Realty coordonne l'inspection, l'évaluation et la clôture, avec un suivi post-clôture.",
+    "q3": "Leo Realty gère-t-il les propriétés locatives ?",
+    "a3": "Oui. Leo Realty gère les locations résidentielles (appartements et maisons), les espaces commerciaux, les propriétés multifamiliales et les baux à court et à long terme dans tout le sud de la Floride. L'équipe aide à la négociation du bail et au traitement des demandes.",
+    "q4": "Qu'est-ce qui est inclus dans une évaluation gratuite de la maison ?",
+    "a4": "Leo Realty fournit une analyse comparative complète du marché (CMA) sans frais : analyse détaillée du marché, ventes comparables récentes, recommandations d'optimisation du prix, recommandations de timing et un rapport écrit. Le CMA n'a aucune obligation — c'est de l'information pure pour le propriétaire.",
+    "q5": "Quel est le délai de clôture typique pour une vente ou un achat ?",
+    "a5": "La plupart des transactions du sud de la Floride se clôturent dans les 30 à 45 jours suivant la signature du contrat. Les transactions au comptant peuvent se clôturer en aussi peu que 7 à 14 jours. Les achats financés par hypothèque dépendent du timing du prêteur — KLE Mortgage Financing traite généralement en 21 à 30 jours. Leo Realty coordonne l'inspection, l'évaluation et le titre pour respecter le calendrier."
+  },
+  "Neighborhood": {
+    "label": "Guide du quartier",
+    "homesFor": "Maisons à vendre à",
+    "intro": "À propos de ce quartier",
+    "highlightsHeader": "Points forts locaux",
+    "zipCodesHeader": "Codes postaux desservis",
+    "listingsHeader": "Annonces récentes à",
+    "viewAllListings": "Parcourir toutes les annonces de {city}",
+    "ctaTitle": "Vous cherchez à acheter ou vendre à {city} ?",
+    "ctaSubcopy": "La commission MR 2% de Leo Realty fait économiser des milliers aux vendeurs. Consultation gratuite, sans engagement.",
+    "ctaButton": "Planifier une consultation"
+  },
   "Footer": {
     "tagline": "32 ans d'expertise immobilière de confiance dans le sud de la Floride. Hypothèques simplifiées. Rêves réalisés.",
     "tagShort": "Personne ne fait mieux",
