@@ -34,6 +34,9 @@ export default function LanguageSwitcher({
     router.replace(pathname, { locale: next });
   };
 
+  const displayCode = (loc: string) =>
+    loc === "ht" ? "KR" : loc.toUpperCase();
+
   return (
     <div ref={ref} className={cn("relative", className)}>
       <button
@@ -43,7 +46,7 @@ export default function LanguageSwitcher({
         aria-label={t("label")}
       >
         <Globe className="w-4 h-4" />
-        <span className="uppercase">{locale}</span>
+        <span>{displayCode(locale)}</span>
         <ChevronDown
           className={cn(
             "w-3 h-3 transition-transform",
