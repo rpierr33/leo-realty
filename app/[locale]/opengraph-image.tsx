@@ -2,7 +2,8 @@ import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 
-export const runtime = "edge";
+// Node.js runtime (default) — edge runtime is incompatible with
+// generateImageMetadata which Next.js treats like generateStaticParams.
 export const alt = "Leo Realty Capital Investments";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
