@@ -106,6 +106,55 @@ GEO ≠ SEO. SEO gets you ranked; GEO gets you cited. AI assistants pull from wi
 - `~/.claude/skills/marketing-skills/skills/seo-audit/SKILL.md` — auditing checklist
 - `memory/polyglot_recipe.md` — i18n recipe (already integrated; growth work uses it)
 
+## i18n Audit — MANDATORY before claiming "translation complete"
+
+When you add or modify translatable content, the audit is non-negotiable:
+
+```bash
+npm run dev          # in one terminal
+npm run i18n:audit   # in another — runs scripts/i18n-audit.ts
+```
+
+The audit asserts that every route × locale combination has:
+- A unique `<title>` per locale
+- A unique `<meta name="description">` per locale
+- A unique `<h1>` per locale
+
+It exits non-zero on any leak. CI runs the same script on every PR via
+`.github/workflows/i18n.yml`. **Do not claim translation work is complete
+until the audit passes.**
+
+### Architectural invariants (do not undo)
+
+1. **Catalog wins over DB on non-default locales.** When a route renders
+   content that lives in BOTH a database table AND a translation catalog
+   (e.g., blog posts), non-English locales must prefer the catalog. The
+   DB only has English; the catalog has all 3 locales. See
+   `app/[locale]/(public)/blog/[slug]/page.tsx` — the `useTranslated`
+   guard is the invariant.
+
+2. **`generateMetadata` must use translated content.** Every page's
+   `generateMetadata` function must pull title/description from the
+   translated catalog when the locale is not English. Body content
+   alone is not enough — `<title>`, `<meta description>`, and OG tags
+   are SEO-critical and AI-citation-critical.
+
+3. **Per-locale `<html lang>`.** Root layout uses `getLocale()` from
+   `next-intl/server`. Static `lang="en"` is forbidden.
+
+### Adding new pages — i18n checklist
+
+Before submitting a PR that adds a new page or component:
+
+- [ ] Strings added to all 3 message catalogs (en/fr/ht.json)?
+- [ ] `generateMetadata` returns translated title/description?
+- [ ] `<h1>`, `<h2>` headings use `t()` calls?
+- [ ] Form labels, placeholders, validation messages translated?
+- [ ] Any DB-fallback path checks locale before defaulting to DB English?
+- [ ] Visible body text uses `useTranslations()` or `getTranslations()`?
+- [ ] `npm run i18n:audit` passes locally?
+- [ ] If new route, added to ROUTES array in `scripts/i18n-audit.ts`?
+
 ## When to Hand Back to User
 - Google Business Profile claim/verification (Google requires the actual business owner)
 - Schema validator results that need credentialed sign-off
