@@ -1,15 +1,23 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Search, Phone } from "lucide-react";
 
 export default function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const t = useTranslations("Hero");
+
+  const stats = [
+    { value: t("stat1Value"), label: t("stat1Label") },
+    { value: t("stat2Value"), label: t("stat2Label") },
+    { value: t("stat3Value"), label: t("stat3Label") },
+  ];
 
   return (
     <section
@@ -35,14 +43,12 @@ export default function HeroSection() {
       {/* Bottom fade */}
       <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-[#07101F] to-transparent" />
 
-      {/* Content — two column: text left, Leopold right */}
       <motion.div
         className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-36 pb-24"
         style={{ opacity }}
       >
         <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div className="max-w-xl">
-          {/* Overline — "MR 2% · 32 Years In Business" */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -51,32 +57,28 @@ export default function HeroSection() {
           >
             <span className="block w-10 h-px bg-[#C5A55A]" />
             <span className="text-[#C5A55A] text-xs font-semibold tracking-[0.18em] uppercase">
-              MR 2% &nbsp;·&nbsp; 32 Years In Business
+              {t("overline")}
             </span>
           </motion.div>
 
-          {/* Main headline — single flowing line */}
           <motion.h1
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="font-playfair text-[clamp(2.8rem,6vw,5.5rem)] font-medium text-white leading-[1.06] tracking-tight mb-6"
           >
-            No One Does It Better
+            {t("headline")}
           </motion.h1>
 
-          {/* Sub-copy */}
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-white/55 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl"
           >
-            South Florida&apos;s most trusted brokerage — helping families buy, sell,
-            rent, and finance their dream homes for over three decades.
+            {t("subcopy")}
           </motion.p>
 
-          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -88,7 +90,7 @@ export default function HeroSection() {
               className="group inline-flex items-center gap-2.5 bg-[#C5A55A] text-[#0A1628] font-semibold text-sm px-7 py-4 rounded-full hover:bg-[#D4BA7A] transition-all duration-200"
             >
               <Search className="w-4 h-4" />
-              Search Properties
+              {t("searchCta")}
             </Link>
             <a
               href="tel:+13057052030"
@@ -99,7 +101,6 @@ export default function HeroSection() {
             </a>
           </motion.div>
 
-          {/* Social proof — single star snippet below CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -114,24 +115,19 @@ export default function HeroSection() {
               ))}
             </div>
             <span className="text-white/50 text-xs">
-              5/5 stars —{" "}
-              <span className="text-white/70 italic">&ldquo;No one does it better&rdquo;</span>
-              {" "}— Sarah Johnson
+              {t("starsLabel")} —{" "}
+              <span className="text-white/70 italic">&ldquo;{t("testimonialQuote")}&rdquo;</span>
+              {" "}— {t("testimonialAuthor")}
             </span>
           </motion.div>
 
-          {/* Stats row */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap gap-10 pt-8 border-t border-white/8"
           >
-            {[
-              { value: "32+", label: "Years In Business" },
-              { value: "1,000+", label: "Homes Closed" },
-              { value: "MR 2%", label: "Commission Rate" },
-            ].map((stat) => (
+            {stats.map((stat) => (
               <div key={stat.label}>
                 <div className="font-playfair text-3xl font-medium text-[#C5A55A] leading-none mb-1">
                   {stat.value}
@@ -142,7 +138,6 @@ export default function HeroSection() {
           </motion.div>
         </div>
 
-          {/* Leopold's photo — right column */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -165,14 +160,13 @@ export default function HeroSection() {
                 style={{ backgroundColor: "#C5A55A", color: "#07101F" }}
               >
                 <p className="font-playfair text-sm font-semibold">Leopold Evariste</p>
-                <p className="text-xs opacity-80">CEO & Founder · 32 Years</p>
+                <p className="text-xs opacity-80">{t("ceoTitle")}</p>
               </div>
             </div>
           </motion.div>
         </div>
       </motion.div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -185,7 +179,7 @@ export default function HeroSection() {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="w-px h-12 bg-gradient-to-b from-transparent via-[#C5A55A]/40 to-transparent"
         />
-        <span className="text-white/25 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+        <span className="text-white/25 text-[10px] tracking-[0.2em] uppercase">{t("scroll")}</span>
       </motion.div>
     </section>
   );

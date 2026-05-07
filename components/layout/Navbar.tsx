@@ -1,37 +1,39 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { Phone, Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Properties", href: "/properties" },
-  {
-    label: "Services",
-    href: "/services",
-    children: [
-      { label: "Buy a Home", href: "/services#buying" },
-      { label: "Sell Your Home", href: "/services#selling" },
-      { label: "Rent a Property", href: "/services#renting" },
-      { label: "Mortgage Lending", href: "/services#mortgage" },
-    ],
-  },
-  { label: "Loan Programs", href: "/loan-programs" },
-  { label: "Team", href: "/team" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
-];
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const t = useTranslations("Nav");
+
+  const navLinks = [
+    { label: t("home"), href: "/" },
+    { label: t("about"), href: "/about" },
+    { label: t("properties"), href: "/properties" },
+    {
+      label: t("services"),
+      href: "/services",
+      children: [
+        { label: t("buyHome"), href: "/services#buying" },
+        { label: t("sellHome"), href: "/services#selling" },
+        { label: t("rentProperty"), href: "/services#renting" },
+        { label: t("mortgage"), href: "/services#mortgage" },
+      ],
+    },
+    { label: t("loanPrograms"), href: "/loan-programs" },
+    { label: t("team"), href: "/team" },
+    { label: t("blog"), href: "/blog" },
+    { label: t("contact"), href: "/contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -65,7 +67,7 @@ export default function Navbar() {
       >
         <div className="bg-[#C5A55A]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between py-2 text-xs font-semibold text-[#0A1628]">
-            <span className="tracking-wide">MR 2% Commission &nbsp;·&nbsp; 32 Years In Business &nbsp;·&nbsp; No One Does It Better</span>
+            <span className="tracking-wide">{t("announcement")}</span>
             <a
               href="tel:+13057052030"
               className="flex items-center gap-1.5 hover:opacity-70 transition-opacity"
@@ -153,8 +155,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* CTA + Language */}
+          <div className="hidden lg:flex items-center gap-2">
+            <LanguageSwitcher />
             <a
               href="tel:+13057052030"
               className="flex items-center gap-1.5 text-white/70 text-sm hover:text-[#C5A55A] transition-colors"
@@ -166,18 +169,21 @@ export default function Navbar() {
               href="/contact"
               className="bg-[#C5A55A] text-[#0A1628] font-semibold text-sm px-5 py-2.5 rounded-full hover:bg-[#D4BA7A] transition-colors shadow-lg shadow-[#C5A55A]/20"
             >
-              Get Started
+              {t("getStarted")}
             </Link>
           </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            className="lg:hidden text-white p-2 -mr-2"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle navigation"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile menu toggle + lang */}
+          <div className="lg:hidden flex items-center gap-1">
+            <LanguageSwitcher />
+            <button
+              className="text-white p-2 -mr-2"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={t("toggleNavigation")}
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -223,7 +229,7 @@ export default function Navbar() {
                 href="/contact"
                 className="block text-center bg-[#C5A55A] text-[#0A1628] font-semibold text-sm py-3 rounded-full hover:bg-[#D4BA7A] transition-colors"
               >
-                Get Started
+                {t("getStarted")}
               </Link>
             </div>
           </div>

@@ -1,17 +1,14 @@
 "use client";
 
 import { Phone, Search, MessageSquare } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
-/**
- * FloatingContactBar — sticky bottom mobile CTA bar.
- * Hidden on md+ screens (md:hidden). Glassmorphism background.
- * Phone: (305) 705-2030
- */
 export default function FloatingContactBar() {
+  const t = useTranslations("FloatingContactBar");
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
-      {/* Glassmorphism bar */}
       <div
         className="flex items-stretch border-t border-white/10"
         style={{
@@ -20,50 +17,44 @@ export default function FloatingContactBar() {
           WebkitBackdropFilter: "blur(20px)",
         }}
       >
-        {/* Call Now */}
         <a
           href="tel:+13057052030"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-3 text-white/80 active:bg-white/10 transition-colors"
-          aria-label="Call Leo Realty"
+          aria-label={t("ariaCall")}
         >
           <Phone className="w-5 h-5 text-[#C5A55A]" />
           <span className="text-[10px] font-semibold tracking-wide uppercase text-white/70">
-            Call Now
+            {t("callNow")}
           </span>
         </a>
 
-        {/* Divider */}
         <div className="w-px bg-white/10 my-2" />
 
-        {/* Find Property */}
         <Link
           href="/properties"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-3 text-white/80 active:bg-white/10 transition-colors"
-          aria-label="Find a property"
+          aria-label={t("ariaFind")}
         >
           <Search className="w-5 h-5 text-[#C5A55A]" />
           <span className="text-[10px] font-semibold tracking-wide uppercase text-white/70">
-            Find Property
+            {t("findProperty")}
           </span>
         </Link>
 
-        {/* Divider */}
         <div className="w-px bg-white/10 my-2" />
 
-        {/* Contact */}
         <Link
           href="/contact"
           className="flex flex-1 flex-col items-center justify-center gap-1 py-3 text-white/80 active:bg-white/10 transition-colors"
-          aria-label="Contact us"
+          aria-label={t("ariaContact")}
         >
           <MessageSquare className="w-5 h-5 text-[#C5A55A]" />
           <span className="text-[10px] font-semibold tracking-wide uppercase text-white/70">
-            Contact
+            {t("contact")}
           </span>
         </Link>
       </div>
 
-      {/* Safe area spacer for iOS */}
       <div
         className="bg-[#07101F]"
         style={{ height: "env(safe-area-inset-bottom, 0px)" }}

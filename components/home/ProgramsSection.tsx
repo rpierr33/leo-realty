@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import LendingPartnerCallout from "@/components/shared/LendingPartnerCallout";
-// Use inline SVG to avoid lucide-react Turbopack module evaluation bug
+
 function ArrowRightIcon({ className }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -12,71 +13,39 @@ function ArrowRightIcon({ className }: { className?: string }) {
   );
 }
 
-const programs = [
-  {
-    title: "Homebuyer Program",
-    description: "First-time buyers guided from pre-approval to closing. Low down payments, competitive rates.",
-    highlight: "As low as 3% down",
-    href: "/loan-programs#first-time-buyer",
-  },
-  {
-    title: "Hometown Heroes",
-    description: "Special mortgage benefits for Florida's teachers, nurses, law enforcement, and firefighters.",
-    highlight: "Exclusive FL program",
-    href: "/loan-programs#hometown-heroes",
-    featured: true,
-  },
-  {
-    title: "FHA Loans",
-    description: "Government-backed financing with flexible credit requirements. Accessible for moderate credit or limited savings.",
-    highlight: "3.5% minimum down",
-    href: "/loan-programs#fha",
-  },
-  {
-    title: "VA Loans",
-    description: "Zero down payment and no PMI for veterans and active military. You served — let us serve you.",
-    highlight: "0% down available",
-    href: "/loan-programs#va",
-  },
-  {
-    title: "DSCR Loans",
-    description: "Qualify on property cash flow, not personal income. Built for real estate investors expanding their portfolio.",
-    highlight: "No income docs needed",
-    href: "/loan-programs#dscr",
-  },
-  {
-    title: "USDA Loans",
-    description: "Zero down for eligible rural and suburban properties. Government-backed with competitive rates.",
-    highlight: "100% financing",
-    href: "/loan-programs#usda",
-  },
-];
-
 export default function ProgramsSection() {
+  const t = useTranslations("Programs");
+
+  const programs = [
+    { title: t("p1Title"), description: t("p1Desc"), highlight: t("p1Highlight"), href: "/loan-programs#first-time-buyer" },
+    { title: t("p2Title"), description: t("p2Desc"), highlight: t("p2Highlight"), href: "/loan-programs#hometown-heroes", featured: true },
+    { title: t("p3Title"), description: t("p3Desc"), highlight: t("p3Highlight"), href: "/loan-programs#fha" },
+    { title: t("p4Title"), description: t("p4Desc"), highlight: t("p4Highlight"), href: "/loan-programs#va" },
+    { title: t("p5Title"), description: t("p5Desc"), highlight: t("p5Highlight"), href: "/loan-programs#dscr" },
+    { title: t("p6Title"), description: t("p6Desc"), highlight: t("p6Highlight"), href: "/loan-programs#usda" },
+  ];
+
   return (
     <section className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end mb-16">
           <div>
-            <span className="section-label">Mortgage Programs</span>
+            <span className="section-label">{t("label")}</span>
             <h2 className="font-playfair text-[clamp(2rem,4vw,3.25rem)] font-medium text-[#0A1628] leading-tight">
-              Financing For
+              {t("headline1")}
               <br />
-              Every Dream
+              {t("headline2")}
             </h2>
           </div>
           <p className="text-[#9CA3AF] text-base leading-relaxed lg:text-right max-w-sm lg:ml-auto">
-            KLE Mortgage&apos;s licensed loan originators find the right program for your unique situation — not just the standard option.
+            {t("subcopy")}
           </p>
         </div>
 
-        {/* Lending partner disclosure */}
         <div className="mb-12">
           <LendingPartnerCallout />
         </div>
 
-        {/* Programs — editorial text list with gold accent lines */}
         <div className="divide-y divide-[#E8E4DE]">
           {programs.map((program, i) => (
             <motion.div
@@ -91,7 +60,6 @@ export default function ProgramsSection() {
                 className="group flex items-start justify-between gap-8 py-7 hover:bg-[#FAF8F5] transition-colors duration-150 -mx-4 px-4"
               >
                 <div className="flex gap-6 items-start">
-                  {/* Gold line accent */}
                   <div className="w-px h-full min-h-[2.5rem] bg-[#C5A55A] flex-shrink-0 mt-1.5" style={{ width: "2px" }} />
 
                   <div>
@@ -101,7 +69,7 @@ export default function ProgramsSection() {
                       </h3>
                       {program.featured && (
                         <span className="text-[10px] font-semibold uppercase tracking-wider text-[#C5A55A] border border-[#C5A55A]/30 px-2 py-0.5">
-                          Featured
+                          {t("featuredBadge")}
                         </span>
                       )}
                     </div>
@@ -127,7 +95,7 @@ export default function ProgramsSection() {
             href="/loan-programs"
             className="inline-flex items-center gap-2 bg-[#0A1628] text-white font-medium text-sm px-8 py-4 rounded-full hover:bg-[#152238] transition-colors"
           >
-            View All Programs
+            {t("viewAll")}
             <ArrowRightIcon className="w-4 h-4" />
           </Link>
         </div>
