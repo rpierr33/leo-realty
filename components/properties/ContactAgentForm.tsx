@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
+import { captureUtm, HONEYPOT_STYLE } from "@/lib/utm";
 
 export default function ContactAgentForm({
   propertyTitle,
@@ -20,6 +21,7 @@ export default function ContactAgentForm({
   propertyId: number;
 }) {
   const t = useTranslations("ContactAgent");
+  const locale = useLocale() as "en" | "fr" | "ht";
   const [submitted, setSubmitted] = useState(false);
 
   const schema = z.object({
@@ -27,6 +29,7 @@ export default function ContactAgentForm({
     email: z.string().email(t("errorEmail")),
     phone: z.string().min(10, t("errorPhone")),
     message: z.string().min(10, t("errorMessage")),
+    website: z.string().optional(), // honeypot
   });
 
   type FormData = z.infer<typeof schema>;
@@ -43,9 +46,16 @@ export default function ContactAgentForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...data,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
           interest: "buying",
           source: `property_inquiry:${propertyId}`,
+          propertyId,
+          locale,
+          utm: captureUtm(),
+          website: data.website,
         }),
       });
       if (!res.ok) throw new Error("Failed to submit");
@@ -75,6 +85,17 @@ export default function ContactAgentForm({
     <div className="bg-white rounded-2xl p-6 border border-gray-100">
       <h3 className="font-bold text-[#0A1628] font-[var(--font-playfair)] mb-5">{t("title")}</h3>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div aria-hidden="true" style={HONEYPOT_STYLE}>
+          <label>
+            Website (do not fill)
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              {...register("website")}
+            />
+          </label>
+        </div>
         <div>
           <Label htmlFor="name" className="text-sm font-medium text-gray-700 mb-1.5 block">{t("fullNameLabel")}</Label>
           <Input id="name" {...register("name")} placeholder={t("fullNamePlaceholder")} className={errors.name ? "border-red-400" : ""} />

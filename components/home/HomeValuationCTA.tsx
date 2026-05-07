@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Home, Mail, Phone, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
+import { captureUtm, HONEYPOT_STYLE } from "@/lib/utm";
 
 export default function HomeValuationCTA() {
   const t = useTranslations("Valuation");
+  const locale = useLocale() as "en" | "fr" | "ht";
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -44,6 +47,9 @@ export default function HomeValuationCTA() {
           interest: "selling",
           message: `Home valuation request for: ${address}`,
           source: "valuation",
+          locale,
+          utm: captureUtm(),
+          website,
         }),
       });
 
@@ -135,6 +141,18 @@ export default function HomeValuationCTA() {
                 noValidate
                 className="bg-white/8 border border-white/12 rounded-2xl p-8 space-y-4"
               >
+                <div aria-hidden="true" style={HONEYPOT_STYLE}>
+                  <label>
+                    Website (do not fill)
+                    <input
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                    />
+                  </label>
+                </div>
                 <h3 className="font-playfair text-xl font-semibold text-white mb-2">
                   {t("formTitle")}
                 </h3>

@@ -4,16 +4,18 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
+import { captureUtm, HONEYPOT_STYLE } from "@/lib/utm";
 
 export default function ContactForm() {
   const t = useTranslations("Contact");
+  const locale = useLocale() as "en" | "fr" | "ht";
   const [submitted, setSubmitted] = useState(false);
 
   const schema = z.object({
@@ -23,6 +25,7 @@ export default function ContactForm() {
     subject: z.string().min(5, t("errorSubject")),
     interest: z.enum(["buying", "selling", "renting", "mortgage", "other"]),
     message: z.string().min(20, t("errorMessage")),
+    website: z.string().optional(), // honeypot
   });
 
   type FormData = z.infer<typeof schema>;
@@ -49,6 +52,9 @@ export default function ContactForm() {
           interest: data.interest,
           message: `Subject: ${data.subject}\n\n${data.message}`,
           source: "contact_form",
+          locale,
+          utm: captureUtm(),
+          website: data.website,
         }),
       });
       if (!res.ok) throw new Error("Failed to submit");
@@ -80,6 +86,17 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div aria-hidden="true" style={HONEYPOT_STYLE}>
+        <label>
+          Website (do not fill)
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            {...register("website")}
+          />
+        </label>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <Label htmlFor="name" className="text-sm font-medium text-gray-700 mb-1.5 block">
