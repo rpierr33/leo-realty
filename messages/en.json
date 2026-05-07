@@ -747,6 +747,13 @@
     "fairHousingTitle": "Fair Housing Statement",
     "fairHousingDescription": "Leo Realty Capital Investments Fair Housing Policy"
   },
+  "LendingCallout": {
+    "compactPrefix": "Mortgage and lending services provided by",
+    "compactSuffix": "(NMLS #2380070), our exclusive lending partner. Leo Realty Capital Investments is a licensed real estate brokerage and is not a mortgage lender.",
+    "defaultLabel": "Lending Partner",
+    "defaultPrefix": "All mortgage programs and lending services are offered through our exclusive lending partner,",
+    "defaultSuffix": "(NMLS #2380070). Leo Realty Capital Investments is a licensed real estate brokerage and does not originate mortgage loans."
+  },
   "Footer": {
     "tagline": "32 years of trusted real estate expertise in South Florida. Mortgages Made Easy. Dreams Made Real.",
     "tagShort": "No One Does It Better",

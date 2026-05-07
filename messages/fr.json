@@ -747,6 +747,13 @@
     "fairHousingTitle": "Déclaration de logement équitable",
     "fairHousingDescription": "Politique de logement équitable de Leo Realty Capital Investments"
   },
+  "LendingCallout": {
+    "compactPrefix": "Services hypothécaires et de prêt fournis par",
+    "compactSuffix": "(NMLS #2380070), notre partenaire de prêt exclusif. Leo Realty Capital Investments est un courtier immobilier agréé et n'est pas un prêteur hypothécaire.",
+    "defaultLabel": "Partenaire de prêt",
+    "defaultPrefix": "Tous les programmes hypothécaires et services de prêt sont offerts via notre partenaire de prêt exclusif,",
+    "defaultSuffix": "(NMLS #2380070). Leo Realty Capital Investments est un courtier immobilier agréé et n'octroie pas de prêts hypothécaires."
+  },
   "Footer": {
     "tagline": "32 ans d'expertise immobilière de confiance dans le sud de la Floride. Hypothèques simplifiées. Rêves réalisés.",
     "tagShort": "Personne ne fait mieux",

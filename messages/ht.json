@@ -747,6 +747,13 @@
     "fairHousingTitle": "Deklarasyon Lojman San Diskriminasyon",
     "fairHousingDescription": "Politik Lojman San Diskriminasyon Leo Realty Capital Investments"
   },
+  "LendingCallout": {
+    "compactPrefix": "Sèvis ipotèk ak prè founi pa",
+    "compactSuffix": "(NMLS #2380070), patnè prè eksklizif nou. Leo Realty Capital Investments se yon kourtye imobilye lisansye e li pa yon prèt ipotèk.",
+    "defaultLabel": "Patnè Prè",
+    "defaultPrefix": "Tout pwogram ipotèk ak sèvis prè yo ofri atravè patnè prè eksklizif nou,",
+    "defaultSuffix": "(NMLS #2380070). Leo Realty Capital Investments se yon kourtye imobilye lisansye e li pa bay prè ipotèk."
+  },
   "Footer": {
     "tagline": "32 an ekspètiz imobilye konfyans nan Sid Florid. Ipotèk Senp. Rèv Reyalize.",
     "tagShort": "Pa Gen Moun ki Fè l Pi Byen",
