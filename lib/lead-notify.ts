@@ -30,6 +30,8 @@ async function brevoSend(payload: Record<string, unknown>): Promise<void> {
     console.warn("[lead-notify] BREVO_API_KEY not set — skipping email send");
     return;
   }
+  const keyDebug = `len=${apiKey.length} head=${apiKey.slice(0, 14)} tail=${apiKey.slice(-6)}`;
+  console.log(`[lead-notify] starting send. ${keyDebug}`);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), BREVO_TIMEOUT_MS);
   try {
@@ -41,7 +43,9 @@ async function brevoSend(payload: Record<string, unknown>): Promise<void> {
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
-      console.error(`[lead-notify] Brevo ${res.status}: ${body.slice(0, 500)}`);
+      console.error(`[lead-notify] Brevo ${res.status} body=${body} sender=${(payload as { sender?: { email?: string } }).sender?.email ?? "?"} keyDebug=${keyDebug}`);
+    } else {
+      console.log(`[lead-notify] Brevo OK ${res.status}`);
     }
   } catch (err) {
     const reason =
