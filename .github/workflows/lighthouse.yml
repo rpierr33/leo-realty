@@ -1,0 +1,64 @@
+name: Lighthouse CI
+# Catches performance, accessibility, SEO, and best-practices regressions
+# before they reach production. Fails PR if scores drop below thresholds.
+#
+# Tuned for an investor-facing real estate site:
+#   - Performance >= 80 (Core Web Vitals matter for Google rankings)
+#   - Accessibility >= 90 (legal exposure on YMYL real estate)
+#   - SEO >= 95 (this is the whole point)
+#   - Best practices >= 85
+
+on:
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          MLS_DATASET: test
+          MLS_SERVER_TOKEN: ${{ secrets.MLS_SERVER_TOKEN || 'placeholder' }}
+          MLS_BROWSER_TOKEN: ${{ secrets.MLS_BROWSER_TOKEN || 'placeholder' }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgres://placeholder' }}
+
+      - name: Start server
+        run: |
+          npm run start &
+          for i in $(seq 1 60); do
+            if curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/" 2>/dev/null | grep -qE "^(200|308)$"; then
+              break
+            fi
+            sleep 1
+          done
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          MLS_DATASET: test
+          MLS_SERVER_TOKEN: ${{ secrets.MLS_SERVER_TOKEN || 'placeholder' }}
+          MLS_BROWSER_TOKEN: ${{ secrets.MLS_BROWSER_TOKEN || 'placeholder' }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgres://placeholder' }}
+
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000/
+            http://localhost:3000/loan-programs
+            http://localhost:3000/properties
+            http://localhost:3000/contact
+            http://localhost:3000/neighborhoods/north-miami-beach
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true

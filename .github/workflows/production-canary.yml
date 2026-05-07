@@ -1,0 +1,45 @@
+name: Production canary
+# Runs the health check against PRODUCTION after every push to master.
+# Catches deploys that succeeded on Vercel's side but produce broken
+# pages (DB connection lost, env var missing, runtime error, etc.).
+#
+# Triggers a GitHub commit status fail — visible in the master commit
+# history and Vercel project — and posts to Discord/Slack if configured.
+
+on:
+  push:
+    branches: [master, main]
+  schedule:
+    # Hourly canary so we catch regressions from external causes
+    # (Vercel infra, DB outage, MLS API change, etc.)
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Wait for Vercel production deploy
+        # Give Vercel up to 5 minutes to ship the latest commit before checking
+        if: github.event_name == 'push'
+        run: sleep 90
+
+      - name: Run health check against production
+        env:
+          AUDIT_BASE_URL: https://leorealtycapitalinvestments.com
+        run: npm run health:check
+
+      - name: Run i18n audit against production
+        env:
+          AUDIT_BASE_URL: https://leorealtycapitalinvestments.com
+        run: npm run i18n:audit

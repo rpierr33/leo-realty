@@ -12,7 +12,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "npx tsx lib/db/seed.ts",
     "db:studio": "drizzle-kit studio",
-    "i18n:audit": "tsx scripts/i18n-audit.ts"
+    "i18n:audit": "tsx scripts/i18n-audit.ts",
+    "health:check": "tsx scripts/health-check.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
