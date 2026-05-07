@@ -16,6 +16,7 @@ type LeadForEmail = {
 };
 
 const BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email";
+const BREVO_TIMEOUT_MS = 8_000;
 
 function escape(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>
@@ -29,18 +30,25 @@ async function brevoSend(payload: Record<string, unknown>): Promise<void> {
     console.warn("[lead-notify] BREVO_API_KEY not set — skipping email send");
     return;
   }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), BREVO_TIMEOUT_MS);
   try {
     const res = await fetch(BREVO_ENDPOINT, {
       method: "POST",
       headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     });
     if (!res.ok) {
       const body = await res.text().catch(() => "");
       console.error(`[lead-notify] Brevo ${res.status}: ${body.slice(0, 500)}`);
     }
   } catch (err) {
-    console.error("[lead-notify] Brevo fetch failed:", err);
+    const reason =
+      err instanceof Error && err.name === "AbortError" ? `timeout after ${BREVO_TIMEOUT_MS}ms` : err;
+    console.error("[lead-notify] Brevo fetch failed:", reason);
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

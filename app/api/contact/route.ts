@@ -144,7 +144,10 @@ export async function POST(req: NextRequest) {
       })
       .returning({ id: leads.id });
 
-    // 6. Fire-and-forget notifications. Email failure must NEVER 500 the response.
+    // 6. Notifications. Awaited so they survive the serverless function lifecycle —
+    //    a fire-and-forget Promise gets killed when the response returns. Each helper
+    //    has its own 8s AbortController timeout and absorbs failures, so this never
+    //    500s the lead-creation response.
     const leadForEmail = {
       id: inserted.id,
       firstName,
@@ -156,11 +159,10 @@ export async function POST(req: NextRequest) {
       source: sourceTag,
       assignedAgentName: picked?.name ?? null,
     };
-    Promise.allSettled([notifyTeam(leadForEmail), sendAutoresponder(leadForEmail, data.locale)]).catch(
-      () => {
-        // already logged inside helpers
-      },
-    );
+    await Promise.allSettled([
+      notifyTeam(leadForEmail),
+      sendAutoresponder(leadForEmail, data.locale),
+    ]);
 
     return NextResponse.json({ success: true, message: "Lead created", id: inserted.id }, { status: 201 });
   } catch (err) {
