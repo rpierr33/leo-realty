@@ -5,6 +5,7 @@ name: i18n audit
 #   2. Build-time TypeScript passes (catches param signature changes etc)
 #   3. i18n audit script verifies every route × locale has unique
 #      <title>, <meta description>, <h1>
+#   4. Health check verifies routes return 200 + JSON-LD schemas valid
 
 on:
   pull_request:
@@ -29,7 +30,6 @@ jobs:
       - name: Build (catches compile + Next 16 metadata route errors)
         run: npm run build
         env:
-          # Build-time env — minimum needed to compile.
           NEXT_PUBLIC_SITE_URL: https://leorealtycapitalinvestments.com
           MLS_DATASET: test
           MLS_SERVER_TOKEN: ${{ secrets.MLS_SERVER_TOKEN || 'placeholder' }}
@@ -39,7 +39,6 @@ jobs:
       - name: Start production server
         run: |
           npm run start &
-          # Wait for server to be ready (up to 60s)
           for i in $(seq 1 60); do
             if curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000/" 2>/dev/null | grep -qE "^(200|308)$"; then
               echo "Server up after ${i}s"
@@ -55,4 +54,11 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgres://placeholder' }}
 
       - name: Run i18n audit
-        run: AUDIT_BASE_URL=http://localhost:3000 npm run i18n:audit
+        env:
+          AUDIT_BASE_URL: http://localhost:3000
+        run: npm run i18n:audit
+
+      - name: Run health check (smoke + JSON-LD validation)
+        env:
+          AUDIT_BASE_URL: http://localhost:3000
+        run: npm run health:check
