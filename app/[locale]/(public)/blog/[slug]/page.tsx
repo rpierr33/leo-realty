@@ -8,17 +8,46 @@ import { blogPosts, agents } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { formatDate } from "@/lib/utils/format";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ locale: string; slug: string }> };
+
+const FALLBACK_TITLE_KEYS: Record<string, "p1Title" | "p2Title" | "p3Title"> = {
+  "investing-in-real-estate": "p1Title",
+  "investment-properties-south-florida": "p2Title",
+  "hometown-heroes-program": "p3Title",
+};
+
+const FALLBACK_EXCERPT_KEYS: Record<string, "p1Excerpt" | "p2Excerpt" | "p3Excerpt"> = {
+  "investing-in-real-estate": "p1Excerpt",
+  "investment-properties-south-florida": "p2Excerpt",
+  "hometown-heroes-program": "p3Excerpt",
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const tBlog = await getTranslations({ locale, namespace: "BlogContent" });
+
+  const titleKey = FALLBACK_TITLE_KEYS[slug];
+  const excerptKey = FALLBACK_EXCERPT_KEYS[slug];
+
+  // For known fallback posts on non-English locales, the DB only has
+  // English so we prefer the translated catalog. For English (or
+  // non-fallback slugs), prefer the DB.
+  if (titleKey && excerptKey && locale !== "en") {
+    return { title: tBlog(titleKey), description: tBlog(excerptKey) };
+  }
+
   try {
     const [post] = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
-    if (!post) return { title: "Post Not Found" };
-    return { title: post.title, description: post.excerpt };
+    if (post) return { title: post.title, description: post.excerpt };
   } catch {
-    return { title: "Blog Post" };
+    // fall through
   }
+
+  if (titleKey && excerptKey) {
+    return { title: tBlog(titleKey), description: tBlog(excerptKey) };
+  }
+
+  return { title: "Blog Post" };
 }
 
 const FALLBACK_POSTS_DATA: Record<string, {
@@ -175,9 +204,9 @@ const FALLBACK_CONTENT_KEYS: Record<string, "p1Content" | "p2Content" | "p3Conte
 };
 
 export default async function BlogPostPage({ params }: Props) {
-  const t = await getTranslations("BlogPost");
-  const tBlog = await getTranslations("BlogContent");
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "BlogPost" });
+  const tBlog = await getTranslations({ locale, namespace: "BlogContent" });
 
   let post = null;
   let authorName = null;
@@ -213,17 +242,36 @@ export default async function BlogPostPage({ params }: Props) {
   const fallback = FALLBACK_POSTS_DATA[slug];
   if (!post && !fallback) notFound();
 
-  // For fallback posts, pull the translated content from the catalog
+  // For fallback posts, pull translated title/excerpt/content from the catalog
   const fallbackContentKey = FALLBACK_CONTENT_KEYS[slug];
+  const fallbackTitleKey = FALLBACK_TITLE_KEYS[slug];
+  const fallbackExcerptKey = FALLBACK_EXCERPT_KEYS[slug];
+
   const fallbackContent = fallbackContentKey
     ? tBlog(fallbackContentKey)
     : fallback?.legacyContent ?? "";
+  const fallbackTitle = fallbackTitleKey ? tBlog(fallbackTitleKey) : fallback?.title ?? "";
+  const fallbackExcerpt = fallbackExcerptKey ? tBlog(fallbackExcerptKey) : fallback?.excerpt ?? "";
 
-  const displayPost = post ?? {
-    id: 0,
+  // For known fallback slugs on non-English locales, the DB only has the
+  // English version — prefer the translated catalog. Otherwise prefer DB.
+  const useTranslated = fallbackTitleKey && locale !== "en";
+
+  const displayPost = (post && !useTranslated) ? {
+    ...post,
+    content: post.content ?? fallbackContent,
+  } : {
+    id: post?.id ?? 0,
     slug,
-    ...fallback!,
+    ...(fallback ?? {}),
+    title: fallbackTitle,
+    excerpt: fallbackExcerpt,
     content: fallbackContent,
+    coverImageUrl: post?.coverImageUrl ?? fallback?.coverImageUrl,
+    publishedAt: post?.publishedAt ?? fallback?.publishedAt,
+    readTimeMinutes: post?.readTimeMinutes ?? fallback?.readTimeMinutes,
+    category: post?.category ?? fallback?.category,
+    tags: post?.tags ?? fallback?.tags,
   };
   const displayAuthor = authorName ?? (displayPost as { authorName?: string }).authorName;
 

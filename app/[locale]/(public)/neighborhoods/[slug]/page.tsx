@@ -16,12 +16,21 @@ export function generateStaticParams() {
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const n = getNeighborhoodBySlug(slug);
   if (!n) return { title: "Neighborhood Not Found" };
+  const t = await getTranslations({ locale, namespace: "Neighborhood" });
+  const tN = await getTranslations({ locale, namespace: "Neighborhoods" });
+  const SLUG_KEY: Record<string, string> = {
+    "north-miami-beach": "nmb", "miami-beach": "mb", "brickell": "br",
+    "aventura": "av", "coral-gables": "cg", "doral": "do",
+    "hollywood": "ho", "pembroke-pines": "pp",
+  };
+  const keyPrefix = SLUG_KEY[slug] ?? "nmb";
+  const description = tN(`${keyPrefix}_description` as "nmb_description");
   return {
-    title: `Homes for Sale in ${n.name}, ${n.state} — Leo Realty`,
-    description: `${n.description.slice(0, 155)}`.trim(),
+    title: `${t("homesFor")} ${n.name}, ${n.state}`,
+    description: description.slice(0, 155).trim(),
     alternates: { canonical: `${SITE_URL}/neighborhoods/${n.slug}` },
   };
 }
