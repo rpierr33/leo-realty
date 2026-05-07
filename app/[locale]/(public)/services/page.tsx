@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { Home, DollarSign, Key, TrendingUp, ArrowRight, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("servicesTitle"), description: t("servicesDescription") };
+}
 
 export default function ServicesPage() {
   const t = useTranslations("Services");

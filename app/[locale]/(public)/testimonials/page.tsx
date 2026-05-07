@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { Star, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("testimonialsTitle"), description: t("testimonialsDescription") };
+}
 
 export default function TestimonialsPage() {
   const t = useTranslations("TestimonialsPage");

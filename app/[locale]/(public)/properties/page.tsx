@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Bed, Bath, Ruler, MapPin, ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -5,6 +6,12 @@ import PropertyFilters from "@/components/properties/PropertyFilters";
 import { searchProperties, formatPriceUSD, type SearchParams as MlsSearchParams } from "@/lib/mls";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("propertiesTitle"), description: t("propertiesDescription") };
+}
 
 type SearchParams = {
   type?: string;

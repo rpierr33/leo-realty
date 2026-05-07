@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -6,6 +7,12 @@ import { agents } from "@/lib/db/schema";
 import { eq, asc } from "drizzle-orm";
 
 export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("teamTitle"), description: t("teamDescription") };
+}
 
 async function getTeam() {
   try {

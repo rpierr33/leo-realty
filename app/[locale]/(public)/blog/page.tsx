@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Clock, Tag, ArrowRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -7,6 +8,12 @@ import { eq } from "drizzle-orm";
 import { formatDate } from "@/lib/utils/format";
 
 export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("blogTitle"), description: t("blogDescription") };
+}
 
 async function getPosts() {
   try {

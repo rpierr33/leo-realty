@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import { Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("fairHousingTitle"), description: t("fairHousingDescription") };
+}
 
 export default function FairHousingPage() {
   const t = useTranslations("FairHousing");

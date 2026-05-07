@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import HeroSection from "@/components/home/HeroSection";
 import StatsBar from "@/components/home/StatsBar";
 import ProgramsSection from "@/components/home/ProgramsSection";
@@ -10,11 +11,11 @@ import CTABanner from "@/components/home/CTABanner";
 import HomeValuationCTA from "@/components/home/HomeValuationCTA";
 import SavingsCalculator from "@/components/home/SavingsCalculator";
 
-export const metadata: Metadata = {
-  title: "Leo Realty Capital Investments | South Florida Real Estate",
-  description:
-    "Leo Realty Inc — MR 2% | 32 Years In Business | No One Does It Better. Buy, sell, and rent with South Florida's most trusted brokerage. Mortgage financing through our partner KLE Mortgage.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("homeTitle"), description: t("homeDescription") };
+}
 
 export default function HomePage() {
   return (

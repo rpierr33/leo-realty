@@ -1,7 +1,15 @@
+import type { Metadata } from "next";
 import { CheckCircle, ArrowRight, Star, Shield, Home, DollarSign, TrendingUp } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import LendingPartnerCallout from "@/components/shared/LendingPartnerCallout";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  return { title: t("loanProgramsTitle"), description: t("loanProgramsDescription") };
+}
 
 export default function LoanProgramsPage() {
   const t = useTranslations("LoanPrograms");
