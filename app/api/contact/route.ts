@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { z } from "zod";
 import { and, eq, gte, or, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
@@ -144,13 +144,11 @@ export async function POST(req: NextRequest) {
       })
       .returning({ id: leads.id });
 
-    // 6. Notifications. FIRE-AND-FORGET — never await. A previous attempt to await
-    //    these caused 300s function timeouts when Brevo accepted but did not respond
-    //    promptly, taking the whole site down (the project-wide Lambda concurrency
-    //    got fully consumed by hung functions). Email reliability is sacrificed here
-    //    on purpose — leads still capture, status page still loads. A proper
-    //    background-work pattern (next/server `after()` or a queue) is the right
-    //    long-term fix and is tracked separately.
+    // 6. Notifications via Next.js `after()`. The callback runs after the response
+    //    is sent, but within Vercel's lifecycle so the function isn't killed before
+    //    it completes. This is the official pattern for post-response side effects
+    //    (next/server). Each helper has its own AbortController timeout and absorbs
+    //    failures — email failure must never reach the user.
     const leadForEmail = {
       id: inserted.id,
       firstName,
@@ -162,11 +160,11 @@ export async function POST(req: NextRequest) {
       source: sourceTag,
       assignedAgentName: picked?.name ?? null,
     };
-    Promise.allSettled([
-      notifyTeam(leadForEmail),
-      sendAutoresponder(leadForEmail, data.locale),
-    ]).catch(() => {
-      // already logged inside helpers
+    after(async () => {
+      await Promise.allSettled([
+        notifyTeam(leadForEmail),
+        sendAutoresponder(leadForEmail, data.locale),
+      ]);
     });
 
     return NextResponse.json({ success: true, message: "Lead created", id: inserted.id }, { status: 201 });
