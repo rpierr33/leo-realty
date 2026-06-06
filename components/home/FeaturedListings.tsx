@@ -1,107 +1,33 @@
 import { ArrowRight, Bed, Bath, Ruler, MapPin } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { db } from "@/lib/db";
-import { properties, agents } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
-import { formatPrice } from "@/lib/utils/format";
-
-async function getFeaturedProperties() {
-  try {
-    const rows = await db
-      .select({
-        id: properties.id,
-        slug: properties.slug,
-        title: properties.title,
-        price: properties.price,
-        status: properties.status,
-        propertyType: properties.propertyType,
-        bedrooms: properties.bedrooms,
-        bathrooms: properties.bathrooms,
-        sqft: properties.sqft,
-        address: properties.address,
-        city: properties.city,
-        state: properties.state,
-        images: properties.images,
-        isFeatured: properties.isFeatured,
-        agentName: agents.name,
-      })
-      .from(properties)
-      .leftJoin(agents, eq(properties.agentId, agents.id))
-      .where(and(eq(properties.isFeatured, true), eq(properties.isPublished, true)))
-      .limit(6);
-    return rows;
-  } catch {
-    return [];
-  }
-}
-
-const FALLBACK_LISTINGS = [
-  {
-    id: 1,
-    slug: "luxury-waterfront-miami",
-    title: "Luxury Waterfront Estate",
-    price: "1250000",
-    status: "for_sale" as const,
-    propertyType: "residential" as const,
-    bedrooms: 5,
-    bathrooms: 4,
-    sqft: 3800,
-    address: "123 Ocean Drive",
-    city: "Miami Beach",
-    state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1200&q=85", caption: "", order: 0 }],
-    isFeatured: true,
-    agentName: "Leopold Evariste",
-  },
-  {
-    id: 2,
-    slug: "modern-condo-brickell",
-    title: "Modern Brickell Condo",
-    price: "485000",
-    status: "for_sale" as const,
-    propertyType: "condo" as const,
-    bedrooms: 2,
-    bathrooms: 2,
-    sqft: 1200,
-    address: "456 Brickell Ave",
-    city: "Miami",
-    state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=85", caption: "", order: 0 }],
-    isFeatured: true,
-    agentName: "Carly Cadet",
-  },
-  {
-    id: 3,
-    slug: "family-home-aventura",
-    title: "Spacious Family Home",
-    price: "680000",
-    status: "for_sale" as const,
-    propertyType: "residential" as const,
-    bedrooms: 4,
-    bathrooms: 3,
-    sqft: 2600,
-    address: "789 Aventura Blvd",
-    city: "Aventura",
-    state: "FL",
-    images: [{ url: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&q=85", caption: "", order: 0 }],
-    isFeatured: true,
-    agentName: "Jean Samuel Luxama",
-  },
-];
+import {
+  searchProperties,
+  formatPriceUSD,
+  listingLabelKey,
+  LEO_REALTY_OFFICE_ID,
+  type MlsListing,
+} from "@/lib/mls";
 
 export default async function FeaturedListings() {
   const t = await getTranslations("FeaturedListings");
-  const listings = await getFeaturedProperties();
-  const displayListings = listings.length > 0 ? listings : FALLBACK_LISTINGS;
+  const tProps = await getTranslations("PropertiesPage");
 
-  const statusLabels: Record<string, string> = {
-    for_sale: t("statusForSale"),
-    for_rent: t("statusForRent"),
-    pending: t("statusPending"),
-    sold: t("statusSold"),
-    rented: t("statusRented"),
-  };
+  // Pull LEO Realty's own active listings from MIAMI MLS — sorted newest first.
+  // No DB seed, no demo fallback — if the office has 0 active listings, the
+  // section gracefully hides itself and points visitors to the full search.
+  let listings: MlsListing[] = [];
+  try {
+    const result = await searchProperties({
+      listOfficeMlsId: LEO_REALTY_OFFICE_ID,
+      statusBucket: "all",
+      sort: "newest",
+      top: 6,
+    });
+    listings = result.listings;
+  } catch (err) {
+    console.error("FeaturedListings MLS error:", err);
+  }
 
   return (
     <section className="py-24 md:py-32 bg-[#FAF8F5]">
@@ -124,24 +50,31 @@ export default async function FeaturedListings() {
           </Link>
         </div>
 
-        {displayListings.length === 0 ? (
+        {listings.length === 0 ? (
           <div className="text-center py-20 text-[#6B7280]">
             <p className="text-lg mb-3">{t("emptyTitle")}</p>
-            <Link href="/contact" className="text-[#C5A55A] font-semibold underline underline-offset-4">
+            <Link
+              href="/contact"
+              className="text-[#C5A55A] font-semibold underline underline-offset-4"
+            >
               {t("emptyCta")}
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {displayListings.map((listing) => {
-              const image = listing.images?.[0]?.url;
-              const statusLabel = statusLabels[listing.status] ?? listing.status;
-              const isRent = listing.status === "for_rent";
+            {listings.map((listing) => {
+              const image = listing.photos[0]?.url;
+              const statusLabel = tProps(listingLabelKey(listing) as "statusForSale");
+              const title =
+                listing.unparsedAddress ??
+                [listing.city, listing.stateOrProvince].filter(Boolean).join(", ") ??
+                t("emptyTitle");
+              const locationLine = [listing.city, listing.stateOrProvince].filter(Boolean).join(", ");
 
               return (
                 <Link
-                  key={listing.id}
-                  href={`/properties/${listing.slug}`}
+                  key={listing.listingKey}
+                  href={`/properties/${encodeURIComponent(listing.listingKey)}`}
                   className="group block"
                 >
                   <div className="relative aspect-[16/9] overflow-hidden bg-[#E8E4DE] mb-5">
@@ -149,7 +82,7 @@ export default async function FeaturedListings() {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={image}
-                        alt={listing.title}
+                        alt={title}
                         className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out"
                       />
                     ) : (
@@ -165,34 +98,35 @@ export default async function FeaturedListings() {
 
                   <div>
                     <div className="text-[#C5A55A] font-medium text-xl mb-1">
-                      {formatPrice(listing.price)}
-                      {isRent && <span className="text-sm font-normal text-[#6B7280]">{t("perMonth")}</span>}
+                      {formatPriceUSD(listing.listPrice, listing.isLease)}
                     </div>
 
-                    <h3 className="font-playfair font-medium text-[#0A1628] text-lg leading-snug mb-2 group-hover:text-[#C5A55A] transition-colors duration-200">
-                      {listing.title}
+                    <h3 className="font-playfair font-medium text-[#0A1628] text-lg leading-snug mb-2 group-hover:text-[#C5A55A] transition-colors duration-200 line-clamp-1">
+                      {title}
                     </h3>
 
                     <div className="flex items-center gap-1 text-[#9CA3AF] text-sm mb-3">
-                      <MapPin className="w-3 h-3" />
-                      {listing.address}, {listing.city}, {listing.state}
+                      <MapPin className="w-3 h-3 flex-shrink-0" />
+                      <span className="truncate">{locationLine}</span>
                     </div>
 
                     <div className="flex items-center gap-5 text-[#6B7280] text-sm pt-3 border-t border-[#E8E4DE]">
-                      {listing.bedrooms > 0 && (
+                      {listing.bedrooms !== null && listing.bedrooms > 0 && (
                         <span className="flex items-center gap-1.5">
                           <Bed className="w-3.5 h-3.5" />
                           {listing.bedrooms} {t("beds")}
                         </span>
                       )}
-                      <span className="flex items-center gap-1.5">
-                        <Bath className="w-3.5 h-3.5" />
-                        {listing.bathrooms} {t("baths")}
-                      </span>
-                      {listing.sqft && (
+                      {listing.bathroomsTotal !== null && listing.bathroomsTotal > 0 && (
+                        <span className="flex items-center gap-1.5">
+                          <Bath className="w-3.5 h-3.5" />
+                          {listing.bathroomsTotal} {t("baths")}
+                        </span>
+                      )}
+                      {listing.livingArea !== null && listing.livingArea > 0 && (
                         <span className="flex items-center gap-1.5">
                           <Ruler className="w-3.5 h-3.5" />
-                          {listing.sqft.toLocaleString()} {t("sqft")}
+                          {listing.livingArea.toLocaleString()} {t("sqft")}
                         </span>
                       )}
                     </div>

@@ -205,9 +205,13 @@ export interface SearchParams {
   q?: string;
   sort?: string;
   includePending?: boolean;
+  listOfficeMlsId?: string;
   top?: number;
   skip?: number;
 }
+
+/** LEO Realty's office identifier in the MIAMI MLS feed. */
+export const LEO_REALTY_OFFICE_ID = "LEOT01";
 
 function escapeOData(value: string): string {
   return value.replace(/'/g, "''");
@@ -256,6 +260,8 @@ function buildFilter(params: SearchParams): string {
 
   if (params.city) clauses.push(`City eq '${escapeOData(params.city)}'`);
   if (params.stateOrProvince) clauses.push(`StateOrProvince eq '${escapeOData(params.stateOrProvince)}'`);
+  if (params.listOfficeMlsId)
+    clauses.push(`ListOfficeMlsId eq '${escapeOData(params.listOfficeMlsId)}'`);
   if (params.minPrice !== undefined) clauses.push(`ListPrice ge ${params.minPrice}`);
   if (params.maxPrice !== undefined) clauses.push(`ListPrice le ${params.maxPrice}`);
   if (params.minBeds !== undefined) clauses.push(`BedroomsTotal ge ${params.minBeds}`);
