@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
       pool: parseFlagParam(searchParams.get("pool")),
       waterfront: parseFlagParam(searchParams.get("waterfront")),
       garage: parseFlagParam(searchParams.get("garage")),
+      includePending: parseFlagParam(searchParams.get("include_pending")),
       q: searchParams.get("q") ?? undefined,
       sort: searchParams.get("sort") ?? undefined,
       top: parseNumberParam(searchParams.get("top")),

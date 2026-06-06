@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bed, Bath, Ruler, MapPin, ArrowRight, Map } from "lucide-react";
+import { Bed, Bath, Ruler, MapPin, ArrowRight, Map, Info } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import PropertyFilters from "@/components/properties/PropertyFilters";
@@ -32,6 +32,7 @@ type SearchParams = {
   pool?: string;
   waterfront?: string;
   garage?: string;
+  include_pending?: string;
   city?: string;
   sort?: string;
   q?: string;
@@ -75,6 +76,7 @@ export default async function PropertiesPage({ searchParams }: Props) {
     pool: flag(params.pool),
     waterfront: flag(params.waterfront),
     garage: flag(params.garage),
+    includePending: flag(params.include_pending),
     city: params.city || undefined,
     q: params.q,
     sort: params.sort,
@@ -136,12 +138,21 @@ export default async function PropertiesPage({ searchParams }: Props) {
                 className="inline-flex items-center gap-2 bg-white border border-[#E8E4DE] hover:border-[#C5A55A]/40 text-[#0A1628] text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
               >
                 <Map className="w-4 h-4 text-[#C5A55A]" />
-                Map view
+                {t("mapView")}
               </Link>
               {hasFilters && <SaveSearchButton params={params} />}
             </div>
             <div className="text-xs text-[#6B7280]">
-              Showing {listings.length} of {total.toLocaleString()}
+              {t("showingNofM", { n: listings.length, total: total.toLocaleString() })}
+            </div>
+          </div>
+
+          {/* IDX FYI — explains why our public count differs from the agent-facing MLS */}
+          <div className="mt-3 flex items-start gap-3 bg-[#FAF8F5] border border-[#E8E4DE] rounded-xl p-4">
+            <Info className="w-4 h-4 text-[#C5A55A] mt-0.5 flex-shrink-0" />
+            <div>
+              <div className="text-xs font-semibold text-[#0A1628] mb-1">{t("idxFyiTitle")}</div>
+              <p className="text-xs text-[#6B7280] leading-relaxed">{t("idxFyiBody")}</p>
             </div>
           </div>
 

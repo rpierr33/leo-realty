@@ -158,17 +158,23 @@ export interface StatusFilter {
   mlsStatuses?: string[]; // MlsStatus in (…)
 }
 
-export function statusBucketToFilter(bucket: StatusBucket | undefined): StatusFilter {
-  if (!bucket || bucket === "all") return { statuses: ["Active", "ActiveUnderContract"] };
+export function statusBucketToFilter(
+  bucket: StatusBucket | undefined,
+  includePending: boolean = false
+): StatusFilter {
+  const activeStatuses = includePending
+    ? ["Active", "ActiveUnderContract", "Pending"]
+    : ["Active", "ActiveUnderContract"];
+  if (!bucket || bucket === "all") return { statuses: activeStatuses };
   if (bucket === "for_sale") {
     return {
-      statuses: ["Active", "ActiveUnderContract"],
+      statuses: activeStatuses,
       notPropertyTypes: ["Residential Lease", "Commercial Lease"],
     };
   }
   if (bucket === "for_rent") {
     return {
-      statuses: ["Active", "ActiveUnderContract"],
+      statuses: activeStatuses,
       propertyTypes: ["Residential Lease", "Commercial Lease"],
     };
   }
@@ -179,7 +185,7 @@ export function statusBucketToFilter(bucket: StatusBucket | undefined): StatusFi
   if (bucket === "rented") {
     return { statuses: ["Closed"], propertyTypes: ["Residential Lease", "Commercial Lease"] };
   }
-  return { statuses: ["Active", "ActiveUnderContract"] };
+  return { statuses: activeStatuses };
 }
 
 export interface SearchParams {
@@ -198,6 +204,7 @@ export interface SearchParams {
   garage?: boolean;
   q?: string;
   sort?: string;
+  includePending?: boolean;
   top?: number;
   skip?: number;
 }
@@ -217,7 +224,7 @@ function notInClause(field: string, values: string[]): string {
 function buildFilter(params: SearchParams): string {
   const clauses: string[] = [];
 
-  const statusFilter = statusBucketToFilter(params.statusBucket);
+  const statusFilter = statusBucketToFilter(params.statusBucket, params.includePending);
   if (statusFilter.statuses && statusFilter.statuses.length) {
     clauses.push(inClause("StandardStatus", statusFilter.statuses));
   }
@@ -261,8 +268,16 @@ function buildFilter(params: SearchParams): string {
 
   if (params.q && params.q.trim()) {
     const term = escapeOData(params.q.trim());
+    // Search across address, ZIP, city, county, subdivision, and street name —
+    // the universal "search anything" path so visitors don't have to guess
+    // which field their input maps to.
     clauses.push(
-      `(contains(City, '${term}') or contains(UnparsedAddress, '${term}') or contains(PostalCode, '${term}') or contains(SubdivisionName, '${term}'))`
+      `(contains(City, '${term}') or ` +
+        `contains(UnparsedAddress, '${term}') or ` +
+        `contains(PostalCode, '${term}') or ` +
+        `contains(CountyOrParish, '${term}') or ` +
+        `contains(SubdivisionName, '${term}') or ` +
+        `contains(StreetName, '${term}'))`
     );
   }
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BookmarkPlus, Loader2, Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type FilterParams = Record<string, string | undefined>;
 
@@ -12,9 +13,7 @@ function describeParams(params: FilterParams): string {
   else if (params.status === "sold") parts.push("Sold");
   else if (params.status === "rented") parts.push("Rented");
   else if (params.status === "pending") parts.push("Pending");
-  if (params.type && params.type !== "all") {
-    parts.push(params.type.replace(/_/g, " "));
-  }
+  if (params.type && params.type !== "all") parts.push(params.type.replace(/_/g, " "));
   if (params.city) parts.push(`in ${params.city}`);
   if (params.beds) parts.push(`${params.beds}+ bed`);
   if (params.baths) parts.push(`${params.baths}+ bath`);
@@ -28,6 +27,7 @@ function describeParams(params: FilterParams): string {
 }
 
 export default function SaveSearchButton({ params }: { params: FilterParams }) {
+  const t = useTranslations("SaveSearchModal");
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState(describeParams(params));
@@ -67,7 +67,7 @@ export default function SaveSearchButton({ params }: { params: FilterParams }) {
         className="inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] text-sm font-bold px-4 py-2.5 rounded-xl hover:bg-[#D4BA7A] transition-colors"
       >
         <BookmarkPlus className="w-4 h-4" />
-        Save this search
+        {t("buttonLabel")}
       </button>
 
       {open && (
@@ -85,12 +85,9 @@ export default function SaveSearchButton({ params }: { params: FilterParams }) {
                   <Check className="w-6 h-6 text-[#C5A55A]" />
                 </div>
                 <h3 className="font-playfair text-xl font-bold text-[#0A1628] mb-2">
-                  Check your inbox
+                  {t("doneTitle")}
                 </h3>
-                <p className="text-sm text-[#6B7280] mb-5">
-                  We sent a confirmation link to <span className="font-semibold">{email}</span>. Click
-                  it to start receiving alerts when new matching listings hit the Miami MLS.
-                </p>
+                <p className="text-sm text-[#6B7280] mb-5">{t("doneBody", { email })}</p>
                 <button
                   onClick={() => {
                     setOpen(false);
@@ -98,55 +95,52 @@ export default function SaveSearchButton({ params }: { params: FilterParams }) {
                   }}
                   className="inline-flex items-center gap-2 bg-[#0A1628] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-[#0A1628]/90 transition-colors"
                 >
-                  Done
+                  {t("doneClose")}
                 </button>
               </div>
             ) : (
               <>
                 <h3 className="font-playfair text-xl font-bold text-[#0A1628] mb-1">
-                  Save & alert me
+                  {t("modalTitle")}
                 </h3>
-                <p className="text-sm text-[#6B7280] mb-5">
-                  We&apos;ll email you when new MLS listings match these filters. Confirm by clicking
-                  the link we send — no account needed.
-                </p>
+                <p className="text-sm text-[#6B7280] mb-5">{t("modalIntro")}</p>
 
                 <label className="block text-xs font-semibold text-[#0A1628] mb-1.5">
-                  Name this search
+                  {t("nameLabel")}
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full border border-[#E8E4DE] rounded-xl px-3 py-2.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-[#C5A55A]/40"
-                  placeholder="e.g. Doral condos under $500k"
+                  placeholder={t("namePlaceholder")}
                   maxLength={255}
                 />
 
                 <label className="block text-xs font-semibold text-[#0A1628] mb-1.5">
-                  Your email
+                  {t("emailLabel")}
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full border border-[#E8E4DE] rounded-xl px-3 py-2.5 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-[#C5A55A]/40"
-                  placeholder="you@example.com"
+                  placeholder={t("emailPlaceholder")}
                   autoComplete="email"
                   maxLength={255}
                 />
 
                 <label className="block text-xs font-semibold text-[#0A1628] mb-1.5">
-                  Alert frequency
+                  {t("frequencyLabel")}
                 </label>
                 <select
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value as "instant" | "daily" | "weekly")}
                   className="w-full border border-[#E8E4DE] rounded-xl px-3 py-2.5 text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-[#C5A55A]/40 bg-white"
                 >
-                  <option value="instant">Instant — as soon as it lists</option>
-                  <option value="daily">Daily digest</option>
-                  <option value="weekly">Weekly digest</option>
+                  <option value="instant">{t("freqInstant")}</option>
+                  <option value="daily">{t("freqDaily")}</option>
+                  <option value="weekly">{t("freqWeekly")}</option>
                 </select>
 
                 {error && (
@@ -161,7 +155,7 @@ export default function SaveSearchButton({ params }: { params: FilterParams }) {
                     disabled={busy}
                     className="text-sm text-[#6B7280] hover:text-[#0A1628] font-medium px-4 py-2.5"
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                   <button
                     onClick={submit}
@@ -169,7 +163,7 @@ export default function SaveSearchButton({ params }: { params: FilterParams }) {
                     className="inline-flex items-center gap-2 bg-[#0A1628] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-[#0A1628]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     {busy && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {busy ? "Sending…" : "Save & confirm via email"}
+                    {busy ? t("sending") : t("submit")}
                   </button>
                 </div>
               </>

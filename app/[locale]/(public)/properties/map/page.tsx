@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Grid3x3, ArrowLeft } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import PropertyFilters from "@/components/properties/PropertyFilters";
 import PropertiesMapWrapper from "@/components/properties/PropertiesMapWrapper";
@@ -32,6 +33,7 @@ type SearchParams = {
   pool?: string;
   waterfront?: string;
   garage?: string;
+  include_pending?: string;
   city?: string;
   sort?: string;
   q?: string;
@@ -58,6 +60,7 @@ function flag(value: string | undefined): boolean | undefined {
 type Props = { searchParams: Promise<SearchParams> };
 
 export default async function PropertiesMapPage({ searchParams }: Props) {
+  const t = await getTranslations("PropertiesPage");
   const params = await searchParams;
   const bucket = statusBucket(params.status);
 
@@ -73,6 +76,7 @@ export default async function PropertiesMapPage({ searchParams }: Props) {
     pool: flag(params.pool),
     waterfront: flag(params.waterfront),
     garage: flag(params.garage),
+    includePending: flag(params.include_pending),
     city: params.city || undefined,
     q: params.q,
     sort: params.sort,
@@ -113,14 +117,14 @@ export default async function PropertiesMapPage({ searchParams }: Props) {
           href="/properties"
           className="inline-flex items-center gap-2 text-[#6B7280] hover:text-[#C5A55A] transition-colors text-sm mb-4"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to grid view
+          <ArrowLeft className="w-4 h-4" /> {t("gridView")}
         </Link>
 
         <PropertyFilters currentParams={params} />
 
         <div className="mt-4 flex items-center justify-between">
           <div className="text-xs text-[#6B7280]">
-            Showing {listings.length} mapped of {total.toLocaleString()} total
+            {t("showingNofM", { n: listings.length, total: total.toLocaleString() })}
           </div>
           <Link
             href={`/properties${
@@ -131,7 +135,7 @@ export default async function PropertiesMapPage({ searchParams }: Props) {
             className="inline-flex items-center gap-2 bg-white border border-[#E8E4DE] hover:border-[#C5A55A]/40 text-[#0A1628] text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
           >
             <Grid3x3 className="w-4 h-4 text-[#C5A55A]" />
-            Grid view
+            {t("gridView")}
           </Link>
         </div>
 
