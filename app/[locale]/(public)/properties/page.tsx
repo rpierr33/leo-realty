@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Bed, Bath, Ruler, MapPin, ArrowRight } from "lucide-react";
+import { Bed, Bath, Ruler, MapPin, ArrowRight, Map } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import PropertyFilters from "@/components/properties/PropertyFilters";
-import { searchProperties, formatPriceUSD, type SearchParams as MlsSearchParams } from "@/lib/mls";
+import SaveSearchButton from "@/components/properties/SaveSearchButton";
+import {
+  searchProperties,
+  formatPriceUSD,
+  deriveListingLabel,
+  type SearchParams as MlsSearchParams,
+  type StatusBucket,
+} from "@/lib/mls";
 
 export const dynamic = "force-dynamic";
 
@@ -20,16 +27,20 @@ type SearchParams = {
   price_max?: string;
   beds?: string;
   baths?: string;
+  sqft_min?: string;
+  year_min?: string;
+  pool?: string;
+  waterfront?: string;
+  garage?: string;
+  city?: string;
+  sort?: string;
   q?: string;
 };
 
-function statusToBridge(uiStatus: string | undefined): string | undefined {
-  if (!uiStatus || uiStatus === "all") return undefined;
-  if (uiStatus === "for_sale") return "Active";
-  if (uiStatus === "for_rent") return "Active";
-  if (uiStatus === "pending") return "Pending";
-  if (uiStatus === "sold") return "Closed";
-  return uiStatus;
+const ALLOWED_STATUS: StatusBucket[] = ["for_sale", "for_rent", "pending", "sold", "rented", "all"];
+function statusBucket(raw: string | undefined): StatusBucket {
+  if (!raw || !ALLOWED_STATUS.includes(raw as StatusBucket)) return "for_sale";
+  return raw as StatusBucket;
 }
 
 function num(value: string | undefined): number | undefined {
@@ -38,30 +49,35 @@ function num(value: string | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+function flag(value: string | undefined): boolean | undefined {
+  if (!value) return undefined;
+  if (value === "1" || value === "true" || value === "yes") return true;
+  return undefined;
+}
+
 type Props = { searchParams: Promise<SearchParams> };
 
 export default async function PropertiesPage({ searchParams }: Props) {
   const t = await getTranslations("PropertiesPage");
   const params = await searchParams;
 
-  const STATUS_LABEL: Record<string, string> = {
-    Active: t("statusForSale"),
-    ActiveUnderContract: t("statusUnderContract"),
-    Pending: t("statusPending"),
-    Closed: t("statusSold"),
-    Hold: t("statusHold"),
-    Withdrawn: t("statusWithdrawn"),
-    Expired: t("statusExpired"),
-    Canceled: t("statusCanceled"),
-  };
+  const bucket = statusBucket(params.status);
 
   const mlsParams: MlsSearchParams = {
-    status: statusToBridge(params.status) ?? "Active",
+    statusBucket: bucket,
+    propertyTypeKey: params.type && params.type !== "all" ? params.type : undefined,
     minPrice: num(params.price_min),
     maxPrice: num(params.price_max),
     minBeds: num(params.beds),
     minBaths: num(params.baths),
+    minSqft: num(params.sqft_min),
+    minYearBuilt: num(params.year_min),
+    pool: flag(params.pool),
+    waterfront: flag(params.waterfront),
+    garage: flag(params.garage),
+    city: params.city || undefined,
     q: params.q,
+    sort: params.sort,
     top: 60,
   };
 
@@ -78,10 +94,18 @@ export default async function PropertiesPage({ searchParams }: Props) {
     console.error("Properties page MLS error:", mlsError);
   }
 
+  const hasFilters = Object.entries(params).some(([k, v]) => v && v !== "all" && k !== "sort");
+
   return (
     <>
       <section className="relative bg-[#0A1628] pt-40 pb-24 overflow-hidden">
-        <div className="absolute inset-0 opacity-20 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1800&q=80')" }} />
+        <div
+          className="absolute inset-0 opacity-20 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1800&q=80')",
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628] to-[#0A1628]/60" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <span className="section-label">{t("label")}</span>
@@ -91,7 +115,8 @@ export default async function PropertiesPage({ searchParams }: Props) {
           <p className="text-white/60 text-xl max-w-2xl leading-relaxed">{t("subcopy")}</p>
           <div className="mt-6 flex items-center gap-2 text-[#C5A55A] text-sm font-medium">
             <span className="w-2 h-2 rounded-full bg-[#C5A55A]" />
-            {total.toLocaleString()} {total === 1 ? t("listingSingular") : t("listingPlural")} {t("listingsAvailable")}
+            {total.toLocaleString()}{" "}
+            {total === 1 ? t("listingSingular") : t("listingPlural")} {t("listingsAvailable")}
           </div>
         </div>
       </section>
@@ -100,7 +125,27 @@ export default async function PropertiesPage({ searchParams }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <PropertyFilters currentParams={params} />
 
-          <div className="mt-8">
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                href={`/properties/map${
+                  hasFilters
+                    ? "?" + new URLSearchParams(params as Record<string, string>).toString()
+                    : ""
+                }`}
+                className="inline-flex items-center gap-2 bg-white border border-[#E8E4DE] hover:border-[#C5A55A]/40 text-[#0A1628] text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+              >
+                <Map className="w-4 h-4 text-[#C5A55A]" />
+                Map view
+              </Link>
+              {hasFilters && <SaveSearchButton params={params} />}
+            </div>
+            <div className="text-xs text-[#6B7280]">
+              Showing {listings.length} of {total.toLocaleString()}
+            </div>
+          </div>
+
+          <div className="mt-6">
             {mlsError ? (
               <div className="text-center py-20 bg-white rounded-2xl border border-[#E8E4DE]">
                 <MapPin className="w-12 h-12 text-gray-200 mx-auto mb-4" />
@@ -112,7 +157,10 @@ export default async function PropertiesPage({ searchParams }: Props) {
                 <MapPin className="w-12 h-12 text-gray-200 mx-auto mb-4" />
                 <p className="text-[#6B7280] text-lg mb-2 font-semibold">{t("noResultsTitle")}</p>
                 <p className="text-[#6B7280]/70 text-sm mb-6">{t("noResultsSubtitle")}</p>
-                <Link href="/properties" className="text-[#C5A55A] font-semibold underline underline-offset-4">
+                <Link
+                  href="/properties"
+                  className="text-[#C5A55A] font-semibold underline underline-offset-4"
+                >
                   {t("clearFilters")}
                 </Link>
               </div>
@@ -120,12 +168,14 @@ export default async function PropertiesPage({ searchParams }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {listings.map((listing) => {
                   const image = listing.photos[0]?.url;
-                  const statusLabel = STATUS_LABEL[listing.status ?? ""] ?? listing.status ?? t("statusAvailable");
+                  const statusLabel = deriveListingLabel(listing);
                   const title =
                     listing.unparsedAddress ??
                     [listing.city, listing.stateOrProvince].filter(Boolean).join(", ") ??
                     t("listingSingular");
-                  const locationLine = [listing.city, listing.stateOrProvince, listing.postalCode].filter(Boolean).join(", ");
+                  const locationLine = [listing.city, listing.stateOrProvince, listing.postalCode]
+                    .filter(Boolean)
+                    .join(", ");
 
                   return (
                     <Link
@@ -136,7 +186,11 @@ export default async function PropertiesPage({ searchParams }: Props) {
                       <div className="relative h-56 overflow-hidden bg-[#0A1628]/5">
                         {image ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+                          <img
+                            src={image}
+                            alt={title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-[#0A1628]/5">
                             <span className="font-playfair text-[#0A1628]/20 text-5xl">L</span>
@@ -148,7 +202,7 @@ export default async function PropertiesPage({ searchParams }: Props) {
                         </div>
                         <div className="absolute bottom-4 left-4">
                           <div className="text-[#C5A55A] font-bold text-xl leading-none">
-                            {formatPriceUSD(listing.listPrice)}
+                            {formatPriceUSD(listing.listPrice, listing.isLease)}
                           </div>
                         </div>
                       </div>
@@ -181,7 +235,9 @@ export default async function PropertiesPage({ searchParams }: Props) {
                             </span>
                           )}
                           {listing.listingOfficeName && (
-                            <span className="ml-auto text-[10px] text-[#6B7280]/60 truncate">{listing.listingOfficeName}</span>
+                            <span className="ml-auto text-[10px] text-[#6B7280]/60 truncate">
+                              {listing.listingOfficeName}
+                            </span>
                           )}
                         </div>
                       </div>
@@ -197,10 +253,15 @@ export default async function PropertiesPage({ searchParams }: Props) {
       <section className="py-16 bg-[#0A1628]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-2">{t("ctaTitle")}</h2>
+            <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-2">
+              {t("ctaTitle")}
+            </h2>
             <p className="text-white/50 text-sm">{t("ctaSubcopy")}</p>
           </div>
-          <Link href="/contact" className="flex-shrink-0 inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold text-sm px-8 py-4 rounded-full hover:bg-[#D4BA7A] transition-colors whitespace-nowrap">
+          <Link
+            href="/contact"
+            className="flex-shrink-0 inline-flex items-center gap-2 bg-[#C5A55A] text-[#0A1628] font-bold text-sm px-8 py-4 rounded-full hover:bg-[#D4BA7A] transition-colors whitespace-nowrap"
+          >
             {t("ctaButton")}
             <ArrowRight className="w-4 h-4" />
           </Link>

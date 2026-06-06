@@ -4,7 +4,7 @@ import { Bed, Bath, Ruler, MapPin, Phone, Mail, Calendar, ArrowLeft } from "luci
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ContactAgentForm from "@/components/properties/ContactAgentForm";
-import { getProperty, formatPriceUSD, type MlsListing } from "@/lib/mls";
+import { getProperty, formatPriceUSD, deriveListingLabel, type MlsListing } from "@/lib/mls";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const listing = await getProperty(listingKey);
     if (!listing) return { title: "Property Not Found" };
     const title = listing.unparsedAddress ?? "Property";
-    const price = formatPriceUSD(listing.listPrice);
+    const price = formatPriceUSD(listing.listPrice, listing.isLease);
     return {
       title: `${title} — ${price}`,
       description: (listing.publicRemarks ?? "").slice(0, 160),
@@ -30,17 +30,6 @@ export default async function PropertyDetailPage({ params }: Props) {
   const tProps = await getTranslations("PropertiesPage");
   const { slug } = await params;
   const listingKey = decodeURIComponent(slug);
-
-  const STATUS_LABEL: Record<string, string> = {
-    Active: tProps("statusForSale"),
-    ActiveUnderContract: tProps("statusUnderContract"),
-    Pending: tProps("statusPending"),
-    Closed: tProps("statusSold"),
-    Hold: tProps("statusHold"),
-    Withdrawn: tProps("statusWithdrawn"),
-    Expired: tProps("statusExpired"),
-    Canceled: tProps("statusCanceled"),
-  };
 
   let listing: MlsListing | null = null;
   let mlsError: string | null = null;
@@ -76,7 +65,7 @@ export default async function PropertyDetailPage({ params }: Props) {
 
   const images = listing.photos;
   const primaryImage = images[0]?.url;
-  const statusLabel = STATUS_LABEL[listing.status ?? ""] ?? listing.status ?? tProps("statusAvailable");
+  const statusLabel = deriveListingLabel(listing);
   const locationLine = [listing.city, listing.stateOrProvince, listing.postalCode].filter(Boolean).join(", ");
 
   return (
@@ -121,7 +110,7 @@ export default async function PropertyDetailPage({ params }: Props) {
               </div>
 
               <h1 className="text-3xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-3">{title}</h1>
-              <p className="text-[#C5A55A] font-bold text-3xl mb-4">{formatPriceUSD(listing.listPrice)}</p>
+              <p className="text-[#C5A55A] font-bold text-3xl mb-4">{formatPriceUSD(listing.listPrice, listing.isLease)}</p>
               <div className="flex items-center gap-2 text-gray-500 mb-6">
                 <MapPin className="w-4 h-4" />
                 <span>{locationLine || tProps("addressOnRequest")}</span>

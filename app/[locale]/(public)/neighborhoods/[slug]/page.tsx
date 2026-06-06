@@ -75,7 +75,7 @@ export default async function NeighborhoodPage({ params }: Props) {
   // Try to fetch a few listings filtered to this neighborhood (best-effort).
   let listings: Awaited<ReturnType<typeof searchProperties>>["listings"] = [];
   try {
-    const result = await searchProperties({ status: "Active", q: n.name, top: 6 });
+    const result = await searchProperties({ statusBucket: "for_sale", q: n.name, top: 6 });
     listings = result.listings;
   } catch {
     // MLS may not be activated yet — skip gracefully.

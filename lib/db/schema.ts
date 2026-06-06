@@ -216,6 +216,22 @@ export const adminUsers = pgTable('admin_users', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
+// Email-based saved searches with new-listing alerts.
+// No login required — verification via emailed magic link.
+export const savedSearches = pgTable('saved_searches', {
+  id: serial('id').primaryKey(),
+  email: varchar('email', { length: 255 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  paramsJson: jsonb('params_json').$type<Record<string, string>>().notNull(),
+  frequency: varchar('frequency', { length: 20 }).notNull().default('instant'),
+  verifyToken: varchar('verify_token', { length: 64 }),
+  verifiedAt: timestamp('verified_at'),
+  lastNotifiedAt: timestamp('last_notified_at'),
+  unsubscribedAt: timestamp('unsubscribed_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
 // ─── Relations ────────────────────────────────────────────────────────────────
 
 export const agentsRelations = relations(agents, ({ many }) => ({
