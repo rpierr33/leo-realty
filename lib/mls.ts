@@ -392,23 +392,41 @@ export function formatStatus(status: string | null): string {
 }
 
 /**
- * Derive the user-facing status label from a listing.
- * Active+Lease → "For Rent", Active+sale → "For Sale", Closed+Lease → "Rented", Closed → "Sold", etc.
+ * Derive a translation key for the listing's user-facing status.
+ * Active+Lease → "statusForRent", Active+sale → "statusForSale", Closed+Lease → "statusRented", etc.
+ * Render side picks up the translated copy via next-intl.
  */
-export function deriveListingLabel(listing: MlsListing): string {
+export function listingLabelKey(listing: MlsListing): string {
   const status = listing.status;
   if (listing.isLease) {
-    if (status === "Active" || status === "ActiveUnderContract") return "For Rent";
-    if (status === "Pending") return "Pending";
-    if (status === "Closed") return "Rented";
-    return status ?? "Lease";
+    if (status === "Active" || status === "ActiveUnderContract") return "statusForRent";
+    if (status === "Pending") return "statusPending";
+    if (status === "Closed") return "statusRented";
+    return "statusAvailable";
   }
-  if (status === "Active") return "For Sale";
-  if (status === "ActiveUnderContract") return "Under Contract";
-  if (status === "Pending") return "Pending";
-  if (status === "Closed") return "Sold";
-  if (status === "Withdrawn") return "Withdrawn";
-  if (status === "Expired") return "Expired";
-  if (status === "Canceled") return "Canceled";
-  return status ?? "Available";
+  if (status === "Active") return "statusForSale";
+  if (status === "ActiveUnderContract") return "statusUnderContract";
+  if (status === "Pending") return "statusPending";
+  if (status === "Closed") return "statusSold";
+  if (status === "Withdrawn") return "statusWithdrawn";
+  if (status === "Expired") return "statusExpired";
+  if (status === "Canceled") return "statusCanceled";
+  return "statusAvailable";
+}
+
+/** English fallback (used in non-i18n contexts: emails, server logs, cron). */
+export function deriveListingLabel(listing: MlsListing): string {
+  const EN: Record<string, string> = {
+    statusForSale: "For Sale",
+    statusForRent: "For Rent",
+    statusUnderContract: "Under Contract",
+    statusPending: "Pending",
+    statusSold: "Sold",
+    statusRented: "Rented",
+    statusWithdrawn: "Withdrawn",
+    statusExpired: "Expired",
+    statusCanceled: "Canceled",
+    statusAvailable: "Available",
+  };
+  return EN[listingLabelKey(listing)] ?? "Available";
 }

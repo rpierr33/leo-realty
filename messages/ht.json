@@ -534,7 +534,9 @@
     "idxFyiTitle": "Sou rezilta sa yo",
     "idxFyiBody": "Nou montre piblik bagay ki gen pèmisyon IDX nan dosye MIAMI Association of REALTORS®. Kèk pwopriyete rete sèlman sou MLS paske bwoker ki mete l la chwazi konsa — pa parèt isit la. Rele nou epi n ap montre w sa ki disponib.",
     "saveSearch": "Sove rechèch sa a",
-    "popupView": "Wè detay →"
+    "popupView": "Wè detay →",
+    "statusForRent": "Pou Lwe",
+    "statusRented": "Lwe"
   },
   "TestimonialsPage": {
     "label": "Istwa Kliyan",

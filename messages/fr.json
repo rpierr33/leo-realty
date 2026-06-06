@@ -534,7 +534,9 @@
     "idxFyiTitle": "À propos de ces résultats",
     "idxFyiBody": "Nous affichons les annonces diffusées au public via l'IDX du MIAMI Association of REALTORS®. Certaines annonces restent exclusives au MLS au choix du courtier — elles n'apparaissent pas ici. Contactez-nous et nous vous montrerons ce qui est disponible.",
     "saveSearch": "Sauvegarder cette recherche",
-    "popupView": "Voir les détails →"
+    "popupView": "Voir les détails →",
+    "statusForRent": "À louer",
+    "statusRented": "Loué"
   },
   "TestimonialsPage": {
     "label": "Témoignages clients",

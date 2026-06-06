@@ -534,7 +534,9 @@
     "idxFyiTitle": "About these results",
     "idxFyiBody": "We show listings syndicated to public IDX from the MIAMI Association of REALTORS® feed. Some listings remain MLS-only at the listing broker's choice — those aren't shown here. Reach out and we'll pull what's available.",
     "saveSearch": "Save this search",
-    "popupView": "View details →"
+    "popupView": "View details →",
+    "statusForRent": "For Rent",
+    "statusRented": "Rented"
   },
   "TestimonialsPage": {
     "label": "Client Stories",

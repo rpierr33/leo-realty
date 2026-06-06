@@ -7,7 +7,7 @@ import SaveSearchButton from "@/components/properties/SaveSearchButton";
 import {
   searchProperties,
   formatPriceUSD,
-  deriveListingLabel,
+  listingLabelKey,
   type SearchParams as MlsSearchParams,
   type StatusBucket,
 } from "@/lib/mls";
@@ -179,7 +179,7 @@ export default async function PropertiesPage({ searchParams }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {listings.map((listing) => {
                   const image = listing.photos[0]?.url;
-                  const statusLabel = deriveListingLabel(listing);
+                  const statusLabel = t(listingLabelKey(listing) as "statusForSale");
                   const title =
                     listing.unparsedAddress ??
                     [listing.city, listing.stateOrProvince].filter(Boolean).join(", ") ??

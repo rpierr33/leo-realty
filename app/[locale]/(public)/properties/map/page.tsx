@@ -7,7 +7,7 @@ import PropertyFilters from "@/components/properties/PropertyFilters";
 import PropertiesMapWrapper from "@/components/properties/PropertiesMapWrapper";
 import {
   searchProperties,
-  deriveListingLabel,
+  listingLabelKey,
   type SearchParams as MlsSearchParams,
   type StatusBucket,
 } from "@/lib/mls";
@@ -103,7 +103,7 @@ export default async function PropertiesMapPage({ searchParams }: Props) {
         photoUrl: l.photos[0]?.url ?? null,
         latitude: l.latitude!,
         longitude: l.longitude!,
-        statusLabel: deriveListingLabel(l),
+        statusLabel: t(listingLabelKey(l) as "statusForSale"),
       }));
   } catch (err) {
     mlsError = err instanceof Error ? err.message : "MLS search failed";

@@ -4,7 +4,7 @@ import { Bed, Bath, Ruler, MapPin, Phone, Mail, Calendar, ArrowLeft } from "luci
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ContactAgentForm from "@/components/properties/ContactAgentForm";
-import { getProperty, formatPriceUSD, deriveListingLabel, type MlsListing } from "@/lib/mls";
+import { getProperty, formatPriceUSD, listingLabelKey, type MlsListing } from "@/lib/mls";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -65,7 +65,7 @@ export default async function PropertyDetailPage({ params }: Props) {
 
   const images = listing.photos;
   const primaryImage = images[0]?.url;
-  const statusLabel = deriveListingLabel(listing);
+  const statusLabel = tProps(listingLabelKey(listing) as "statusForSale");
   const locationLine = [listing.city, listing.stateOrProvince, listing.postalCode].filter(Boolean).join(", ");
 
   return (
