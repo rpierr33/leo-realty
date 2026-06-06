@@ -99,8 +99,9 @@ export default function PropertiesMap({ listings }: { listings: MapListing[] }) 
         iconAnchor: [30, 15],
       });
 
-      const photoHtml = l.photoUrl
-        ? `<img src="${l.photoUrl}" alt="" style="width:220px;height:120px;object-fit:cover;border-radius:8px;display:block;margin-bottom:8px"/>`
+      const safePhotoUrl = isSafeHttpUrl(l.photoUrl) ? l.photoUrl! : null;
+      const photoHtml = safePhotoUrl
+        ? `<img src="${escapeHtml(safePhotoUrl)}" alt="" style="width:220px;height:120px;object-fit:cover;border-radius:8px;display:block;margin-bottom:8px"/>`
         : "";
       const specs = [
         l.bedrooms ? `${l.bedrooms} bd` : null,
@@ -155,4 +156,14 @@ function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>
     c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : c === '"' ? "&quot;" : "&#39;"
   );
+}
+
+function isSafeHttpUrl(value: string | null): boolean {
+  if (!value) return false;
+  try {
+    const u = new URL(value);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
