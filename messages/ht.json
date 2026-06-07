@@ -1,20 +1,20 @@
 {
   "Nav": {
-    "home": "Lakay",
-    "about": "Sou Nou",
+    "home": "Paj santral",
+    "about": "De nou",
     "properties": "Pwopriyete",
     "services": "Sèvis",
     "loanPrograms": "Pwogram Prè",
     "team": "Ekip",
     "blog": "Blog",
-    "contact": "Kontak Nou",
+    "contact": "Kontakte Nou",
     "buyHome": "Achte yon Kay",
     "sellHome": "Vann Kay Ou",
     "rentProperty": "Lwe yon Pwopriyete",
     "mortgage": "Prè Ipotèk",
     "getStarted": "Kòmanse",
     "announcement": "Komisyon MR 2% · 32 An nan Biznis · Pa Gen Moun ki Fè l Pi Byen",
-    "toggleNavigation": "Louvri meni"
+    "toggleNavigation": "Chanje navigasyon"
   },
   "LanguageSwitcher": {
     "label": "Lang",
@@ -203,10 +203,10 @@
   "FloatingContactBar": {
     "callNow": "Rele",
     "findProperty": "Pwopriyete",
-    "contact": "Kontak",
+    "contact": "Kontakte",
     "ariaCall": "Rele Leo Realty",
     "ariaFind": "Jwenn yon pwopriyete",
-    "ariaContact": "Kontak nou"
+    "ariaContact": "Kontakte nou"
   },
   "Legal": {
     "label": "Legal",
@@ -305,7 +305,7 @@
     "errorSubmit": "Echèk pou voye mesaj la. Tanpri eseye ankò oswa rele nou dirèkteman."
   },
   "About": {
-    "label": "Sou Nou",
+    "label": "De nou",
     "title1": "32 An",
     "title2": "Ekselans Konfyans",
     "subcopy": "Leo Realty Capital Investments te kourtye imobilye konfyans Sid Florid la depi 1992 — ki ap ede dè milye fanmi achte, vann, lwe, ak finanse kay rèv yo.",
@@ -835,7 +835,7 @@
   "Neighborhood": {
     "label": "Gid Katye",
     "homesFor": "Kay Pou Vann nan",
-    "intro": "Sou katye sa a",
+    "intro": "Konsènan katye sa a",
     "highlightsHeader": "Pwen fò lokal",
     "zipCodesHeader": "Kòd ZIP ki sèvi",
     "listingsHeader": "Lis resan nan",
@@ -917,8 +917,8 @@
     "tagline": "32 an ekspètiz imobilye konfyans nan Sid Florid. Ipotèk Senp. Rèv Reyalize.",
     "tagShort": "Pa Gen Moun ki Fè l Pi Byen",
     "quickLinks": "Lyen Rapid",
-    "linkHome": "Lakay",
-    "linkAbout": "Sou Nou",
+    "linkHome": "Paj santral",
+    "linkAbout": "De nou",
     "linkProperties": "Pwopriyete",
     "linkServices": "Sèvis",
     "linkLoanPrograms": "Pwogram Prè",
@@ -934,7 +934,7 @@
     "loanDscr": "Prè DSCR",
     "loanHometownHeroes": "Hometown Heroes",
     "loanFirstTime": "Premye Achtè",
-    "contactHeader": "Kontak Nou",
+    "contactHeader": "Kontakte Nou",
     "addressLine1": "909 North Miami Beach Blvd",
     "addressLine2": "Suite 301A",
     "addressLine3": "North Miami Beach, FL",
