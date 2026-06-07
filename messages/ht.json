@@ -305,7 +305,7 @@
     "errorSubmit": "Echèk pou voye mesaj la. Tanpri eseye ankò oswa rele nou dirèkteman."
   },
   "About": {
-    "label": "Konsènan Nou",
+    "label": "Sou Nou",
     "title1": "32 An",
     "title2": "Ekselans Konfyans",
     "subcopy": "Leo Realty Capital Investments te kourtye imobilye konfyans Sid Florid la depi 1992 — ki ap ede dè milye fanmi achte, vann, lwe, ak finanse kay rèv yo.",
@@ -835,7 +835,7 @@
   "Neighborhood": {
     "label": "Gid Katye",
     "homesFor": "Kay Pou Vann nan",
-    "intro": "Konsènan katye sa a",
+    "intro": "Sou katye sa a",
     "highlightsHeader": "Pwen fò lokal",
     "zipCodesHeader": "Kòd ZIP ki sèvi",
     "listingsHeader": "Lis resan nan",
@@ -918,7 +918,7 @@
     "tagShort": "Pa Gen Moun ki Fè l Pi Byen",
     "quickLinks": "Lyen Rapid",
     "linkHome": "Lakay",
-    "linkAbout": "Konsènan Nou",
+    "linkAbout": "Sou Nou",
     "linkProperties": "Pwopriyete",
     "linkServices": "Sèvis",
     "linkLoanPrograms": "Pwogram Prè",
@@ -934,7 +934,7 @@
     "loanDscr": "Prè DSCR",
     "loanHometownHeroes": "Hometown Heroes",
     "loanFirstTime": "Premye Achtè",
-    "contactHeader": "Kontakte Nou",
+    "contactHeader": "Kontak Nou",
     "addressLine1": "909 North Miami Beach Blvd",
     "addressLine2": "Suite 301A",
     "addressLine3": "North Miami Beach, FL",

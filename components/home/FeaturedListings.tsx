@@ -27,7 +27,7 @@ export default async function FeaturedListings() {
       top: 30,
     });
     listings = result.listings
-      .filter((l) => l.photos.length >= 3)
+      .filter((l) => l.photos.length >= 1)
       .sort((a, b) => {
         // Composite rank: photo count (weight 1) + log price (weight 0.7).
         // Newest already came first from MLS; photo + price tie-break promotes
