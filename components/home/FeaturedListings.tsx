@@ -13,18 +13,30 @@ export default async function FeaturedListings() {
   const t = await getTranslations("FeaturedListings");
   const tProps = await getTranslations("PropertiesPage");
 
-  // Pull LEO Realty's own active listings from MIAMI MLS — sorted newest first.
-  // No DB seed, no demo fallback — if the office has 0 active listings, the
-  // section gracefully hides itself and points visitors to the full search.
+  // Pull LEO Realty's own active listings from MIAMI MLS, then rank for
+  // visual quality: prefer listings with the most photos AND highest list
+  // price within the active window. We over-fetch 30 newest, drop anything
+  // with fewer than 3 photos, and surface the top 12 — newest + best
+  // photographed first.
   let listings: MlsListing[] = [];
   try {
     const result = await searchProperties({
       listOfficeMlsId: LEO_REALTY_OFFICE_ID,
       statusBucket: "all",
       sort: "newest",
-      top: 6,
+      top: 30,
     });
-    listings = result.listings;
+    listings = result.listings
+      .filter((l) => l.photos.length >= 3)
+      .sort((a, b) => {
+        // Composite rank: photo count (weight 1) + log price (weight 0.7).
+        // Newest already came first from MLS; photo + price tie-break promotes
+        // the most showroom-quality listings into the homepage hero grid.
+        const scoreA = a.photos.length + (a.listPrice ? Math.log10(a.listPrice) * 0.7 : 0);
+        const scoreB = b.photos.length + (b.listPrice ? Math.log10(b.listPrice) * 0.7 : 0);
+        return scoreB - scoreA;
+      })
+      .slice(0, 12);
   } catch (err) {
     console.error("FeaturedListings MLS error:", err);
   }

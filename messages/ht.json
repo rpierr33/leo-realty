@@ -1,20 +1,20 @@
 {
   "Nav": {
     "home": "Lakay",
-    "about": "Konsènan",
+    "about": "Sou Nou",
     "properties": "Pwopriyete",
     "services": "Sèvis",
     "loanPrograms": "Pwogram Prè",
     "team": "Ekip",
     "blog": "Blog",
-    "contact": "Kontakte Nou",
+    "contact": "Kontak Nou",
     "buyHome": "Achte yon Kay",
     "sellHome": "Vann Kay Ou",
     "rentProperty": "Lwe yon Pwopriyete",
     "mortgage": "Prè Ipotèk",
     "getStarted": "Kòmanse",
     "announcement": "Komisyon MR 2% · 32 An nan Biznis · Pa Gen Moun ki Fè l Pi Byen",
-    "toggleNavigation": "Chanje navigasyon"
+    "toggleNavigation": "Louvri meni"
   },
   "LanguageSwitcher": {
     "label": "Lang",
@@ -203,10 +203,10 @@
   "FloatingContactBar": {
     "callNow": "Rele",
     "findProperty": "Pwopriyete",
-    "contact": "Kontakte",
+    "contact": "Kontak",
     "ariaCall": "Rele Leo Realty",
     "ariaFind": "Jwenn yon pwopriyete",
-    "ariaContact": "Kontakte nou"
+    "ariaContact": "Kontak nou"
   },
   "Legal": {
     "label": "Legal",
