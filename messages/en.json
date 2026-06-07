@@ -966,5 +966,22 @@
     "doneTitle": "Check your inbox",
     "doneBody": "We sent a confirmation link to {email}. Click it to start receiving alerts when new matching listings hit the Miami MLS.",
     "doneClose": "Done"
+  },
+  "BestDeals": {
+    "label": "Hot On The Market",
+    "headline1": "Best deals & newest",
+    "headline2": "Miami listings",
+    "subcopy": "The best-value and freshest listings across the MIAMI Association of REALTORS® MLS — refreshed continuously.",
+    "tabBest": "Best deals",
+    "tabNewest": "Just listed",
+    "viewAll": "See all deals",
+    "browseAll": "Browse the full MLS",
+    "beds": "bd",
+    "baths": "ba",
+    "sqft": "sqft",
+    "pricePerSqft": "${value}/sqft",
+    "priceTag": "Best value",
+    "newTag": "New",
+    "emptyTitle": "No matches right now — try widening your filter."
   }
 }

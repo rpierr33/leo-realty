@@ -966,5 +966,22 @@
     "doneTitle": "Tcheke bwat imèl ou",
     "doneBody": "Nou voye yon lyen konfimasyon nan {email}. Klike sou li pou kòmanse resevwa alèt lè nouvo lis Miami MLS koresponn.",
     "doneClose": "Fini"
+  },
+  "BestDeals": {
+    "label": "Pi Bon Òf nan Mache a",
+    "headline1": "Pi bon òf ak dènye yo",
+    "headline2": "nan Miami",
+    "subcopy": "Pi bon valè ak pi nouvo lis sou MLS MIAMI Association of REALTORS® — mete ajou san rete.",
+    "tabBest": "Pi bon òf",
+    "tabNewest": "Fenk afiche",
+    "viewAll": "Wè tout òf",
+    "browseAll": "Gade tout MLS la",
+    "beds": "chanm",
+    "baths": "twalèt",
+    "sqft": "pye²",
+    "pricePerSqft": "{value} $/pye²",
+    "priceTag": "Bon valè",
+    "newTag": "Nouvo",
+    "emptyTitle": "Pa gen rezilta kounye a — eseye elaji filtè ou."
   }
 }

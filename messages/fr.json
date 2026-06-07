@@ -966,5 +966,22 @@
     "doneTitle": "Vérifiez votre boîte de réception",
     "doneBody": "Lien de confirmation envoyé à {email}. Cliquez pour commencer à recevoir des alertes lorsqu'une nouvelle annonce MIAMI MLS correspond.",
     "doneClose": "Terminé"
+  },
+  "BestDeals": {
+    "label": "En Tête du Marché",
+    "headline1": "Meilleures affaires & nouveautés",
+    "headline2": "à Miami",
+    "subcopy": "Les annonces les plus intéressantes et les plus récentes du MLS de la MIAMI Association of REALTORS® — actualisées en continu.",
+    "tabBest": "Meilleures affaires",
+    "tabNewest": "Nouvelles annonces",
+    "viewAll": "Voir tout",
+    "browseAll": "Explorer le MLS complet",
+    "beds": "ch",
+    "baths": "sdb",
+    "sqft": "pi²",
+    "pricePerSqft": "{value} $/pi²",
+    "priceTag": "Bon rapport",
+    "newTag": "Nouveau",
+    "emptyTitle": "Aucun résultat — essayez d'élargir vos filtres."
   }
 }

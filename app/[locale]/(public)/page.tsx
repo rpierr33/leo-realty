@@ -4,6 +4,7 @@ import HeroSection from "@/components/home/HeroSection";
 import StatsBar from "@/components/home/StatsBar";
 import ProgramsSection from "@/components/home/ProgramsSection";
 import FeaturedListings from "@/components/home/FeaturedListings";
+import BestDealsSection from "@/components/home/BestDealsSection";
 import TeamPreview from "@/components/home/TeamPreview";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import MortgageCalculator from "@/components/home/MortgageCalculator";
@@ -38,6 +39,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <StatsBar />
       <ProgramsSection />
       <FeaturedListings />
+      <BestDealsSection />
       <HomeValuationCTA />
       <SavingsCalculator />
       <TeamPreview />
