@@ -1,9 +1,10 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Bed, Bath, Ruler, MapPin, Phone, Mail, Calendar, ArrowLeft } from "lucide-react";
+import { Bed, Bath, Ruler, MapPin, Phone, Mail, Calendar } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ContactAgentForm from "@/components/properties/ContactAgentForm";
+import SmartBackLink from "@/components/properties/SmartBackLink";
 import { getProperty, formatPriceUSD, listingLabelKey, type MlsListing } from "@/lib/mls";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -71,9 +72,7 @@ export default async function PropertyDetailPage({ params }: Props) {
   return (
     <div className="pt-24 bg-[#F8F7F4] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <Link href="/properties" className="inline-flex items-center gap-2 text-gray-500 hover:text-[#C5A55A] transition-colors mb-8">
-          <ArrowLeft className="w-4 h-4" /> {t("backToProperties")}
-        </Link>
+        <SmartBackLink backLabel={t("back")} browseAllLabel={t("browseAllProperties")} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">

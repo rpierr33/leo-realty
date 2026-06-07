@@ -668,7 +668,9 @@
     "courtesyOfPrefix": "Listing courtesy of",
     "updatedPrefix": "Updated",
     "sidebarTitle": "Interested in this property?",
-    "sidebarSubtitle": "Speak with a Leo Realty agent today — we'll arrange a showing and answer questions."
+    "sidebarSubtitle": "Speak with a Leo Realty agent today — we'll arrange a showing and answer questions.",
+    "back": "Back",
+    "browseAllProperties": "Browse all properties"
   },
   "BlogPost": {
     "notFound": "Post Not Found",

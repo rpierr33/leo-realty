@@ -668,7 +668,9 @@
     "courtesyOfPrefix": "Annonce gracieuseté de",
     "updatedPrefix": "Mis à jour",
     "sidebarTitle": "Intéressé par cette propriété ?",
-    "sidebarSubtitle": "Parlez à un agent Leo Realty aujourd'hui — nous organiserons une visite et répondrons à vos questions."
+    "sidebarSubtitle": "Parlez à un agent Leo Realty aujourd'hui — nous organiserons une visite et répondrons à vos questions.",
+    "back": "Retour",
+    "browseAllProperties": "Voir toutes les propriétés"
   },
   "BlogPost": {
     "notFound": "Article introuvable",
