@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/listing-alerts",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/search-health",
+      "schedule": "0 */6 * * *"
     }
   ]
 }
