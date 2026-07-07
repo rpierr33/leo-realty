@@ -10,16 +10,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
+        // Trim submitted + env values so a stray newline/space in an env var
+        // (or a fat-fingered paste) can never break admin login again. Email is
+        // compared case-insensitively. Mirrors the hardened kle-mortgage auth.
+        const email = String(credentials?.email || '').trim();
+        const password = String(credentials?.password || '').trim();
 
         if (!email || !password) return null;
 
         // Env-based admin auth (no DB required for initial setup)
-        const adminEmail = process.env.ADMIN_EMAIL || 'admin@leorealty.com';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'leorealty2024';
+        const adminEmail = (process.env.ADMIN_EMAIL || 'admin@leorealty.com').trim();
+        const adminPassword = (process.env.ADMIN_PASSWORD || 'leorealty2024').trim();
 
-        if (email === adminEmail && password === adminPassword) {
+        if (email.toLowerCase() === adminEmail.toLowerCase() && password === adminPassword) {
           return {
             id: '1',
             email: adminEmail,
