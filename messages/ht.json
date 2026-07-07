@@ -683,7 +683,13 @@
     "sidebarTitle": "Enterese nan pwopriyete sa a?",
     "sidebarSubtitle": "Pale ak yon ajan Leo Realty jodi a — n ap aranje yon vizit e reponn kesyon.",
     "back": "Tounen",
-    "browseAllProperties": "Wè tout pwopriyete yo"
+    "browseAllProperties": "Wè tout pwopriyete yo",
+    "photoOf": "{current} sou {total}",
+    "prevPhoto": "Foto anvan",
+    "nextPhoto": "Foto apre",
+    "openFullscreen": "Plen ekran",
+    "closeFullscreen": "Fèmen",
+    "viewAllPhotos": "Wè tout {total} foto yo"
   },
   "BlogPost": {
     "notFound": "Pòs Pa Jwenn",

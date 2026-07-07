@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ContactAgentForm from "@/components/properties/ContactAgentForm";
 import SmartBackLink from "@/components/properties/SmartBackLink";
+import PropertyGallery from "@/components/properties/PropertyGallery";
 import { getProperty, formatPriceUSD, listingLabelKey, type MlsListing } from "@/lib/mls";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -65,7 +66,6 @@ export default async function PropertyDetailPage({ params }: Props) {
     tProps("listingSingular");
 
   const images = listing.photos;
-  const primaryImage = images[0]?.url;
   const statusLabel = tProps(listingLabelKey(listing) as "statusForSale");
   const locationLine = [listing.city, listing.stateOrProvince, listing.postalCode].filter(Boolean).join(", ");
 
@@ -76,26 +76,7 @@ export default async function PropertyDetailPage({ params }: Props) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <div className="rounded-2xl overflow-hidden bg-white border border-gray-100">
-              <div className="h-80 md:h-96 bg-[#0A1628]/5">
-                {primaryImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={primaryImage} alt={title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="font-playfair text-[#0A1628]/20 text-6xl">L</span>
-                  </div>
-                )}
-              </div>
-              {images.length > 1 && (
-                <div className="grid grid-cols-4 gap-1 p-1">
-                  {images.slice(1, 5).map((img, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img key={i} src={img.url} alt={img.description ?? title} className="h-20 w-full object-cover rounded" />
-                  ))}
-                </div>
-              )}
-            </div>
+            <PropertyGallery images={images} title={title} />
 
             <div className="bg-white rounded-2xl p-8 border border-gray-100">
               <div className="flex flex-wrap gap-2 mb-4">

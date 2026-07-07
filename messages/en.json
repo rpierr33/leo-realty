@@ -683,7 +683,13 @@
     "sidebarTitle": "Interested in this property?",
     "sidebarSubtitle": "Speak with a Leo Realty agent today — we'll arrange a showing and answer questions.",
     "back": "Back",
-    "browseAllProperties": "Browse all properties"
+    "browseAllProperties": "Browse all properties",
+    "photoOf": "{current} of {total}",
+    "prevPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "openFullscreen": "View fullscreen",
+    "closeFullscreen": "Close",
+    "viewAllPhotos": "View all {total} photos"
   },
   "BlogPost": {
     "notFound": "Post Not Found",
