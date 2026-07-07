@@ -206,6 +206,8 @@ export interface SearchParams {
   sort?: string;
   includePending?: boolean;
   listOfficeMlsId?: string;
+  /** Hide "do-not-post"/test listings from results. Defaults to true. */
+  excludeTestListings?: boolean;
   top?: number;
   skip?: number;
 }
@@ -273,18 +275,32 @@ function buildFilter(params: SearchParams): string {
   if (params.garage) clauses.push(`GarageSpaces ge 1`);
 
   if (params.q && params.q.trim()) {
-    const term = escapeOData(params.q.trim());
+    // Bridge OData contains() is CASE-SENSITIVE. A visitor typing "broward"
+    // matched ZERO records because the feed stores "Broward" — the lone clause
+    // that could match a county name. Lowercase the term in JS and tolower()
+    // every field so the search is case-insensitive (verified: "broward"
+    // townhouse rentals went 0 → 300 with this change).
+    const term = escapeOData(params.q.trim().toLowerCase());
     // Search across address, ZIP, city, county, subdivision, and street name —
     // the universal "search anything" path so visitors don't have to guess
     // which field their input maps to.
     clauses.push(
-      `(contains(City, '${term}') or ` +
-        `contains(UnparsedAddress, '${term}') or ` +
-        `contains(PostalCode, '${term}') or ` +
-        `contains(CountyOrParish, '${term}') or ` +
-        `contains(SubdivisionName, '${term}') or ` +
-        `contains(StreetName, '${term}'))`
+      `(contains(tolower(City), '${term}') or ` +
+        `contains(tolower(UnparsedAddress), '${term}') or ` +
+        `contains(tolower(PostalCode), '${term}') or ` +
+        `contains(tolower(CountyOrParish), '${term}') or ` +
+        `contains(tolower(SubdivisionName), '${term}') or ` +
+        `contains(tolower(StreetName), '${term}'))`
     );
+  }
+
+  // Hide agents' "do-not-post" / test listings from the public site.
+  // CRITICAL: the `not` operator MUST be parenthesized. Bridge OData parses an
+  // unparenthesized `not contains(...) and <clause>` as `not (contains(...) and
+  // <clause>)`, which silently drops every clause after it — e.g. a price/beds
+  // filter stops applying (verified: 91,797 results vs the correct 7,192).
+  if (params.excludeTestListings !== false) {
+    clauses.push(`(not contains(tolower(UnparsedAddress), 'dnp'))`);
   }
 
   return clauses.join(" and ");
@@ -323,6 +339,28 @@ const SELECT_FIELDS = [
   "CarportSpaces",
 ].join(",");
 
+/**
+ * True if a listing is a test / "do-not-post" record that must never be shown
+ * publicly. Belt-and-suspenders to the OData `dnp` exclusion: also catches
+ * "test" markers and non-lease listings priced absurdly low (e.g. a $99 "home"),
+ * which agents enter while staging the MLS and which a `dnp` check alone misses.
+ */
+export function isTestListing(l: MlsListing): boolean {
+  const addr = (l.unparsedAddress ?? "").toLowerCase();
+  if (addr.includes("dnp")) return true;
+  if (/\btest\b/.test(addr)) return true;
+  if (addr.includes("do not post") || addr.includes("do not show")) return true;
+  // A RESIDENTIAL home priced under $1,000 is a data-entry/test artifact (e.g. a
+  // $99 "house"). Scope this to residential ONLY — commercial / land / industrial
+  // listings legitimately carry $0–$1 placeholder prices (quoted per-sqft or "on
+  // request"), and must NOT be mistaken for test data.
+  const pt = (l.propertyType ?? "").toLowerCase();
+  if (!l.isLease && pt.includes("residential") && l.listPrice !== null && l.listPrice < 1000) {
+    return true;
+  }
+  return false;
+}
+
 export async function searchProperties(params: SearchParams = {}): Promise<{
   listings: MlsListing[];
   total: number;
@@ -356,9 +394,16 @@ export async function searchProperties(params: SearchParams = {}): Promise<{
   }
 
   const data: BridgeResponse = await res.json();
+  const mapped = data.value.map(mapBridge);
+  const filtered =
+    params.excludeTestListings === false ? mapped : mapped.filter((l) => !isTestListing(l));
+  const rawTotal = data["@odata.count"] ?? data.value.length;
+  // Keep "Showing N of M" honest: subtract any per-page test records from the
+  // total (OData already drops the `dnp`-marked bulk; this catches stragglers).
+  const removed = mapped.length - filtered.length;
   return {
-    listings: data.value.map(mapBridge),
-    total: data["@odata.count"] ?? data.value.length,
+    listings: filtered,
+    total: Math.max(filtered.length, rawTotal - removed),
   };
 }
 
@@ -383,7 +428,9 @@ export async function getProperty(listingKey: string): Promise<MlsListing | null
 }
 
 export function formatPriceUSD(value: number | null, isLease: boolean = false): string {
-  if (value === null || value === undefined) return "Price on request";
+  // 0 is a placeholder commercial/land price ("on request"), never a real sale
+  // price — show it gracefully instead of a broken-looking "$0".
+  if (value === null || value === undefined || value === 0) return "Price on request";
   const formatted = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

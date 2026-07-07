@@ -75,13 +75,25 @@
     "p6Desc": "Zero down for eligible rural and suburban properties. Government-backed with competitive rates.",
     "p6Highlight": "100% financing"
   },
-  "FeaturedListings": {
-    "label": "Featured Listings",
+  "PremiumListings": {
+    "label": "Premium Listings",
     "headline1": "Premium South Florida",
-    "headline2": "Properties",
+    "headline2": "Estates",
+    "subcopy": "A curated selection of South Florida's finest luxury homes — $1M and up, refreshed live from the MLS.",
+    "viewAll": "View all luxury homes",
+    "browseAll": "Browse all premium listings",
+    "premiumBadge": "Premium",
+    "beds": "Beds",
+    "baths": "Baths",
+    "sqft": "sqft"
+  },
+  "FeaturedListings": {
+    "label": "Our Listings",
+    "headline1": "Listed by",
+    "headline2": "Leo Realty",
     "viewAll": "View All Properties",
     "browseAll": "Browse All Properties",
-    "emptyTitle": "No featured properties at this time.",
+    "emptyTitle": "No active Leo Realty listings right now.",
     "emptyCta": "Contact us to find your perfect home",
     "statusForSale": "For Sale",
     "statusForRent": "For Rent",
@@ -91,7 +103,8 @@
     "perMonth": "/mo",
     "beds": "Beds",
     "baths": "Baths",
-    "sqft": "sqft"
+    "sqft": "sqft",
+    "ourBadge": "Leo Realty"
   },
   "Valuation": {
     "label": "Free Home Valuation",
@@ -971,9 +984,9 @@
   },
   "BestDeals": {
     "label": "Hot On The Market",
-    "headline1": "Best deals & newest",
-    "headline2": "Miami listings",
-    "subcopy": "The best-value and freshest listings across the MIAMI Association of REALTORS® MLS — refreshed continuously.",
+    "headline1": "Best deals across the",
+    "headline2": "Miami MLS",
+    "subcopy": "Honestly-priced homes with the best value per square foot across the MIAMI Association of REALTORS® MLS — every price makes sense.",
     "tabBest": "Best deals",
     "tabNewest": "Just listed",
     "viewAll": "See all deals",

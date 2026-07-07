@@ -1,4 +1,4 @@
-import { ArrowRight, Bed, Bath, Ruler, MapPin, TrendingDown, Sparkles } from "lucide-react";
+import { ArrowRight, Bed, Bath, Ruler, MapPin, TrendingDown } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
@@ -9,30 +9,30 @@ import {
 } from "@/lib/mls";
 
 /**
- * Market-wide "Best Deals & Newest" section (NOT limited to LEO Realty).
+ * Good Deals on the MLS — market-wide value section (NOT limited to Leo Realty).
  *
- * Two columns of cards:
- * 1. Best Deals — Active sale listings ranked by lowest price-per-sqft
- *    (a reliable proxy for "value" — assumes the lower $/sqft within a
- *    livable size band, the better the deal vs the market median).
- * 2. Just Listed — Active listings by ModificationTimestamp desc.
- *
- * Both pools are filtered to Active sale + ≥800 sqft + ≥1 photo to avoid
- * land/junk/missing-data records polluting the homepage.
+ * Active for-sale homes ranked by lowest price-per-sqft (a reliable proxy for
+ * "value" — the lower the $/sqft within a livable size band, the better the deal
+ * vs the market). A $50k price FLOOR plus the MLS-layer test/"do-not-post"
+ * exclusion keep mispriced junk (e.g. a $99 "home") out of the showcase, so
+ * every price shown makes sense.
  */
 
 const MIN_SQFT = 800;
-const MAX_PRICE_FOR_DEALS = 1_500_000; // cap to filter luxury outliers
-const CARDS_PER_COLUMN = 4;
+const MIN_PRICE_FOR_DEALS = 50_000; // floor out mispriced / test records
+const MAX_PRICE_FOR_DEALS = 1_500_000; // cap luxury outliers (those belong in Premium)
+const CARDS = 8;
 
 async function fetchBestDeals(): Promise<MlsListing[]> {
   try {
     const { listings } = await searchProperties({
       statusBucket: "for_sale",
-      minSqft: MIN_SQFT,
+      propertyTypeKey: "residential", // real homes/condos, not land or commercial
+      minPrice: MIN_PRICE_FOR_DEALS,
       maxPrice: MAX_PRICE_FOR_DEALS,
+      minSqft: MIN_SQFT,
       sort: "price_asc",
-      top: 60,
+      top: 80,
     });
     return listings
       .filter(
@@ -40,24 +40,9 @@ async function fetchBestDeals(): Promise<MlsListing[]> {
       )
       .map((l) => ({ ...l, _ppsf: (l.listPrice as number) / (l.livingArea as number) }))
       .sort((a, b) => (a as { _ppsf: number })._ppsf - (b as { _ppsf: number })._ppsf)
-      .slice(0, CARDS_PER_COLUMN);
+      .slice(0, CARDS);
   } catch (err) {
     console.error("BestDeals fetch error:", err);
-    return [];
-  }
-}
-
-async function fetchNewest(): Promise<MlsListing[]> {
-  try {
-    const { listings } = await searchProperties({
-      statusBucket: "for_sale",
-      minSqft: MIN_SQFT,
-      sort: "newest",
-      top: 20,
-    });
-    return listings.filter((l) => l.photos.length >= 1).slice(0, CARDS_PER_COLUMN);
-  } catch (err) {
-    console.error("Newest fetch error:", err);
     return [];
   }
 }
@@ -65,7 +50,6 @@ async function fetchNewest(): Promise<MlsListing[]> {
 function ListingCard({
   listing,
   badge,
-  badgeIcon,
   tProps,
   t,
   tBeds,
@@ -74,7 +58,6 @@ function ListingCard({
 }: {
   listing: MlsListing;
   badge: string;
-  badgeIcon: React.ReactNode;
   tProps: (k: "statusForSale") => string;
   t: (k: "pricePerSqft", v?: Record<string, string | number>) => string;
   tBeds: string;
@@ -112,7 +95,7 @@ function ListingCard({
           </div>
         )}
         <div className="absolute top-3 left-3 inline-flex items-center gap-1 bg-[#0A1628] text-[#C5A55A] text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full">
-          {badgeIcon}
+          <TrendingDown className="w-3 h-3" />
           {badge}
         </div>
         <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full">
@@ -166,9 +149,9 @@ export default async function BestDealsSection() {
   const t = await getTranslations("BestDeals");
   const tProps = await getTranslations("PropertiesPage");
 
-  const [deals, newest] = await Promise.all([fetchBestDeals(), fetchNewest()]);
+  const deals = await fetchBestDeals();
 
-  if (deals.length === 0 && newest.length === 0) return null;
+  if (deals.length === 0) return null;
 
   return (
     <section className="py-24 md:py-28 bg-white">
@@ -184,7 +167,7 @@ export default async function BestDealsSection() {
             <p className="text-[#6B7280] text-base mt-3 max-w-2xl leading-relaxed">{t("subcopy")}</p>
           </div>
           <Link
-            href="/properties?status=for_sale&sort=newest"
+            href="/properties?status=for_sale&sort=price_asc"
             className="group inline-flex items-center gap-2 text-[#0A1628] font-medium text-sm hover:text-[#C5A55A] transition-colors flex-shrink-0"
           >
             {t("viewAll")}
@@ -192,59 +175,24 @@ export default async function BestDealsSection() {
           </Link>
         </div>
 
-        {/* Best Deals row */}
-        {deals.length > 0 && (
-          <div className="mb-12">
-            <div className="flex items-center gap-2 mb-5">
-              <TrendingDown className="w-5 h-5 text-[#C5A55A]" />
-              <h3 className="font-playfair text-xl font-semibold text-[#0A1628]">{t("tabBest")}</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {deals.map((listing) => (
-                <ListingCard
-                  key={listing.listingKey}
-                  listing={listing}
-                  badge={t("priceTag")}
-                  badgeIcon={<TrendingDown className="w-3 h-3" />}
-                  tProps={tProps}
-                  t={t}
-                  tBeds={t("beds")}
-                  tBaths={t("baths")}
-                  tSqft={t("sqft")}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Newest row */}
-        {newest.length > 0 && (
-          <div>
-            <div className="flex items-center gap-2 mb-5">
-              <Sparkles className="w-5 h-5 text-[#C5A55A]" />
-              <h3 className="font-playfair text-xl font-semibold text-[#0A1628]">{t("tabNewest")}</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {newest.map((listing) => (
-                <ListingCard
-                  key={listing.listingKey}
-                  listing={listing}
-                  badge={t("newTag")}
-                  badgeIcon={<Sparkles className="w-3 h-3" />}
-                  tProps={tProps}
-                  t={t}
-                  tBeds={t("beds")}
-                  tBaths={t("baths")}
-                  tSqft={t("sqft")}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {deals.map((listing) => (
+            <ListingCard
+              key={listing.listingKey}
+              listing={listing}
+              badge={t("priceTag")}
+              tProps={tProps}
+              t={t}
+              tBeds={t("beds")}
+              tBaths={t("baths")}
+              tSqft={t("sqft")}
+            />
+          ))}
+        </div>
 
         <div className="text-center mt-14">
           <Link
-            href="/properties?status=for_sale"
+            href="/properties?status=for_sale&sort=price_asc"
             className="inline-flex items-center gap-2 border border-[#0A1628]/20 text-[#0A1628] font-medium text-sm px-8 py-3.5 rounded-full hover:bg-[#0A1628] hover:text-white hover:border-[#0A1628] transition-all duration-200"
           >
             {t("browseAll")}

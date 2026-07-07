@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import HeroSection from "@/components/home/HeroSection";
 import StatsBar from "@/components/home/StatsBar";
 import ProgramsSection from "@/components/home/ProgramsSection";
+import PremiumListings from "@/components/home/PremiumListings";
 import FeaturedListings from "@/components/home/FeaturedListings";
 import BestDealsSection from "@/components/home/BestDealsSection";
 import TeamPreview from "@/components/home/TeamPreview";
@@ -38,6 +39,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HeroSection />
       <StatsBar />
       <ProgramsSection />
+      {/* Three distinct listing sections in order: market luxury → broker-owned → market value */}
+      <PremiumListings />
       <FeaturedListings />
       <BestDealsSection />
       <HomeValuationCTA />

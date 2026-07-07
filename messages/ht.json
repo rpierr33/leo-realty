@@ -75,13 +75,25 @@
     "p6Desc": "Zewo mizansèn pou pwopriyete riral ak ti vil ki kalifye. Avèk soutyen gouvènman, to konpetitif.",
     "p6Highlight": "Finansman 100%"
   },
-  "FeaturedListings": {
-    "label": "Pwopriyete Espesyal",
+  "PremiumListings": {
+    "label": "Pwopriyete Premye Klas",
     "headline1": "Pwopriyete Premye Klas",
     "headline2": "nan Sid Florid",
+    "subcopy": "Yon seleksyon pi bèl kay liks nan Sid Florid — apati 1 M$, mete ajou an dirèk depi MLS la.",
+    "viewAll": "Wè tout kay liks",
+    "browseAll": "Gade tout pwopriyete premye klas",
+    "premiumBadge": "Premye Klas",
+    "beds": "Chanm",
+    "baths": "Saldebenn",
+    "sqft": "pye²"
+  },
+  "FeaturedListings": {
+    "label": "Lis Nou yo",
+    "headline1": "Afiche pa",
+    "headline2": "Leo Realty",
     "viewAll": "Wè Tout Pwopriyete",
     "browseAll": "Gade Tout Pwopriyete",
-    "emptyTitle": "Pa gen pwopriyete espesyal kounye a.",
+    "emptyTitle": "Pa gen lis Leo Realty ki aktif kounye a.",
     "emptyCta": "Kontakte nou pou jwenn kay pafè ou a",
     "statusForSale": "Pou Vann",
     "statusForRent": "Pou Lwe",
@@ -91,7 +103,8 @@
     "perMonth": "/mwa",
     "beds": "Chanm",
     "baths": "Saldebenn",
-    "sqft": "pye²"
+    "sqft": "pye²",
+    "ourBadge": "Leo Realty"
   },
   "Valuation": {
     "label": "Evalyasyon Gratis",
@@ -971,9 +984,9 @@
   },
   "BestDeals": {
     "label": "Pi Bon Òf nan Mache a",
-    "headline1": "Pi bon òf ak dènye yo",
-    "headline2": "nan Miami",
-    "subcopy": "Pi bon valè ak pi nouvo lis sou MLS MIAMI Association of REALTORS® — mete ajou san rete.",
+    "headline1": "Pi bon òf sou",
+    "headline2": "MLS Miami a",
+    "subcopy": "Kay ak bon pri, pi bon valè pou chak pye kare sou MLS MIAMI Association of REALTORS® — chak pri gen sans.",
     "tabBest": "Pi bon òf",
     "tabNewest": "Fenk afiche",
     "viewAll": "Wè tout òf",

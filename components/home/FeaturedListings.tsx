@@ -9,15 +9,20 @@ import {
   type MlsListing,
 } from "@/lib/mls";
 
+/**
+ * Broker-Owned Listings — Leo Realty, Inc.'s OWN active listings (ListOfficeMlsId
+ * = LEOT01), shown in their own clearly-labeled section so they read as
+ * broker-owned, NOT conflated with the market-wide Premium or Good Deals
+ * sections. Each card carries a "Leo Realty" badge to make ownership obvious.
+ */
 export default async function FeaturedListings() {
   const t = await getTranslations("FeaturedListings");
   const tProps = await getTranslations("PropertiesPage");
 
-  // Pull LEO Realty's own active listings from MIAMI MLS, then rank for
+  // Pull Leo Realty's own active listings from MIAMI MLS, then rank for
   // visual quality: prefer listings with the most photos AND highest list
   // price within the active window. We over-fetch 30 newest, drop anything
-  // with fewer than 3 photos, and surface the top 12 — newest + best
-  // photographed first.
+  // without a photo, and surface the top 12 — newest + best photographed first.
   let listings: MlsListing[] = [];
   try {
     const result = await searchProperties({
@@ -103,7 +108,10 @@ export default async function FeaturedListings() {
                       </div>
                     )}
 
-                    <div className="absolute top-4 left-4 bg-white text-[#0A1628] text-[11px] font-semibold tracking-wider uppercase px-3 py-1.5">
+                    <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-[#C5A55A] text-[#0A1628] text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full">
+                      {t("ourBadge")}
+                    </div>
+                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[11px] font-semibold tracking-wider uppercase px-3 py-1.5 rounded-full">
                       {statusLabel}
                     </div>
                   </div>

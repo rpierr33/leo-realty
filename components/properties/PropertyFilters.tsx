@@ -103,7 +103,9 @@ export default function PropertyFilters({ currentParams }: { currentParams: Filt
   const updateFilter = useCallback(
     (key: string, value: string | undefined) => {
       startTransition(() => {
-        router.push(buildHref({ [key]: value }));
+        // scroll: false — keep the visitor anchored on the filter bar instead of
+        // jumping back to the top of the page on every selection.
+        router.push(buildHref({ [key]: value }), { scroll: false });
       });
     },
     [router, buildHref]
@@ -126,7 +128,7 @@ export default function PropertyFilters({ currentParams }: { currentParams: Filt
     setPriceMaxDisplay("");
     setSearchInput("");
     startTransition(() => {
-      router.push(pathname);
+      router.push(pathname, { scroll: false });
     });
   }, [pathname, router]);
 

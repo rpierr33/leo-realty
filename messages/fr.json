@@ -75,13 +75,25 @@
     "p6Desc": "Aucune mise de fonds pour les propriétés rurales et suburbaines admissibles. Garanti par l'État avec des taux compétitifs.",
     "p6Highlight": "Financement à 100 %"
   },
-  "FeaturedListings": {
-    "label": "Annonces en vedette",
+  "PremiumListings": {
+    "label": "Sélection haut de gamme",
     "headline1": "Propriétés haut de gamme",
     "headline2": "du sud de la Floride",
+    "subcopy": "Une sélection des plus belles résidences de luxe du sud de la Floride — à partir de 1 M$, actualisée en direct depuis le MLS.",
+    "viewAll": "Voir toutes les résidences de luxe",
+    "browseAll": "Parcourir les annonces haut de gamme",
+    "premiumBadge": "Prestige",
+    "beds": "Chambres",
+    "baths": "Salles de bain",
+    "sqft": "pi²"
+  },
+  "FeaturedListings": {
+    "label": "Nos annonces",
+    "headline1": "Présentées par",
+    "headline2": "Leo Realty",
     "viewAll": "Voir toutes les propriétés",
     "browseAll": "Parcourir toutes les propriétés",
-    "emptyTitle": "Aucune propriété en vedette pour le moment.",
+    "emptyTitle": "Aucune annonce active de Leo Realty pour le moment.",
     "emptyCta": "Contactez-nous pour trouver votre maison idéale",
     "statusForSale": "À vendre",
     "statusForRent": "À louer",
@@ -91,7 +103,8 @@
     "perMonth": "/mois",
     "beds": "Chambres",
     "baths": "Salles de bain",
-    "sqft": "pi²"
+    "sqft": "pi²",
+    "ourBadge": "Leo Realty"
   },
   "Valuation": {
     "label": "Évaluation gratuite",
@@ -971,9 +984,9 @@
   },
   "BestDeals": {
     "label": "En Tête du Marché",
-    "headline1": "Meilleures affaires & nouveautés",
-    "headline2": "à Miami",
-    "subcopy": "Les annonces les plus intéressantes et les plus récentes du MLS de la MIAMI Association of REALTORS® — actualisées en continu.",
+    "headline1": "Meilleures affaires sur le",
+    "headline2": "MLS de Miami",
+    "subcopy": "Des maisons à prix honnête, au meilleur rapport qualité-prix au pied carré, sur le MLS de la MIAMI Association of REALTORS® — chaque prix a du sens.",
     "tabBest": "Meilleures affaires",
     "tabNewest": "Nouvelles annonces",
     "viewAll": "Voir tout",
