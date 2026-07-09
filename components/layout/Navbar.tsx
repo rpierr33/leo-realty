@@ -85,7 +85,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">
             <Image
-              src="/leo-logo.png"
+              src="/leo-logo-v2.png"
               alt="Leo Realty Capital Investments"
               width={200}
               height={100}

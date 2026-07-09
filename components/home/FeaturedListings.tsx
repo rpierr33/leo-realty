@@ -10,7 +10,7 @@ import {
 } from "@/lib/mls";
 
 /**
- * Broker-Owned Listings — Leo Realty, Inc.'s OWN active listings (ListOfficeMlsId
+ * Broker-Owned Listings — Leo Realty's OWN active listings (ListOfficeMlsId
  * = LEOT01), shown in their own clearly-labeled section so they read as
  * broker-owned, NOT conflated with the market-wide Premium or Good Deals
  * sections. Each card carries a "Leo Realty" badge to make ownership obvious.

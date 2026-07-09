@@ -33,7 +33,7 @@ const ORG_SCHEMA = {
   legalName: NAP.legalName,
   alternateName: NAP.alternateName,
   url: SITE_URL,
-  logo: `${SITE_URL}/leo-logo.png`,
+  logo: `${SITE_URL}/leo-logo-v2.png`,
   image: `${SITE_URL}/leopold-hero.jpg`,
   telephone: NAP.telephone,
   email: NAP.email,

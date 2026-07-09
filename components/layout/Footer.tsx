@@ -37,7 +37,7 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-5">
               <Image
-                src="/leo-logo.png"
+                src="/leo-logo-v2.png"
                 alt="Leo Realty Capital Investments"
                 width={200}
                 height={100}

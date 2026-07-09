@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s | Leo Realty Capital Investments",
   },
   description:
-    "Leo Realty Inc — 36 years in business. Buy, sell, rent, and finance your dream home with South Florida's most trusted real estate brokerage. MR 2% | No One Does It Better.",
+    "Leo Realty — 36 years in business. Buy, sell, rent, and finance your dream home with South Florida's most trusted real estate brokerage. MR 2% | No One Does It Better.",
   keywords: ["real estate", "South Florida", "Miami", "mortgage", "buy home", "sell home", "Leo Realty", "MR 2% commission", "Hometown Heroes Florida"],
   alternates: {
     canonical: "/",
