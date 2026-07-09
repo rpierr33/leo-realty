@@ -22,10 +22,10 @@ async function seed() {
       role: 'ceo' as const,
       phone: '(305) 705-2030',
       email: 'leopold@leorealtycapitalinvestments.com',
-      bio: 'Leopold Evariste founded Leo Realty Capital Investments in 1992 with a mission to transform the South Florida real estate experience. His pioneering MR 2% commission model has saved clients millions while delivering white-glove service. With over 32 years of market expertise, Leopold has navigated every cycle of the South Florida market.',
+      bio: 'Leopold Evariste founded Leo Realty Capital Investments in 1992 with a mission to transform the South Florida real estate experience. His pioneering MR 2% commission model has saved clients millions while delivering white-glove service. With over 36 years of market expertise, Leopold has navigated every cycle of the South Florida market.',
       avatarUrl: '/team-leopold.jpg',
       specialties: ['Luxury Properties', 'Investment Properties', 'Commercial Real Estate'],
-      yearsExperience: 32,
+      yearsExperience: 36,
       isActive: true,
       displayOrder: 0,
     },
@@ -319,7 +319,7 @@ async function seed() {
   const testimonialData = [
     { reviewerName: 'Sarah Johnson', reviewerRole: 'Tenant', rating: 5, reviewText: 'Leo Realty made finding my apartment incredibly easy. Truly professional service!', isFeatured: true, displayOrder: 0 },
     { reviewerName: 'Michael Smith', reviewerRole: 'First-Time Homebuyer', rating: 5, reviewText: 'Their MR 2% commission saved me thousands. I couldn\'t be happier with my new home!', isFeatured: true, displayOrder: 1 },
-    { reviewerName: 'David Lee', reviewerRole: 'Business Owner', rating: 5, reviewText: 'Their 32 years of experience really shows. Found the perfect commercial location.', isFeatured: true, displayOrder: 2 },
+    { reviewerName: 'David Lee', reviewerRole: 'Business Owner', rating: 5, reviewText: 'Their 36 years of experience really shows. Found the perfect commercial location.', isFeatured: true, displayOrder: 2 },
     { reviewerName: 'Emily Chen', reviewerRole: 'Real Estate Investor', rating: 5, reviewText: 'The DSCR loan program was exactly what I needed to expand my rental portfolio.', isFeatured: true, displayOrder: 3 },
     { reviewerName: 'James Thompson', reviewerRole: 'Property Owner', rating: 5, reviewText: 'Sold my home in 21 days at asking price. Leo Realty is the gold standard.', isFeatured: true, displayOrder: 4 },
   ];
@@ -345,7 +345,7 @@ async function seed() {
     { key: 'company_phone', value: '(305) 705-2030', type: 'string' as const },
     { key: 'company_email', value: 'Info@leorealtycapitalinvestments.com', type: 'string' as const },
     { key: 'company_address', value: '909 North Miami Beach Blvd, Suite 301A, North Miami Beach, FL', type: 'string' as const },
-    { key: 'company_tagline', value: 'MR 2% | 32 Years In Business | No One Does It Better', type: 'string' as const },
+    { key: 'company_tagline', value: 'MR 2% | 36 Years In Business | No One Does It Better', type: 'string' as const },
     { key: 'company_motto', value: 'Mortgages Made Easy, Dreams Made Real', type: 'string' as const },
     { key: 'office_hours', value: 'Monday-Friday: 9:00 AM - 5:00 PM', type: 'string' as const },
   ];

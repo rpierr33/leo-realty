@@ -15,7 +15,7 @@ import { captureUtm, HONEYPOT_STYLE } from "@/lib/utm";
 
 export default function ContactForm() {
   const t = useTranslations("Contact");
-  const locale = useLocale() as "en" | "fr" | "ht";
+  const locale = useLocale() as "en" | "fr" | "ht" | "es";
   const [submitted, setSubmitted] = useState(false);
 
   const schema = z.object({

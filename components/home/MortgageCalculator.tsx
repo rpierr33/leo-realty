@@ -38,7 +38,7 @@ export default function MortgageCalculator() {
     setResult(calculateMortgage(price, down, rate, years));
   };
 
-  const localeMap: Record<string, string> = { en: "en-US", fr: "fr-FR", ht: "fr-HT" };
+  const localeMap: Record<string, string> = { en: "en-US", fr: "fr-FR", ht: "fr-HT", es: "es-US" };
   const fmt = (n: number) =>
     new Intl.NumberFormat(localeMap[locale] || "en-US", {
       style: "currency",

@@ -65,7 +65,7 @@ const ORG_SCHEMA = {
       closes: "17:00",
     },
   ],
-  knowsLanguage: ["en", "fr", "ht"],
+  knowsLanguage: ["en", "fr", "ht", "es"],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Real Estate Services",
@@ -93,7 +93,7 @@ const WEBSITE_SCHEMA = {
   url: SITE_URL,
   name: NAP.name,
   publisher: { "@id": `${SITE_URL}#organization` },
-  inLanguage: ["en", "fr", "ht"],
+  inLanguage: ["en", "fr", "ht", "es"],
   potentialAction: {
     "@type": "SearchAction",
     target: {

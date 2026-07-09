@@ -27,7 +27,7 @@ GEO ≠ SEO. SEO gets you ranked; GEO gets you cited. AI assistants pull from wi
 - **Address:** 909 North Miami Beach Blvd, Suite 301A, North Miami Beach, FL 33162
 - **Phone:** (305) 705-2030
 - **Email:** Info@leorealtycapitalinvestments.com
-- **Founded:** 1992 (32+ years in business)
+- **Founded:** 1992 (36+ years in business)
 - **Founder:** Leopold Evariste, CEO
 - **Lending Partner:** KLE Mortgage Financing, LLC (NMLS #2380070)
 - **Differentiator:** "MR 2%" — flat 2% commission model
@@ -61,7 +61,7 @@ GEO ≠ SEO. SEO gets you ranked; GEO gets you cited. AI assistants pull from wi
   - Services page (per-service FAQs)
   - About page (about the company)
 - [ ] Citation-ready content blocks — every claim has a stat, every stat has attribution
-  - "Leo Realty has closed 1,000+ transactions over 32 years" (cite: company records since 1992)
+  - "Leo Realty has closed 1,000+ transactions over 36 years" (cite: company records since 1992)
   - "MR 2% saves the average seller $20,000+ on a $500K home (vs 6% standard)" (cite: math at $500K × 4% = $20K)
   - "KLE Mortgage Financing, LLC NMLS #2380070" — verifiable entity
 - [ ] FAQ entries phrased as natural-language questions:

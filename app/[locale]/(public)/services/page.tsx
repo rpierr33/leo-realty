@@ -73,7 +73,7 @@ export default function ServicesPage() {
 
   const stats = [
     { stat: "MR 2%", label: t("stat1Label"), detail: t("stat1Detail") },
-    { stat: "32+", label: t("stat2Label"), detail: t("stat2Detail") },
+    { stat: "36+", label: t("stat2Label"), detail: t("stat2Detail") },
     { stat: "1,000+", label: t("stat3Label"), detail: t("stat3Detail") },
     { stat: "6", label: t("stat4Label"), detail: t("stat4Detail") },
   ];

@@ -19,7 +19,7 @@ export default function SavingsCalculator() {
   const savings = traditionalCommission - mrTwoCommission;
   const savingsPercent = 4;
 
-  const localeMap: Record<string, string> = { en: "en-US", fr: "fr-FR", ht: "fr-HT" };
+  const localeMap: Record<string, string> = { en: "en-US", fr: "fr-FR", ht: "fr-HT", es: "es-US" };
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat(localeMap[locale] || "en-US", {
       style: "currency",

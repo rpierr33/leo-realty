@@ -7,7 +7,7 @@ export default function StatsBar() {
   const t = useTranslations("StatsBar");
 
   const stats = [
-    { value: "32+", label: t("stat1Label"), detail: t("stat1Detail") },
+    { value: "36+", label: t("stat1Label"), detail: t("stat1Detail") },
     { value: "1,000+", label: t("stat2Label"), detail: t("stat2Detail") },
     { value: "MR 2%", label: t("stat3Label"), detail: t("stat3Detail") },
     { value: "6", label: t("stat4Label"), detail: t("stat4Detail") },

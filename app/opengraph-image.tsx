@@ -62,7 +62,7 @@ export default async function OpengraphImage() {
               display: "flex",
             }}
           >
-            Leo Realty · MR 2% · 32 Years
+            Leo Realty · MR 2% · 36 Years
           </div>
         </div>
 

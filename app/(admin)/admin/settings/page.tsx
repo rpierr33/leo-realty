@@ -19,7 +19,7 @@ export default function SettingsPage() {
     facebook: "",
     instagram: "",
     linkedin: "",
-    tagline: "MR 2% | 32 Years In Business | No One Does It Better",
+    tagline: "MR 2% | 36 Years In Business | No One Does It Better",
     motto: "Mortgages Made Easy, Dreams Made Real",
   });
 

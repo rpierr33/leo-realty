@@ -21,7 +21,7 @@ export default function ContactPage() {
   ];
 
   const stats = [
-    { value: "32+", label: t("yearsExperience") },
+    { value: "36+", label: t("yearsExperience") },
     { value: "MR 2%", label: t("commission") },
     { value: "1,000+", label: t("homesClosed") },
     { value: "6", label: t("experts") },

@@ -32,7 +32,7 @@ const schema = z.object({
   message: z.string().max(4000).optional(),
   source: z.string().max(120).optional(),
   propertyId: z.number().int().positive().optional(),
-  locale: z.enum(["en", "fr", "ht"]).default("en"),
+  locale: z.enum(["en", "fr", "ht", "es"]).default("en"),
   utm: utmSchema.optional(),
   // Honeypot — real users never fill this; bots always do.
   website: z.string().max(500).optional(),

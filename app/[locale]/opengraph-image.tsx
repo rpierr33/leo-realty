@@ -14,7 +14,7 @@ export default async function OpengraphImage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const safeLocale = routing.locales.includes(locale as "en" | "fr" | "ht")
+  const safeLocale = routing.locales.includes(locale as "en" | "fr" | "ht" | "es")
     ? locale
     : routing.defaultLocale;
   const t = await getTranslations({ locale: safeLocale, namespace: "OgImage" });

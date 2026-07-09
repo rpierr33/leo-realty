@@ -21,7 +21,7 @@ export default function ContactAgentForm({
   propertyId: number;
 }) {
   const t = useTranslations("ContactAgent");
-  const locale = useLocale() as "en" | "fr" | "ht";
+  const locale = useLocale() as "en" | "fr" | "ht" | "es";
   const [submitted, setSubmitted] = useState(false);
 
   const schema = z.object({

@@ -8,7 +8,7 @@ import { captureUtm, HONEYPOT_STYLE } from "@/lib/utm";
 
 export default function HomeValuationCTA() {
   const t = useTranslations("Valuation");
-  const locale = useLocale() as "en" | "fr" | "ht";
+  const locale = useLocale() as "en" | "fr" | "ht" | "es";
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");

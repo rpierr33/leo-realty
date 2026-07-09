@@ -1,7 +1,7 @@
 // Brevo transactional email — internal alert + prospect autoresponder.
 // Fire-and-forget: never throws, never blocks the lead insert.
 
-type Locale = "en" | "fr" | "ht";
+type Locale = "en" | "fr" | "ht" | "es";
 
 type LeadForEmail = {
   id: number;
@@ -122,6 +122,12 @@ const AUTORESPONDER_COPY: Record<Locale, { subject: string; greeting: (n: string
     greeting: (n) => `Bonjou ${n},`,
     body: "Mèsi paske w kontakte Leo Realty Capital Investments. Yon manm ekip nou nan Sid Florid pral reponn ou nan yon èdtan ouvrab. Si sa w bezwen an ijan, rele nou dirèkteman nan (305) 705-2030.",
     signoff: "— Ekip Leo Realty",
+  },
+  es: {
+    subject: "Recibimos su consulta — Leo Realty",
+    greeting: (n) => `Hola ${n}:`,
+    body: "Gracias por contactar a Leo Realty Capital Investments. Un miembro de nuestro equipo del sur de la Florida le responderá dentro de una hora hábil. Si su necesidad es urgente, llámenos directamente al (305) 705-2030.",
+    signoff: "— El equipo de Leo Realty",
   },
 };
 
