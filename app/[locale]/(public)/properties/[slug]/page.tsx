@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ContactAgentForm from "@/components/properties/ContactAgentForm";
 import SmartBackLink from "@/components/properties/SmartBackLink";
+import ReactionButtons from "@/components/properties/ReactionButtons";
 import PropertyGallery from "@/components/properties/PropertyGallery";
 import { getProperty, formatPriceUSD, listingLabelKey, type MlsListing } from "@/lib/mls";
 
@@ -91,6 +92,15 @@ export default async function PropertyDetailPage({ params }: Props) {
 
               <h1 className="text-3xl font-bold text-[#0A1628] font-[var(--font-playfair)] mb-3">{title}</h1>
               <p className="text-[#C5A55A] font-bold text-3xl mb-4">{formatPriceUSD(listing.listPrice, listing.isLease)}</p>
+              <div className="mb-5">
+                <ReactionButtons
+                  variant="detail"
+                  listingKey={listing.listingKey}
+                  address={listing.unparsedAddress}
+                  price={listing.listPrice}
+                  city={listing.city}
+                />
+              </div>
               <div className="flex items-center gap-2 text-gray-500 mb-6">
                 <MapPin className="w-4 h-4" />
                 <span>{locationLine || tProps("addressOnRequest")}</span>

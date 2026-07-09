@@ -1,5 +1,6 @@
 {
   "Nav": {
+    "myList": "Lis mwen",
     "home": "Paj santral",
     "about": "De nou",
     "properties": "Pwopriyete",
@@ -706,6 +707,26 @@
     "ctaTitle": "Pare pou Pran Pwochèn Etap la?",
     "ctaSubcopy": "Ekspè Leo Realty pare pou ede w atenn objektif imobilye ou.",
     "ctaButton": "Kontakte Nou Jodi a"
+  },
+  "Reactions":   {
+    "interested": "Enterese",
+    "loved": "Renmen anpil",
+    "will_contact": "M ap kontakte",
+    "myListLabel": "Seleksyon ou",
+    "myListTitle": "Lis mwen",
+    "myListSubtitle": "Chak pwopriyete ou make pandan rechèch ou — gwoupe selon jan ou santi w sou yo.",
+    "empty": "Anyen poko sove. Make pwopriyete pandan w ap gade, y ap tann ou isit la.",
+    "emptyCta": "Gade pwopriyete yo",
+    "unavailable": "Pa disponib ankò",
+    "viewListing": "Gade anons lan",
+    "remove": "Retire",
+    "claimTitle": "Kenbe lis ou — sou nenpòt aparèy",
+    "claimBody": "Antre imèl ou epi n ap voye yon lyen sekirize pou lis ou. San modpas, san kont — epi ekip Leo Realty ap pare lè ou vle pale sou yo.",
+    "claimEmailPlaceholder": "ou@egzanp.com",
+    "claimButton": "Voye lis mwen pa imèl",
+    "claimSent": "Tcheke bwat imèl ou — lyen konfimasyon ou an ap rive.",
+    "claimInvalid": "Lyen sa a pa valab oswa li ekspire. Sove lis ou ankò pou w jwenn yon nouvo.",
+    "syncedAs": "Lis ou sove epi senkronize kòm {email}."
   },
   "PropertyFilters": {
     "title": "Filtre Pwopriyete yo",

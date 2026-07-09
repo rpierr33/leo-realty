@@ -1,5 +1,6 @@
 {
   "Nav": {
+    "myList": "Ma liste",
     "home": "Accueil",
     "about": "À propos",
     "properties": "Propriétés",
@@ -706,6 +707,26 @@
     "ctaTitle": "Prêt à passer à l'étape suivante ?",
     "ctaSubcopy": "Les experts de Leo Realty sont prêts à vous aider à atteindre vos objectifs immobiliers.",
     "ctaButton": "Contactez-nous aujourd'hui"
+  },
+  "Reactions":   {
+    "interested": "Intéressé",
+    "loved": "Coup de cœur",
+    "will_contact": "Je vais contacter",
+    "myListLabel": "Votre sélection",
+    "myListTitle": "Ma liste",
+    "myListSubtitle": "Toutes les propriétés que vous avez marquées pendant votre recherche — regroupées selon votre intérêt.",
+    "empty": "Rien d'enregistré pour l'instant. Marquez des propriétés pendant votre navigation et retrouvez-les ici.",
+    "emptyCta": "Parcourir les propriétés",
+    "unavailable": "Plus disponible",
+    "viewListing": "Voir l'annonce",
+    "remove": "Retirer",
+    "claimTitle": "Conservez votre liste — sur tous vos appareils",
+    "claimBody": "Entrez votre e-mail et nous vous enverrons un lien sécurisé vers votre liste. Sans mot de passe, sans compte — et l'équipe Leo Realty sera prête quand vous voudrez en parler.",
+    "claimEmailPlaceholder": "vous@exemple.com",
+    "claimButton": "M'envoyer ma liste",
+    "claimSent": "Vérifiez votre boîte de réception — votre lien de confirmation arrive.",
+    "claimInvalid": "Ce lien est invalide ou expiré. Enregistrez à nouveau votre liste pour en recevoir un nouveau.",
+    "syncedAs": "Votre liste est enregistrée et synchronisée sous {email}."
   },
   "PropertyFilters": {
     "title": "Filtrer les propriétés",

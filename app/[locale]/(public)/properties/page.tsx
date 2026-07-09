@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import PropertyFilters from "@/components/properties/PropertyFilters";
 import SaveSearchButton from "@/components/properties/SaveSearchButton";
 import PropertiesPagination from "@/components/properties/PropertiesPagination";
+import ReactionButtons from "@/components/properties/ReactionButtons";
 import {
   searchProperties,
   formatPriceUSD,
@@ -224,6 +225,12 @@ export default async function PropertiesPage({ searchParams }: Props) {
                         <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#0A1628] text-[11px] font-bold tracking-wider uppercase px-3 py-1.5 rounded-full">
                           {statusLabel}
                         </div>
+                        <ReactionButtons
+                          listingKey={listing.listingKey}
+                          address={listing.unparsedAddress}
+                          price={listing.listPrice}
+                          city={listing.city}
+                        />
                         <div className="absolute bottom-4 left-4">
                           <div className="text-[#C5A55A] font-bold text-xl leading-none">
                             {formatPriceUSD(listing.listPrice, listing.isLease)}

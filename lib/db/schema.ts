@@ -9,6 +9,7 @@ import {
   timestamp,
   numeric,
   jsonb,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -215,6 +216,37 @@ export const adminUsers = pgTable('admin_users', {
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const listingReactionEnum = pgEnum('listing_reaction', [
+  'interested',
+  'loved',
+  'will_contact',
+]);
+
+// A visitor's qualification of an MLS listing ("interested / loved / will
+// contact"), claimed by email — no visitor accounts required (same magic-link
+// pattern as saved searches). Snapshot fields keep the admin view and emails
+// meaningful after a listing sells or expires out of the feed. userId is
+// account-ready for a future client portal.
+export const listingReactions = pgTable(
+  'listing_reactions',
+  {
+    id: serial('id').primaryKey(),
+    email: varchar('email', { length: 255 }).notNull(),
+    listingKey: varchar('listing_key', { length: 64 }).notNull(),
+    reaction: listingReactionEnum('reaction').notNull(),
+    addressSnapshot: varchar('address_snapshot', { length: 500 }),
+    priceSnapshot: integer('price_snapshot'),
+    citySnapshot: varchar('city_snapshot', { length: 100 }),
+    locale: varchar('locale', { length: 5 }).notNull().default('en'),
+    verifyToken: varchar('verify_token', { length: 64 }),
+    verifiedAt: timestamp('verified_at'),
+    userId: integer('user_id'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('listing_reactions_email_listing_uq').on(t.email, t.listingKey)]
+);
 
 // Email-based saved searches with new-listing alerts.
 // No login required — verification via emailed magic link.

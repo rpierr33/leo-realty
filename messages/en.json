@@ -1,5 +1,6 @@
 {
   "Nav": {
+    "myList": "My List",
     "home": "Home",
     "about": "About",
     "properties": "Properties",
@@ -706,6 +707,26 @@
     "ctaTitle": "Ready to Take the Next Step?",
     "ctaSubcopy": "Leo Realty's experts are ready to help you achieve your real estate goals.",
     "ctaButton": "Contact Us Today"
+  },
+  "Reactions":   {
+    "interested": "Interested",
+    "loved": "Loved",
+    "will_contact": "Will contact",
+    "myListLabel": "Your shortlist",
+    "myListTitle": "My List",
+    "myListSubtitle": "Every property you tagged while searching — grouped by how you feel about it.",
+    "empty": "Nothing saved yet. Tag properties as you browse and they'll wait for you here.",
+    "emptyCta": "Browse properties",
+    "unavailable": "No longer available",
+    "viewListing": "View listing",
+    "remove": "Remove",
+    "claimTitle": "Keep your list — on any device",
+    "claimBody": "Enter your email and we'll send you a secure link to your list. No password, no account — and Leo Realty's team will be ready when you want to talk about them.",
+    "claimEmailPlaceholder": "you@example.com",
+    "claimButton": "Email me my list",
+    "claimSent": "Check your inbox — your confirmation link is on its way.",
+    "claimInvalid": "That link is invalid or expired. Save your list again to get a fresh one.",
+    "syncedAs": "Your list is saved and synced as {email}."
   },
   "PropertyFilters": {
     "title": "Filter Properties",

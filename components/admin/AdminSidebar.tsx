@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Home,
+  Heart,
   Users,
   MessageSquare,
   FileText,
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/listings", icon: Home, label: "Listings" },
   { href: "/admin/leads", icon: MessageSquare, label: "Leads" },
+  { href: "/admin/interests", icon: Heart, label: "Interests" },
   { href: "/admin/team", icon: Users, label: "Team" },
   { href: "/admin/blog", icon: FileText, label: "Blog" },
   { href: "/admin/reporting", icon: BarChart2, label: "Reporting" },

@@ -1,5 +1,6 @@
 {
   "Nav": {
+    "myList": "Mi lista",
     "home": "Inicio",
     "about": "Nosotros",
     "properties": "Propiedades",
@@ -706,6 +707,26 @@
     "ctaTitle": "¿Listo para dar el siguiente paso?",
     "ctaSubcopy": "Los expertos de Leo Realty están listos para ayudarle a lograr sus metas de bienes raíces.",
     "ctaButton": "Contáctenos Hoy"
+  },
+  "Reactions":   {
+    "interested": "Me interesa",
+    "loved": "Me encanta",
+    "will_contact": "Voy a contactar",
+    "myListLabel": "Su selección",
+    "myListTitle": "Mi lista",
+    "myListSubtitle": "Cada propiedad que marcó durante su búsqueda — agrupada según su interés.",
+    "empty": "Aún no ha guardado nada. Marque propiedades mientras navega y lo estarán esperando aquí.",
+    "emptyCta": "Explorar propiedades",
+    "unavailable": "Ya no disponible",
+    "viewListing": "Ver propiedad",
+    "remove": "Quitar",
+    "claimTitle": "Conserve su lista — en cualquier dispositivo",
+    "claimBody": "Ingrese su correo y le enviaremos un enlace seguro a su lista. Sin contraseña, sin cuenta — y el equipo de Leo Realty estará listo cuando quiera hablar de ellas.",
+    "claimEmailPlaceholder": "usted@ejemplo.com",
+    "claimButton": "Enviarme mi lista",
+    "claimSent": "Revise su bandeja de entrada — su enlace de confirmación está en camino.",
+    "claimInvalid": "Ese enlace no es válido o expiró. Guarde su lista de nuevo para recibir uno nuevo.",
+    "syncedAs": "Su lista está guardada y sincronizada como {email}."
   },
   "PropertyFilters": {
     "title": "Filtrar Propiedades",

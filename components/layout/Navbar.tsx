@@ -7,6 +7,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { Phone, Menu, X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import LanguageSwitcher from "./LanguageSwitcher";
+import MyListBadge from "./MyListBadge";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -157,6 +158,7 @@ export default function Navbar() {
 
           {/* CTA + Language */}
           <div className="hidden lg:flex items-center gap-2">
+            <MyListBadge />
             <LanguageSwitcher />
             <a
               href="tel:+13057052030"
@@ -175,6 +177,7 @@ export default function Navbar() {
 
           {/* Mobile menu toggle + lang */}
           <div className="lg:hidden flex items-center gap-1">
+            <MyListBadge />
             <LanguageSwitcher />
             <button
               className="text-white p-2 -mr-2"
