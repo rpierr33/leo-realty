@@ -116,6 +116,10 @@ export default function PropertyFilters({ currentParams }: { currentParams: Filt
       const params = intendedParams.current
         ? new URLSearchParams(intendedParams.current.toString())
         : new URLSearchParams(searchParams?.toString() ?? "");
+      // Any filter/sort/search change restarts at page 1 — a page number
+      // carried over from a previous result set would strand the visitor
+      // past the new set's last page.
+      params.delete("page");
       for (const [k, v] of Object.entries(next)) {
         if (v === undefined || v === "" || v === "all") params.delete(k);
         else params.set(k, v);

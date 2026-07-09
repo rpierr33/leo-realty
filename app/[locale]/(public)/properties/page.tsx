@@ -4,10 +4,12 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import PropertyFilters from "@/components/properties/PropertyFilters";
 import SaveSearchButton from "@/components/properties/SaveSearchButton";
+import PropertiesPagination from "@/components/properties/PropertiesPagination";
 import {
   searchProperties,
   formatPriceUSD,
   listingLabelKey,
+  MLS_MAX_SKIP,
   type SearchParams as MlsSearchParams,
   type StatusBucket,
 } from "@/lib/mls";
@@ -37,7 +39,12 @@ type SearchParams = {
   city?: string;
   sort?: string;
   q?: string;
+  page?: string;
 };
+
+const PAGE_SIZE = 60;
+// Bridge rejects $skip beyond MLS_MAX_SKIP — the deepest reachable page.
+const MAX_PAGE = Math.floor(MLS_MAX_SKIP / PAGE_SIZE) + 1;
 
 const ALLOWED_STATUS: StatusBucket[] = ["for_sale", "for_rent", "pending", "sold", "rented", "all"];
 function statusBucket(raw: string | undefined): StatusBucket {
@@ -52,6 +59,9 @@ export default async function PropertiesPage({ searchParams }: Props) {
   const params = await searchParams;
 
   const bucket = statusBucket(params.status);
+
+  const rawPage = parseNumberParam(params.page);
+  const currentPage = Math.min(Math.max(Math.floor(rawPage ?? 1), 1), MAX_PAGE);
 
   const mlsParams: MlsSearchParams = {
     statusBucket: bucket,
@@ -69,7 +79,8 @@ export default async function PropertiesPage({ searchParams }: Props) {
     city: params.city || undefined,
     q: params.q,
     sort: params.sort,
-    top: 60,
+    top: PAGE_SIZE,
+    skip: (currentPage - 1) * PAGE_SIZE,
   };
 
   let listings: Awaited<ReturnType<typeof searchProperties>>["listings"] = [];
@@ -85,7 +96,14 @@ export default async function PropertiesPage({ searchParams }: Props) {
     console.error("Properties page MLS error:", mlsError);
   }
 
-  const hasFilters = Object.entries(params).some(([k, v]) => v && v !== "all" && k !== "sort");
+  const hasFilters = Object.entries(params).some(
+    ([k, v]) => v && v !== "all" && k !== "sort" && k !== "page"
+  );
+
+  const totalPages = Math.min(Math.max(Math.ceil(total / PAGE_SIZE), 1), MAX_PAGE);
+  const rangeFrom = (currentPage - 1) * PAGE_SIZE + 1;
+  const rangeTo = (currentPage - 1) * PAGE_SIZE + listings.length;
+  const deepCapReached = total > MAX_PAGE * PAGE_SIZE;
 
   return (
     <>
@@ -132,7 +150,13 @@ export default async function PropertiesPage({ searchParams }: Props) {
               {hasFilters && <SaveSearchButton params={params} />}
             </div>
             <div className="text-xs text-[#6B7280]">
-              {t("showingNofM", { n: listings.length, total: total.toLocaleString() })}
+              {listings.length > 0
+                ? t("showingRange", {
+                    from: rangeFrom.toLocaleString(),
+                    to: rangeTo.toLocaleString(),
+                    total: total.toLocaleString(),
+                  })
+                : t("showingNofM", { n: 0, total: total.toLocaleString() })}
             </div>
           </div>
 
@@ -247,6 +271,16 @@ export default async function PropertiesPage({ searchParams }: Props) {
               </div>
             )}
           </div>
+
+          {!mlsError && listings.length > 0 && (
+            <PropertiesPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              params={params as Record<string, string | undefined>}
+              deepCapReached={deepCapReached}
+              maxReachable={MAX_PAGE * PAGE_SIZE}
+            />
+          )}
         </div>
       </section>
 

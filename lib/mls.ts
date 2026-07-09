@@ -215,6 +215,13 @@ export interface SearchParams {
 /** LEO Realty's office identifier in the MIAMI MLS feed. */
 export const LEO_REALTY_OFFICE_ID = "LEOT01";
 
+/**
+ * Bridge OData rejects $skip above 10,000 (verified live 2026-07-09:
+ * 400 "Maximum value for $skip is 10000"). Pagination depth is capped
+ * accordingly — deeper inventory requires narrowing the filter.
+ */
+export const MLS_MAX_SKIP = 10_000;
+
 function escapeOData(value: string): string {
   return value.replace(/'/g, "''");
 }
@@ -405,7 +412,7 @@ export async function searchProperties(params: SearchParams = {}): Promise<{
 
   const filter = buildFilter(params);
   const top = Math.min(params.top ?? 24, 200);
-  const skip = params.skip ?? 0;
+  const skip = Math.min(params.skip ?? 0, MLS_MAX_SKIP);
   const orderby = SORT_MAP[params.sort ?? "newest"] ?? SORT_MAP.newest;
 
   const url = new URL(`${API_BASE}/OData/${DATASET}/Property`);
