@@ -114,15 +114,27 @@ function mapBridge(p: BridgeProperty): MlsListing {
   };
 }
 
-// UI sort key → OData $orderby value
-const SORT_MAP: Record<string, string> = {
-  newest: "ModificationTimestamp desc",
-  oldest: "ModificationTimestamp asc",
-  price_asc: "ListPrice asc",
-  price_desc: "ListPrice desc",
-  sqft_desc: "LivingArea desc",
-  beds_desc: "BedroomsTotal desc",
+// UI sort key → primary OData sort field + direction. Every query appends a
+// "ListingKey asc" tiebreaker so the ordering is a stable TOTAL order — that
+// is what makes keyset hops (deep pagination past Bridge's $skip ceiling)
+// exact instead of approximately-right among equal sort values.
+const SORT_FIELDS: Record<string, { field: string; dir: "asc" | "desc"; isTimestamp?: boolean }> = {
+  newest: { field: "ModificationTimestamp", dir: "desc", isTimestamp: true },
+  oldest: { field: "ModificationTimestamp", dir: "asc", isTimestamp: true },
+  price_asc: { field: "ListPrice", dir: "asc" },
+  price_desc: { field: "ListPrice", dir: "desc" },
+  sqft_desc: { field: "LivingArea", dir: "desc" },
+  beds_desc: { field: "BedroomsTotal", dir: "desc" },
 };
+
+function sortSpec(sortKey: string | undefined) {
+  return SORT_FIELDS[sortKey ?? "newest"] ?? SORT_FIELDS.newest;
+}
+
+function orderbyFor(sortKey: string | undefined): string {
+  const s = sortSpec(sortKey);
+  return `${s.field} ${s.dir}, ListingKey asc`;
+}
 
 // UI property-type key → MIAMIRE PropertyType (and optionally PropertySubType filter)
 // PropertyType values seen in feed: Residential | Residential Lease | Residential Income |
@@ -400,6 +412,59 @@ export function violatesRequestedFilters(l: MlsListing, p: SearchParams): string
   return null;
 }
 
+/** Low-level Bridge query. Throws on non-2xx. */
+async function bridgeQuery(q: {
+  filter: string;
+  orderby: string;
+  top: number;
+  skip: number;
+  select: string;
+  count: boolean;
+}): Promise<BridgeResponse> {
+  const url = new URL(`${API_BASE}/OData/${DATASET}/Property`);
+  url.searchParams.set("access_token", SERVER_TOKEN);
+  url.searchParams.set("$filter", q.filter);
+  url.searchParams.set("$select", q.select);
+  url.searchParams.set("$top", String(q.top));
+  url.searchParams.set("$skip", String(q.skip));
+  if (q.count) url.searchParams.set("$count", "true");
+  url.searchParams.set("$orderby", q.orderby);
+
+  const res = await fetch(url.toString(), {
+    headers: { Accept: "application/json" },
+    next: { revalidate: 60 },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Bridge API error ${res.status}: ${text.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+function escapeODataValue(v: string): string {
+  return v.replace(/'/g, "''");
+}
+
+/**
+ * Keyset boundary: "everything strictly AFTER row (value, key) in the active
+ * sort order". Appended to the filter to hop past Bridge's $skip ceiling.
+ */
+function boundaryClause(
+  sortKey: string | undefined,
+  value: unknown,
+  listingKey: string
+): string {
+  const s = sortSpec(sortKey);
+  const cmp = s.dir === "desc" ? "lt" : "gt";
+  const lit = s.isTimestamp
+    ? String(value) // OData datetimeoffset literals are unquoted
+    : typeof value === "number"
+      ? String(value)
+      : `'${escapeODataValue(String(value))}'`;
+  const key = `'${escapeODataValue(listingKey)}'`;
+  return `((${s.field} ${cmp} ${lit}) or (${s.field} eq ${lit} and ListingKey gt ${key}))`;
+}
+
 export async function searchProperties(params: SearchParams = {}): Promise<{
   listings: MlsListing[];
   total: number;
@@ -410,31 +475,65 @@ export async function searchProperties(params: SearchParams = {}): Promise<{
     throw new Error("MLS_SERVER_TOKEN is not configured");
   }
 
-  const filter = buildFilter(params);
+  const baseFilter = buildFilter(params);
   const top = Math.min(params.top ?? 24, 200);
-  const skip = Math.min(params.skip ?? 0, MLS_MAX_SKIP);
-  const orderby = SORT_MAP[params.sort ?? "newest"] ?? SORT_MAP.newest;
+  const requestedSkip = params.skip ?? 0;
+  const orderby = orderbyFor(params.sort);
+  const sortField = sortSpec(params.sort).field;
 
-  const url = new URL(`${API_BASE}/OData/${DATASET}/Property`);
-  url.searchParams.set("access_token", SERVER_TOKEN);
-  url.searchParams.set("$filter", filter);
-  url.searchParams.set("$select", SELECT_FIELDS);
-  url.searchParams.set("$top", String(top));
-  url.searchParams.set("$skip", String(skip));
-  url.searchParams.set("$count", "true");
-  url.searchParams.set("$orderby", orderby);
-
-  const res = await fetch(url.toString(), {
-    headers: { Accept: "application/json" },
-    next: { revalidate: 60 },
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Bridge API error ${res.status}: ${text.slice(0, 200)}`);
+  // Bridge rejects $skip above MLS_MAX_SKIP, so deep offsets are reached by
+  // keyset hops: probe the last row of the current 10k window, then constrain
+  // the filter to everything after it. Each hop advances exactly MLS_MAX_SKIP
+  // rows because the tiebreakered orderby is a stable total order.
+  let filter = baseFilter;
+  let skip = requestedSkip;
+  let hopped = false;
+  while (skip > MLS_MAX_SKIP) {
+    const probe = await bridgeQuery({
+      filter,
+      orderby,
+      top: 1,
+      skip: MLS_MAX_SKIP - 1,
+      select: `${sortField},ListingKey`,
+      count: false,
+    });
+    const row = probe.value[0] as unknown as Record<string, unknown> | undefined;
+    if (!row) {
+      // Ran past the end of the result set — serve an empty final page.
+      skip = 0;
+      filter = `${baseFilter} and (ListingKey eq '__none__')`;
+      hopped = true;
+      break;
+    }
+    filter = `${filter} and ${boundaryClause(params.sort, row[sortField], String(row.ListingKey))}`;
+    skip -= MLS_MAX_SKIP;
+    hopped = true;
   }
 
-  const data: BridgeResponse = await res.json();
+  const data = await bridgeQuery({
+    filter,
+    orderby,
+    top,
+    skip,
+    select: SELECT_FIELDS,
+    count: !hopped,
+  });
+
+  // When hops constrained the filter, the windowed @odata.count no longer
+  // reflects the full result set — fetch the true total separately (cached
+  // 60s like every other query).
+  let hoppedTotal: number | undefined;
+  if (hopped) {
+    const c = await bridgeQuery({
+      filter: baseFilter,
+      orderby,
+      top: 1,
+      skip: 0,
+      select: "ListingKey",
+      count: true,
+    });
+    hoppedTotal = c["@odata.count"] ?? undefined;
+  }
   const mapped = data.value.map(mapBridge);
   const filtered =
     params.excludeTestListings === false ? mapped : mapped.filter((l) => !isTestListing(l));
@@ -456,7 +555,7 @@ export async function searchProperties(params: SearchParams = {}): Promise<{
     }
   }
 
-  const rawTotal = data["@odata.count"] ?? data.value.length;
+  const rawTotal = hoppedTotal ?? data["@odata.count"] ?? data.value.length;
   // Keep "Showing N of M" honest: subtract any per-page test records from the
   // total (OData already drops the `dnp`-marked bulk; this catches stragglers).
   const removed = mapped.length - conforming.length;

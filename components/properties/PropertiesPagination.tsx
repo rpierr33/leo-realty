@@ -7,9 +7,6 @@ type Props = {
   totalPages: number;
   /** Current search params — every href preserves the active filters. */
   params: Record<string, string | undefined>;
-  /** Set when the feed's $skip ceiling hides deeper results (see MLS_MAX_SKIP). */
-  deepCapReached?: boolean;
-  maxReachable?: number;
 };
 
 function pageHref(params: Record<string, string | undefined>, page: number): string {
@@ -40,8 +37,6 @@ export default async function PropertiesPagination({
   currentPage,
   totalPages,
   params,
-  deepCapReached,
-  maxReachable,
 }: Props) {
   if (totalPages <= 1) return null;
   const t = await getTranslations("PropertiesPage");
@@ -99,12 +94,6 @@ export default async function PropertiesPagination({
       <div className="mt-3 text-center text-xs text-[#6B7280]">
         {t("paginationPageOf", { page: currentPage, total: totalPages })}
       </div>
-
-      {deepCapReached && maxReachable ? (
-        <p className="mt-2 text-center text-xs text-[#6B7280]/80">
-          {t("paginationRefine", { max: maxReachable.toLocaleString() })}
-        </p>
-      ) : null}
     </nav>
   );
 }

@@ -9,7 +9,6 @@ import {
   searchProperties,
   formatPriceUSD,
   listingLabelKey,
-  MLS_MAX_SKIP,
   type SearchParams as MlsSearchParams,
   type StatusBucket,
 } from "@/lib/mls";
@@ -43,8 +42,10 @@ type SearchParams = {
 };
 
 const PAGE_SIZE = 60;
-// Bridge rejects $skip beyond MLS_MAX_SKIP — the deepest reachable page.
-const MAX_PAGE = Math.floor(MLS_MAX_SKIP / PAGE_SIZE) + 1;
+// Abuse ceiling only — deep pages are served via keyset hops in lib/mls, so
+// every real result set is fully reachable. This just bounds hop work for
+// hand-crafted absurd URLs.
+const MAX_PAGE = 5000;
 
 const ALLOWED_STATUS: StatusBucket[] = ["for_sale", "for_rent", "pending", "sold", "rented", "all"];
 function statusBucket(raw: string | undefined): StatusBucket {
@@ -103,7 +104,6 @@ export default async function PropertiesPage({ searchParams }: Props) {
   const totalPages = Math.min(Math.max(Math.ceil(total / PAGE_SIZE), 1), MAX_PAGE);
   const rangeFrom = (currentPage - 1) * PAGE_SIZE + 1;
   const rangeTo = (currentPage - 1) * PAGE_SIZE + listings.length;
-  const deepCapReached = total > MAX_PAGE * PAGE_SIZE;
 
   return (
     <>
@@ -272,13 +272,11 @@ export default async function PropertiesPage({ searchParams }: Props) {
             )}
           </div>
 
-          {!mlsError && listings.length > 0 && (
+          {!mlsError && totalPages > 1 && (
             <PropertiesPagination
               currentPage={currentPage}
               totalPages={totalPages}
               params={params as Record<string, string | undefined>}
-              deepCapReached={deepCapReached}
-              maxReachable={MAX_PAGE * PAGE_SIZE}
             />
           )}
         </div>
