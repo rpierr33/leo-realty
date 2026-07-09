@@ -3,23 +3,12 @@ import { db, savedSearches } from "@/lib/db";
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { searchProperties, type SearchParams as MlsSearchParams, type StatusBucket } from "@/lib/mls";
 import { sendListingAlertEmail } from "@/lib/saved-search-notify";
+import { parseNumberParam, parsePriceParam, parseFlagParam } from "@/lib/search-params";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const ALLOWED_STATUS: StatusBucket[] = ["for_sale", "for_rent", "pending", "sold", "rented", "all"];
-
-function num(value: string | undefined): number | undefined {
-  if (!value) return undefined;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : undefined;
-}
-
-function flag(value: string | undefined): boolean | undefined {
-  if (!value) return undefined;
-  if (value === "1" || value === "true" || value === "yes") return true;
-  return undefined;
-}
 
 function paramsToMls(p: Record<string, string>): MlsSearchParams {
   const rawStatus = p.status;
@@ -31,15 +20,16 @@ function paramsToMls(p: Record<string, string>): MlsSearchParams {
     statusBucket,
     propertyTypeKey: p.type && p.type !== "all" ? p.type : undefined,
     city: p.city || undefined,
-    minPrice: num(p.price_min),
-    maxPrice: num(p.price_max),
-    minBeds: num(p.beds),
-    minBaths: num(p.baths),
-    minSqft: num(p.sqft_min),
-    minYearBuilt: num(p.year_min),
-    pool: flag(p.pool),
-    waterfront: flag(p.waterfront),
-    garage: flag(p.garage),
+    minPrice: parsePriceParam(p.price_min),
+    maxPrice: parsePriceParam(p.price_max),
+    minBeds: parseNumberParam(p.beds),
+    minBaths: parseNumberParam(p.baths),
+    minSqft: parseNumberParam(p.sqft_min),
+    minYearBuilt: parseNumberParam(p.year_min),
+    pool: parseFlagParam(p.pool),
+    waterfront: parseFlagParam(p.waterfront),
+    garage: parseFlagParam(p.garage),
+    includePending: parseFlagParam(p.include_pending),
     q: p.q,
     sort: "newest",
     top: 50,

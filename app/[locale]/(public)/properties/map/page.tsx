@@ -12,6 +12,7 @@ import {
   type StatusBucket,
 } from "@/lib/mls";
 import type { MapListing } from "@/components/properties/PropertiesMap";
+import { parseNumberParam, parsePriceParam, parseFlagParam } from "@/lib/search-params";
 
 export const dynamicParams = true;
 export const revalidate = 60;
@@ -45,18 +46,6 @@ function statusBucket(raw: string | undefined): StatusBucket {
   return raw as StatusBucket;
 }
 
-function num(value: string | undefined): number | undefined {
-  if (!value) return undefined;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : undefined;
-}
-
-function flag(value: string | undefined): boolean | undefined {
-  if (!value) return undefined;
-  if (value === "1" || value === "true" || value === "yes") return true;
-  return undefined;
-}
-
 type Props = { searchParams: Promise<SearchParams> };
 
 export default async function PropertiesMapPage({ searchParams }: Props) {
@@ -67,16 +56,16 @@ export default async function PropertiesMapPage({ searchParams }: Props) {
   const mlsParams: MlsSearchParams = {
     statusBucket: bucket,
     propertyTypeKey: params.type && params.type !== "all" ? params.type : undefined,
-    minPrice: num(params.price_min),
-    maxPrice: num(params.price_max),
-    minBeds: num(params.beds),
-    minBaths: num(params.baths),
-    minSqft: num(params.sqft_min),
-    minYearBuilt: num(params.year_min),
-    pool: flag(params.pool),
-    waterfront: flag(params.waterfront),
-    garage: flag(params.garage),
-    includePending: flag(params.include_pending),
+    minPrice: parsePriceParam(params.price_min),
+    maxPrice: parsePriceParam(params.price_max),
+    minBeds: parseNumberParam(params.beds),
+    minBaths: parseNumberParam(params.baths),
+    minSqft: parseNumberParam(params.sqft_min),
+    minYearBuilt: parseNumberParam(params.year_min),
+    pool: parseFlagParam(params.pool),
+    waterfront: parseFlagParam(params.waterfront),
+    garage: parseFlagParam(params.garage),
+    includePending: parseFlagParam(params.include_pending),
     city: params.city || undefined,
     q: params.q,
     sort: params.sort,

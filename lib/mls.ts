@@ -361,9 +361,43 @@ export function isTestListing(l: MlsListing): boolean {
   return false;
 }
 
+/**
+ * Does a listing violate the constraints the caller actually requested?
+ * Belt-and-suspenders against Bridge's non-standard OData parser, which has
+ * twice silently ignored clauses (case-sensitive contains(), unparenthesized
+ * `not` swallowing everything after it). Returns the reason, or null if clean.
+ * Null field values pass — Bridge excludes nulls when a bound applies, so a
+ * null here only appears when no constraint was requested for that field.
+ */
+export function violatesRequestedFilters(l: MlsListing, p: SearchParams): string | null {
+  if (p.minPrice !== undefined && l.listPrice !== null && l.listPrice < p.minPrice)
+    return `price ${l.listPrice} < min ${p.minPrice}`;
+  if (p.maxPrice !== undefined && l.listPrice !== null && l.listPrice > p.maxPrice)
+    return `price ${l.listPrice} > max ${p.maxPrice}`;
+  if (p.minBeds !== undefined && l.bedrooms !== null && l.bedrooms < p.minBeds)
+    return `beds ${l.bedrooms} < min ${p.minBeds}`;
+  if (p.minBaths !== undefined && l.bathroomsTotal !== null && l.bathroomsTotal < p.minBaths)
+    return `baths ${l.bathroomsTotal} < min ${p.minBaths}`;
+  if (p.minSqft !== undefined && l.livingArea !== null && l.livingArea < p.minSqft)
+    return `sqft ${l.livingArea} < min ${p.minSqft}`;
+  if (p.minYearBuilt !== undefined && l.yearBuilt !== null && l.yearBuilt < p.minYearBuilt)
+    return `year ${l.yearBuilt} < min ${p.minYearBuilt}`;
+  if (p.pool && l.poolPrivate === false) return "pool requested, listing has none";
+  if (p.waterfront && l.waterfront === false) return "waterfront requested, listing is not";
+  if (p.garage && l.garageSpaces !== null && l.garageSpaces < 1)
+    return "garage requested, listing has none";
+  if ((p.statusBucket === "for_sale" || p.statusBucket === "sold") && l.isLease)
+    return "lease listing in a sale bucket";
+  if ((p.statusBucket === "for_rent" || p.statusBucket === "rented") && !l.isLease)
+    return "sale listing in a rental bucket";
+  return null;
+}
+
 export async function searchProperties(params: SearchParams = {}): Promise<{
   listings: MlsListing[];
   total: number;
+  /** Rows Bridge returned that violated the requested filters (dropped). Should always be 0. */
+  droppedNonConforming: number;
 }> {
   if (!SERVER_TOKEN) {
     throw new Error("MLS_SERVER_TOKEN is not configured");
@@ -397,13 +431,32 @@ export async function searchProperties(params: SearchParams = {}): Promise<{
   const mapped = data.value.map(mapBridge);
   const filtered =
     params.excludeTestListings === false ? mapped : mapped.filter((l) => !isTestListing(l));
+
+  // Conformance guard: never show a visitor a listing that breaks the filters
+  // they asked for, even if Bridge's parser regresses again. Violations are
+  // dropped, counted, and logged — the search-health cron alerts on them.
+  const conforming: MlsListing[] = [];
+  let droppedNonConforming = 0;
+  for (const l of filtered) {
+    const violation = violatesRequestedFilters(l, params);
+    if (violation) {
+      droppedNonConforming++;
+      console.error(
+        `[mls] filter-conformance violation — Bridge returned an out-of-filter row: ${l.listingKey} (${violation})`
+      );
+    } else {
+      conforming.push(l);
+    }
+  }
+
   const rawTotal = data["@odata.count"] ?? data.value.length;
   // Keep "Showing N of M" honest: subtract any per-page test records from the
   // total (OData already drops the `dnp`-marked bulk; this catches stragglers).
-  const removed = mapped.length - filtered.length;
+  const removed = mapped.length - conforming.length;
   return {
-    listings: filtered,
-    total: Math.max(filtered.length, rawTotal - removed),
+    listings: conforming,
+    total: Math.max(conforming.length, rawTotal - removed),
+    droppedNonConforming,
   };
 }
 

@@ -120,6 +120,67 @@ export async function runSearchHealthChecks(): Promise<SearchHealthReport> {
     add("no test/DNP listings in results", false, `threw: ${msg(e)}`);
   }
 
+  // 7) Price-band conformance — the exact symptom class reported 2026-07-08
+  //    (a $150k–$450k search showing much higher tiers). Every returned row
+  //    must sit inside the band, AND the conformance guard must not be
+  //    silently dropping rows: droppedNonConforming > 0 means Bridge's parser
+  //    is ignoring clauses again and needs investigation even though visitors
+  //    are protected.
+  try {
+    const band = await searchProperties({
+      statusBucket: "for_sale",
+      minPrice: 150_000,
+      maxPrice: 450_000,
+      top: 60,
+    });
+    const outOfRange = band.listings.filter(
+      (l) => l.listPrice !== null && (l.listPrice < 150_000 || l.listPrice > 450_000)
+    );
+    const pass =
+      band.listings.length > 0 && outOfRange.length === 0 && band.droppedNonConforming === 0;
+    add(
+      "price-band conformance ($150k–$450k for-sale)",
+      pass,
+      pass
+        ? `${band.listings.length} listings, all in range`
+        : `out-of-range=${outOfRange.length}, dropped-by-guard=${band.droppedNonConforming}, returned=${band.listings.length}`
+    );
+  } catch (e) {
+    add("price-band conformance ($150k–$450k for-sale)", false, `threw: ${msg(e)}`);
+  }
+
+  // 8) Min-beds conformance.
+  try {
+    const r = await searchProperties({ statusBucket: "for_sale", minBeds: 3, top: 60 });
+    const bad = r.listings.filter((l) => l.bedrooms !== null && l.bedrooms < 3);
+    const pass = r.listings.length > 0 && bad.length === 0 && r.droppedNonConforming === 0;
+    add(
+      "min-beds conformance (3+ bd)",
+      pass,
+      pass
+        ? `${r.listings.length} listings, all 3+ bd`
+        : `violations=${bad.length}, dropped-by-guard=${r.droppedNonConforming}`
+    );
+  } catch (e) {
+    add("min-beds conformance (3+ bd)", false, `threw: ${msg(e)}`);
+  }
+
+  // 9) Bucket integrity: for_rent must return only lease listings.
+  try {
+    const r = await searchProperties({ statusBucket: "for_rent", top: 60 });
+    const bad = r.listings.filter((l) => !l.isLease);
+    const pass = r.listings.length > 0 && bad.length === 0 && r.droppedNonConforming === 0;
+    add(
+      "rental bucket returns only leases",
+      pass,
+      pass
+        ? `${r.listings.length} leases, clean`
+        : `non-lease rows=${bad.length}, dropped-by-guard=${r.droppedNonConforming}`
+    );
+  } catch (e) {
+    add("rental bucket returns only leases", false, `threw: ${msg(e)}`);
+  }
+
   const failures = checks.filter((c) => !c.pass);
   return { healthy: failures.length === 0, ranAt: new Date().toISOString(), checks, failures };
 }

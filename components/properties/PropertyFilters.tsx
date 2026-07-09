@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Search, SlidersHorizontal, X, ChevronDown, Waves, Car, Droplets, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -61,14 +61,24 @@ const POPULAR_CITIES = [
   "Plantation", "South Miami", "Sunny Isles Beach", "Surfside", "Weston",
 ];
 
+// "450k" must not silently become a $450 cap once the k is stripped — expand
+// k/m shorthand to full dollars before digit extraction.
+function expandPriceShorthand(raw: string): string {
+  const m = raw.trim().match(/^\$?\s*([\d.,]+)\s*([kKmM])$/);
+  if (!m) return raw;
+  const base = Number(m[1].replace(/,/g, ""));
+  if (!Number.isFinite(base)) return raw;
+  return String(Math.round(base * (/k/i.test(m[2]) ? 1_000 : 1_000_000)));
+}
+
 function formatPriceInput(value: string): string {
-  const digits = value.replace(/\D/g, "");
+  const digits = expandPriceShorthand(value).replace(/\D/g, "");
   if (!digits) return "";
   return Number(digits).toLocaleString();
 }
 
 function unformatPrice(value: string): string {
-  return value.replace(/\D/g, "");
+  return expandPriceShorthand(value).replace(/\D/g, "");
 }
 
 export default function PropertyFilters({ currentParams }: { currentParams: FilterParams }) {
@@ -87,13 +97,30 @@ export default function PropertyFilters({ currentParams }: { currentParams: Filt
     currentParams.price_max ? Number(currentParams.price_max).toLocaleString() : ""
   );
 
+  // The params the user *intends*, applied cumulatively. useSearchParams only
+  // reflects the last COMMITTED navigation, so two quick interactions (a price
+  // field's blur followed ~100ms later by the Search click) used to build their
+  // URLs from the same stale snapshot and silently drop each other's filters —
+  // verified: min 150k + max 450k + Search landed on ?price_max=450000 only,
+  // showing out-of-range listings. Building from this ref closes that race.
+  const intendedParams = useRef<URLSearchParams | null>(null);
+
+  useEffect(() => {
+    // Re-sync whenever a navigation actually commits (covers back/forward and
+    // server-driven URL changes).
+    intendedParams.current = new URLSearchParams(searchParams?.toString() ?? "");
+  }, [searchParams]);
+
   const buildHref = useCallback(
     (next: Record<string, string | undefined>) => {
-      const params = new URLSearchParams(searchParams?.toString() ?? "");
+      const params = intendedParams.current
+        ? new URLSearchParams(intendedParams.current.toString())
+        : new URLSearchParams(searchParams?.toString() ?? "");
       for (const [k, v] of Object.entries(next)) {
         if (v === undefined || v === "" || v === "all") params.delete(k);
         else params.set(k, v);
       }
+      intendedParams.current = params;
       const qs = params.toString();
       return qs ? `${pathname}?${qs}` : pathname;
     },
@@ -112,8 +139,20 @@ export default function PropertyFilters({ currentParams }: { currentParams: Filt
   );
 
   const submitSearch = useCallback(() => {
-    updateFilter("q", searchInput.trim() || undefined);
-  }, [searchInput, updateFilter]);
+    // The explicit Search action commits everything visible in the hero row —
+    // q AND both price drafts — in a single push, so it can never race the
+    // per-field blur commits.
+    startTransition(() => {
+      router.push(
+        buildHref({
+          q: searchInput.trim() || undefined,
+          price_min: unformatPrice(priceMinDisplay) || undefined,
+          price_max: unformatPrice(priceMaxDisplay) || undefined,
+        }),
+        { scroll: false }
+      );
+    });
+  }, [searchInput, priceMinDisplay, priceMaxDisplay, buildHref, router]);
 
   const toggleFlag = useCallback(
     (key: "pool" | "waterfront" | "garage" | "include_pending") => {
@@ -127,6 +166,7 @@ export default function PropertyFilters({ currentParams }: { currentParams: Filt
     setPriceMinDisplay("");
     setPriceMaxDisplay("");
     setSearchInput("");
+    intendedParams.current = new URLSearchParams();
     startTransition(() => {
       router.push(pathname, { scroll: false });
     });
